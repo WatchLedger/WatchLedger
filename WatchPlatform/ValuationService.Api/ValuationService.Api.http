@@ -1,6 +1,0 @@
-@ValuationService.Api_HostAddress = http://localhost:5001
-
-GET {{ValuationService.Api_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
