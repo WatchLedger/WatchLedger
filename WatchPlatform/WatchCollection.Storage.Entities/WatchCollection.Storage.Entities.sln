@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchCollection.Storage.Entities", "WatchCollection.Storage.Entities.csproj", "{C721C6EC-169E-61A9-A4EB-B3B676D942C0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C721C6EC-169E-61A9-A4EB-B3B676D942C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C721C6EC-169E-61A9-A4EB-B3B676D942C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C721C6EC-169E-61A9-A4EB-B3B676D942C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C721C6EC-169E-61A9-A4EB-B3B676D942C0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FD02DBFB-3B16-4A41-BDB1-2CC4DFEA23BE}
+	EndGlobalSection
+EndGlobal

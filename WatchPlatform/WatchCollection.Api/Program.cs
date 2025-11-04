@@ -1,3 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using WatchCollection.Domain.Services;
+using WatchCollection.Domain.Services.Interfaces;
+using WatchCollection.Storage;
+using WatchCollection.Storage.Entities.Data;
+using WatchCollection.Storage.Interfaces;
+
+
 namespace WatchCollection.Api;
 
 public class Program
@@ -6,7 +14,13 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        var connectionString = builder.Configuration.GetConnectionString("WatchCollection");
+        builder.Services.AddDbContext<WatchServiceDbContext>(options => 
+            options.UseSqlServer(connectionString));
+
         // Add services to the container.
+        builder.Services.AddScoped<IWatchService, WatchService>();
+        builder.Services.AddScoped<IWatchRepository, WatchRepository>();
 
         builder.Services.AddControllers();
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -21,7 +35,6 @@ public class Program
         }
 
         app.UseAuthorization();
-
 
         app.MapControllers();
 

@@ -7,7 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.10"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.10" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="../WatchCollection.Api.Contracts/WatchCollection.Api.Contracts.csproj" />
+      <ProjectReference Include="../WatchCollection.Domain.Services/WatchCollection.Domain.Services.csproj" />
+      <ProjectReference Include="../WatchCollection.Storage.Entities/WatchCollection.Storage.Entities.csproj" />
     </ItemGroup>
 
 </Project>
