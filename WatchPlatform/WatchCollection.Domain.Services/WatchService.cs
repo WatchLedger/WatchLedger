@@ -2,6 +2,7 @@ using System;
 using WatchCollection.Api.Contracts;
 using WatchCollection.Domain.Services.Interfaces;
 using WatchCollection.Domain.Services.Mapping;
+using WatchCollection.Storage.Exceptions;
 using WatchCollection.Storage.Interfaces;
 
 namespace WatchCollection.Domain.Services;
@@ -25,8 +26,10 @@ public class WatchService(IWatchRepository _repository) : IWatchService
     public async Task<WatchResponseContract?> GetWatchById(Guid guid)
     {
         var watch = await _repository.GetWatchById(guid);
+
         if (watch is null)
             return null;
+
         return watch.AsModel().AsContract();
     }
 
@@ -38,12 +41,24 @@ public class WatchService(IWatchRepository _repository) : IWatchService
 
     public async Task<WatchResponseContract> UpdateWatch(Guid watchId, WatchRequestContract contract)
     {
-        var model = contract.AsModel();
-        model.UpdatedAt = DateTimeOffset.Now;
+        try
+        {
+            var model = contract.AsModel();
+            model.UpdatedAt = DateTimeOffset.Now;
 
-        var entity = model.AsEntity();
-        var updatedWatch = await _repository.UpdateWatch(watchId, entity);
+            var entity = model.AsEntity();
+            var updatedWatch = await _repository.UpdateWatch(watchId, entity);
+        
+            return updatedWatch.AsModel().AsContract();
+        }
+        catch (EntityNotFoundException)
+        {
+            throw;
+        }
+    }
 
-        return updatedWatch.AsModel().AsContract();
+    public async Task DeleteWatch(Guid watchId)
+    {
+        await _repository.DeleteWatch(watchId);
     }
 }

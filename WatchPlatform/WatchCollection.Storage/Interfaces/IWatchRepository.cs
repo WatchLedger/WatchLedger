@@ -8,7 +8,6 @@ public interface IWatchRepository
     Task<Watch> Create(Watch watch);
     Task<Watch?> GetWatchById(Guid watchId);
     Task<IEnumerable<Watch>> GetAll();
-    Task<Watch?> UpdateWatch(Guid watchId, Watch watch);
-
-    void DeleteWatch(Guid watchId);
+    Task<Watch> UpdateWatch(Guid watchId, Watch watch);
+    Task DeleteWatch(Guid watchId);
 }

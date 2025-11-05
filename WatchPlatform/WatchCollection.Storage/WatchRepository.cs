@@ -21,6 +21,10 @@ public class WatchRepository(WatchServiceDbContext _context) : IWatchRepository
     public async Task<Watch?> GetWatchById(Guid watchId)
     {
         var watch = await _context.FindAsync<Watch>(watchId);
+
+        if (watch is null)
+            throw new WatchNotFoundException(watchId);
+
         return watch;
     }
 
@@ -30,7 +34,7 @@ public class WatchRepository(WatchServiceDbContext _context) : IWatchRepository
         return watches;
     }
 
-    public async Task<Watch?> UpdateWatch(Guid watchId, Watch watch)
+    public async Task<Watch> UpdateWatch(Guid watchId, Watch watch)
     {
         var existingWatch = await _context.FindAsync<Watch>(watchId);
 
@@ -55,7 +59,7 @@ public class WatchRepository(WatchServiceDbContext _context) : IWatchRepository
         return existingWatch;
     }
 
-    public async void DeleteWatch(Guid watchId)
+    public async Task DeleteWatch(Guid watchId)
     {
         var existingWatch = await _context.FindAsync<Watch>(watchId);
 
