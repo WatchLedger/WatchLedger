@@ -44,7 +44,14 @@ namespace WatchCollection.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _service.GetAll());
+            try
+            {
+                return Ok(await _service.GetAll());
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
         }
 
         [HttpPut]
@@ -59,6 +66,20 @@ namespace WatchCollection.Api.Controllers
                 return Ok(updatedWatch);
             }
             catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        [HttpDelete]
+        [Route("{watchId:Guid}")]
+        public async Task<ActionResult> Delete([FromRoute] Guid watchId)
+        {
+            try
+            {
+                return default;
+            }
+            catch (System.Exception)
             {
                 throw;
             }

@@ -9,4 +9,6 @@ public interface IWatchRepository
     Task<Watch?> GetWatchById(Guid watchId);
     Task<IEnumerable<Watch>> GetAll();
     Task<Watch?> UpdateWatch(Guid watchId, Watch watch);
+
+    void DeleteWatch(Guid watchId);
 }

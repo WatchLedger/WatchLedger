@@ -1,7 +1,9 @@
 using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using WatchCollection.Storage.Entities.Data;
 using WatchCollection.Storage.Entities.Models;
+using WatchCollection.Storage.Exceptions;
 using WatchCollection.Storage.Interfaces;
 
 namespace WatchCollection.Storage;
@@ -33,7 +35,7 @@ public class WatchRepository(WatchServiceDbContext _context) : IWatchRepository
         var existingWatch = await _context.FindAsync<Watch>(watchId);
 
         if (existingWatch is null)
-            return null;
+            throw new WatchNotFoundException(watchId);
 
         existingWatch.Brand = watch.Brand;
         existingWatch.Model = watch.Model;
@@ -51,5 +53,16 @@ public class WatchRepository(WatchServiceDbContext _context) : IWatchRepository
         await _context.SaveChangesAsync();
 
         return existingWatch;
+    }
+
+    public async void DeleteWatch(Guid watchId)
+    {
+        var existingWatch = await _context.FindAsync<Watch>(watchId);
+
+        if (existingWatch is null)
+            throw new WatchNotFoundException(watchId);
+
+        _context.Watches.Remove(existingWatch);
+        await _context.SaveChangesAsync();
     }
 }
