@@ -5,7 +5,8 @@ namespace WatchCollection.Storage.Interfaces;
 
 public interface IWatchRepository
 {
-    Watch Create(Watch watch);
-    Watch? GetWatchById(Guid guid);
-    IEnumerable<Watch> GetAll();
+    Task<Watch> Create(Watch watch);
+    Task<Watch?> GetWatchById(Guid watchId);
+    Task<IEnumerable<Watch>> GetAll();
+    Task<Watch?> UpdateWatch(Guid watchId, Watch watch);
 }

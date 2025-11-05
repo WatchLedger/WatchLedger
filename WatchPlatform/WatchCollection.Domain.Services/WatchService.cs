@@ -6,32 +6,44 @@ using WatchCollection.Storage.Interfaces;
 
 namespace WatchCollection.Domain.Services;
 
-public class WatchService(IWatchRepository repository) : IWatchService
+public class WatchService(IWatchRepository _repository) : IWatchService
 {
-    public WatchResponseContract CreateWatch(WatchRequestContract contract)
+    public async Task<WatchResponseContract> CreateWatch(WatchRequestContract contract)
     {
         var model = contract.AsModel();
         model.OwnerId = Guid.NewGuid();
         model.WatchId = Guid.NewGuid();
-        model.CreatedAt = DateTimeOffset.Now.Date;
+        model.CreatedAt = DateTimeOffset.Now;
         model.UpdatedAt = model.CreatedAt;
 
         var entity = model.AsEntity();
-        var created = repository.Create(entity);
+        var created = await _repository.Create(entity);
 
         return created.AsModel().AsContract();
     }
 
-    public WatchResponseContract? GetWatchById(Guid guid)
+    public async Task<WatchResponseContract?> GetWatchById(Guid guid)
     {
-        var watch = repository.GetWatchById(guid);
+        var watch = await _repository.GetWatchById(guid);
         if (watch is null)
             return null;
         return watch.AsModel().AsContract();
     }
 
-    public IEnumerable<WatchResponseContract> GetAll()
+    public async Task<IEnumerable<WatchResponseContract>> GetAll()
     {
-        return repository.GetAll().Select(wrc => wrc.AsModel().AsContract());
+        var watches = await _repository.GetAll();
+        return watches.Select(wrc => wrc.AsModel().AsContract());
+    }
+
+    public async Task<WatchResponseContract> UpdateWatch(Guid watchId, WatchRequestContract contract)
+    {
+        var model = contract.AsModel();
+        model.UpdatedAt = DateTimeOffset.Now;
+
+        var entity = model.AsEntity();
+        var updatedWatch = await _repository.UpdateWatch(watchId, entity);
+
+        return updatedWatch.AsModel().AsContract();
     }
 }

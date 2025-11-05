@@ -5,7 +5,8 @@ namespace WatchCollection.Domain.Services.Interfaces;
 
 public interface IWatchService
 {
-    WatchResponseContract CreateWatch(WatchRequestContract contract);
-    WatchResponseContract? GetWatchById(Guid guid);
-    IEnumerable<WatchResponseContract> GetAll();
+    Task<WatchResponseContract> CreateWatch(WatchRequestContract contract);
+    Task<WatchResponseContract?> GetWatchById(Guid guid);
+    Task<IEnumerable<WatchResponseContract>> GetAll();
+    Task<WatchResponseContract?> UpdateWatch(Guid watchId, WatchRequestContract contract);
 }
