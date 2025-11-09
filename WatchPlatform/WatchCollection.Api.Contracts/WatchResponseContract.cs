@@ -18,4 +18,5 @@ public class WatchResponseContract
     public bool? IsForSale { get; set; }
     public DateTimeOffset? CreatedAt { get; set; }
     public DateTimeOffset? UpdatedAt { get; set; }
+    public IEnumerable<WatchImageResponseContract>? Images { get; set; }
 }

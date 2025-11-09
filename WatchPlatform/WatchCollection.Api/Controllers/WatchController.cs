@@ -13,12 +13,12 @@ namespace WatchCollection.Api.Controllers
     public class WatchController(IWatchService _service) : ControllerBase
     {
         [HttpPost]
-        public async Task<ActionResult<WatchResponseContract>> Create([FromBody] WatchRequestContract contract)
+        public async Task<ActionResult<WatchResponseContract>> CreateWatch([FromBody] WatchRequestContract contract)
         {
             try
             {
                 var created = await _service.CreateWatch(contract);
-                return CreatedAtAction(nameof(Get), new { watchId = created.WatchId }, created);
+                return CreatedAtAction(nameof(GetWatchById), new { watchId = created.WatchId }, created);
             }
             catch (Exception)
             {
@@ -28,7 +28,7 @@ namespace WatchCollection.Api.Controllers
 
         [HttpGet]
         [Route("{watchId:Guid}")]
-        public async Task<ActionResult<WatchResponseContract>> Get([FromRoute] Guid watchId)
+        public async Task<ActionResult<WatchResponseContract>> GetWatchById([FromRoute] Guid watchId)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAllWatches()
         {
             try
             {
@@ -77,7 +77,7 @@ namespace WatchCollection.Api.Controllers
 
         [HttpDelete]
         [Route("{watchId:Guid}")]
-        public async Task<ActionResult> Delete([FromRoute] Guid watchId)
+        public async Task<ActionResult> DeleteWatch([FromRoute] Guid watchId)
         {
             try
             {
