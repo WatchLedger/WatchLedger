@@ -23,8 +23,8 @@ public class WatchRepository(WatchServiceDbContext _context) : IWatchRepository
         var watch = await _context.FindAsync<Watch>(watchId);
 
         if (watch is null)
-            throw new WatchNotFoundException(watchId);
-
+            return null;
+            
         return watch;
     }
 

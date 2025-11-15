@@ -22,7 +22,7 @@ namespace WatchCollection.Api.Controllers
             }
             catch (Exception)
             {
-                return Problem("An error occured while creating the watch. Please try again later.");
+                return Problem("An error occured while creating the watch. Please try again later.", statusCode: (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -39,7 +39,7 @@ namespace WatchCollection.Api.Controllers
             }
             catch (Exception)
             {
-                return Problem("An error occured while retrieving the watch. Please try again later.");
+                return Problem("An error occured while retrieving the watch. Please try again later.", statusCode: (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -52,7 +52,7 @@ namespace WatchCollection.Api.Controllers
             }
             catch (Exception)
             {
-                return Problem("An error occured while retrieving the watches. Please try again later.");
+                return Problem("An error occured while retrieving the watches. Please try again later.", statusCode: (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -67,11 +67,11 @@ namespace WatchCollection.Api.Controllers
             }
             catch (EntityNotFoundException enfe)
             {
-                return NotFound(new { enfe.Message }); // entitynotfoundexception is appropriate here since we're trying to update a resource that may not exist.
+                return NotFound(new { enfe.Message }); // entitynotfoundexception here instead of returning null, since we're trying to update a resource that may not exist.
             }
             catch (Exception)
             {
-                return Problem("An error occured while updating the watch. Please try again later.");
+                return Problem("An error occured while updating the watch. Please try again later.", statusCode: (int)HttpStatusCode.InternalServerError);
             }
         }
 
@@ -86,11 +86,11 @@ namespace WatchCollection.Api.Controllers
             }
             catch (EntityNotFoundException enfe)
             {
-                return NotFound(new { enfe.Message }); // entitynotfoundexception is appropriate here since we're trying to delete a resource that may not exist.
+                return NotFound(new { enfe.Message }); // entitynotfoundexception here instead of returning null, since we're trying to delete a resource that may not exist.
             }
             catch (Exception)
             {
-                return Problem("An error occured while deleting the watch. Please try again later.");
+                return Problem("An error occured while deleting the watch. Please try again later.", statusCode: (int)HttpStatusCode.InternalServerError);
             }
         }
     }
