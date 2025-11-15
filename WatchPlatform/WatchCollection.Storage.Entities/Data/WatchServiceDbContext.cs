@@ -22,7 +22,7 @@ public partial class WatchServiceDbContext : DbContext
 
     public virtual DbSet<WatchImage> WatchImages { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+       protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Advertisement>(entity =>
         {
@@ -60,7 +60,7 @@ public partial class WatchServiceDbContext : DbContext
 
             entity.HasIndex(e => e.OwnerUserId, "IX_Watches_OwnerUserId");
 
-            entity.Property(e => e.WatchId).HasDefaultValueSql("(newid())");
+            //entity.Property(e => e.WatchId).HasDefaultValueSql("(newid())");
             entity.Property(e => e.Brand).HasMaxLength(100);
             entity.Property(e => e.Condition).HasMaxLength(50);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysdatetimeoffset())");
