@@ -5,7 +5,7 @@ namespace WatchCollection.Storage.Entities.Models;
 
 public partial class WatchImage
 {
-    public Guid ImageId { get; set; }
+    public Guid? ImageId { get; set; }
 
     public Guid WatchId { get; set; }
 

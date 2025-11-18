@@ -1,7 +1,9 @@
 using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WatchCollection.Api.Contracts;
 using WatchCollection.Domain.Services.Interfaces;
+using WatchCollection.Storage.Entities.Models;
 
 namespace WatchCollection.Api.Controllers
 {
@@ -10,11 +12,20 @@ namespace WatchCollection.Api.Controllers
     public class WatchImageController(IWatchImageService _service) : ControllerBase
     {
         [HttpPost]
-        public async Task<ActionResult> UploadImage([FromRoute] Guid watchId, IFormFile image)
+        public async Task<ActionResult> UploadImage(
+            [FromRoute] Guid watchId,
+            [FromForm] WatchImageRequestContract contract, 
+            [FromForm] IFormFile file)
         {
             try
             {
-                return StatusCode((int)HttpStatusCode.NotImplemented, "Image upload functionality is not implemented yet.");
+                var fileName = file.FileName;
+                var contentType = file.ContentType;
+                var fileSize = file.Length;
+
+                using var stream = file.OpenReadStream();
+                var result =  await _service.UploadImageAsync(watchId, fileName, contentType, fileSize,contract, stream);
+                return CreatedAtAction(nameof(GetImages), new { watchId = watchId, imageId = result.ImageId }, result);
             }
             catch (Exception)
             {
@@ -27,7 +38,8 @@ namespace WatchCollection.Api.Controllers
         {
             try
             {
-                return StatusCode((int)HttpStatusCode.NotImplemented, "Get images functionality is not implemented yet.");
+                var result = await _service.GetAllImagesByWatchIdAsync(watchId);
+                return Ok(result);
             }
             catch (Exception)
             {
