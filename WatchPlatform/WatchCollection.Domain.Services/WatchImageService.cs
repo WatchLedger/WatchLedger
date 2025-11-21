@@ -42,4 +42,13 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
         var blobUrl = await _watchImageRepository.DeleteWatchImageDataAsync(watchId, imageId);
         await _blobStorageService.DeleteImageAsync(blobUrl);
     }
+
+    public async Task DeleteImagesByWatchIdAsync(Guid watchId)
+    {
+        var fileNames = await _watchImageRepository.DeleteImagesByWatchIdAsync(watchId);
+        foreach (var filename in fileNames)
+        {
+            await _blobStorageService.DeleteImageAsync(filename);
+        }
+    }
 }

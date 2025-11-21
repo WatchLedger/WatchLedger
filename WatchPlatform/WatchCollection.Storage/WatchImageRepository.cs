@@ -37,4 +37,16 @@ public class WatchImageRepository(WatchServiceDbContext _dbContext) : IWatchImag
 
         return watchImage.FileName;
     }
+
+    public async Task<List<string>> DeleteImagesByWatchIdAsync(Guid watchId)
+    {
+        var watchImages = _dbContext.WatchImages
+            .Where(wi => wi.WatchId == watchId)
+            .ToList();
+
+        _dbContext.WatchImages.RemoveRange(watchImages);
+        await _dbContext.SaveChangesAsync();
+
+        return watchImages.Select(wi => wi.FileName).ToList();
+    }
 }

@@ -7,7 +7,7 @@ using WatchCollection.Storage.Interfaces;
 
 namespace WatchCollection.Domain.Services;
 
-public class WatchService(IWatchRepository _repository) : IWatchService
+public class WatchService(IWatchRepository _repository, IWatchImageService _watchImageService) : IWatchService
 {
     public async Task<WatchResponseContract> CreateWatch(WatchRequestContract contract)
     {
@@ -60,5 +60,6 @@ public class WatchService(IWatchRepository _repository) : IWatchService
     public async Task DeleteWatch(Guid watchId)
     {
         await _repository.DeleteWatch(watchId);
+        await _watchImageService.DeleteImagesByWatchIdAsync(watchId);
     }
 }
