@@ -37,8 +37,9 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
         return entities.Select(e => e.AsModel().AsResponseContract()).ToList();
     }
 
-    public Task DeleteImageAsync(Guid imageId)
+    public async Task DeleteImageAsync(Guid watchId, Guid imageId)
     {
-        throw new NotImplementedException();
+        var blobUrl = await _watchImageRepository.DeleteWatchImageDataAsync(watchId, imageId);
+        await _blobStorageService.DeleteImageAsync(blobUrl);
     }
 }

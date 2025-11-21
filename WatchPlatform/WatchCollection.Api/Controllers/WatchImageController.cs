@@ -53,7 +53,8 @@ namespace WatchCollection.Api.Controllers
         {
             try
             {
-                return StatusCode((int)HttpStatusCode.NotImplemented, "Delete image functionality is not implemented yet.");
+                await _service.DeleteImageAsync(watchId, imageId);
+                return NoContent();
             }
             catch (Exception)
             {

@@ -7,5 +7,5 @@ public interface IWatchImageRepository
 {
     Task<WatchImage> AddWatchImageAsync(WatchImage watchImage);
     Task<List<WatchImage>> GetAllImagesByWatchIdAsync(Guid watchId);
-    Task DeleteAsync(Guid id);
+    Task<string> DeleteWatchImageDataAsync(Guid watchId, Guid imageId);
 }

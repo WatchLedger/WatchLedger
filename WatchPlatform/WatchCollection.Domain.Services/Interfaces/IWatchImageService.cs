@@ -8,5 +8,5 @@ public interface IWatchImageService
 {
     Task<WatchImageResponseContract> UploadImageAsync(Guid watchId, string fileName, string contentType, long fileSize, WatchImageRequestContract contract, Stream imageStream);
     Task<List<WatchImageResponseContract>> GetAllImagesByWatchIdAsync(Guid watchId);
-    Task DeleteImageAsync(Guid imageId);
+    Task DeleteImageAsync(Guid watchId, Guid imageId);
 }
