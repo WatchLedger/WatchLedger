@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using WatchCollection.Api.Contracts;
 using WatchCollection.Domain.Services.Interfaces;
 using WatchCollection.Storage.Entities.Models;
+using WatchCollection.Storage.Exceptions;
 
 namespace WatchCollection.Api.Controllers
 {
@@ -27,6 +28,10 @@ namespace WatchCollection.Api.Controllers
                 var result =  await _service.UploadImageAsync(watchId, fileName, contentType, fileSize,contract, stream);
                 return CreatedAtAction(nameof(GetImages), new { watchId = watchId, imageId = result.ImageId }, result);
             }
+            catch(EntityNotFoundException enfe)
+            {
+                return NotFound( new {message = enfe.Message });
+            }
             catch (Exception)
             {
                 return Problem("An error occurred while uploading the image.", statusCode: (int)HttpStatusCode.InternalServerError);
@@ -40,6 +45,10 @@ namespace WatchCollection.Api.Controllers
             {
                 var result = await _service.GetAllImagesByWatchIdAsync(watchId);
                 return Ok(result);
+            }
+            catch(EntityNotFoundException enfe)
+            {
+                return NotFound( new {message = enfe.Message });
             }
             catch (Exception)
             {
@@ -56,6 +65,10 @@ namespace WatchCollection.Api.Controllers
                 await _service.DeleteImageAsync(watchId, imageId);
                 return NoContent();
             }
+            catch(EntityNotFoundException enfe)
+            {
+                return NotFound( new {message = enfe.Message });
+            }
             catch (Exception)
             {
                 return Problem("An error occurred while deleting the image.", statusCode: (int)HttpStatusCode.InternalServerError);
@@ -69,6 +82,10 @@ namespace WatchCollection.Api.Controllers
             try
             {
                 return StatusCode((int)HttpStatusCode.NotImplemented, "Set main image functionality is not implemented yet.");
+            }
+            catch(EntityNotFoundException enfe)
+            {
+                return NotFound( new {message = enfe.Message });
             }
             catch (Exception)
             {
