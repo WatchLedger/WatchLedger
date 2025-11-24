@@ -49,4 +49,23 @@ public class WatchImageRepository(WatchServiceDbContext _dbContext) : IWatchImag
 
         return watchImages.Select(wi => wi.FileName).ToList();
     }
+
+    public async Task<WatchImage> SetMainImageAsync(Guid watchId, Guid imageId)
+    {
+        var images = await _dbContext.WatchImages
+            .Where(wi => wi.WatchId == watchId)
+            .ToListAsync();
+
+        if (!images.Any(img => img.ImageId == imageId))
+            throw new WatchImageNotFoundException();
+
+        foreach (var img in images)
+        {
+            img.IsPrimary = img.ImageId == imageId;
+        }
+
+        await _dbContext.SaveChangesAsync();
+
+        return images.First(img => img.ImageId == imageId);
+    }
 }

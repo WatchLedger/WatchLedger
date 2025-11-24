@@ -81,7 +81,11 @@ namespace WatchCollection.Api.Controllers
         {
             try
             {
-                return StatusCode((int)HttpStatusCode.NotImplemented, "Set main image functionality is not implemented yet.");
+                if (imageId == Guid.Empty || watchId == Guid.Empty)
+                    return BadRequest(new { message = "ImageId and WatchId cannot be empty." });
+                
+                var updated = await _service.SetMainImageAsync(watchId, imageId);
+                return Ok(updated);
             }
             catch(EntityNotFoundException enfe)
             {

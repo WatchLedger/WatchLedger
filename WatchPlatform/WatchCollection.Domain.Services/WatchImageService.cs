@@ -68,4 +68,14 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
             await _blobStorageService.DeleteImageAsync(filename);
         }
     }
+
+    public async Task<WatchImageResponseContract> SetMainImageAsync(Guid watchId, Guid imageId)
+    {
+        var watch = await _watchService.GetWatchById(watchId);
+        if (watch is null)
+            throw new WatchNotFoundException();
+
+        var updatedEntity = await _watchImageRepository.SetMainImageAsync(watchId, imageId);
+        return updatedEntity.AsModel().AsResponseContract();
+    }
 }

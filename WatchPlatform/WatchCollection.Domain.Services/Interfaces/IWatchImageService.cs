@@ -10,4 +10,5 @@ public interface IWatchImageService
     Task<List<WatchImageResponseContract>> GetAllImagesByWatchIdAsync(Guid watchId);
     Task DeleteImageAsync(Guid watchId, Guid imageId);
     Task DeleteImagesByWatchIdAsync(Guid watchId);
+    Task<WatchImageResponseContract> SetMainImageAsync(Guid watchId, Guid imageId);
 }
