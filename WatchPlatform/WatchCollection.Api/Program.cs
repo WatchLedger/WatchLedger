@@ -25,6 +25,7 @@ public class Program
         // Add repositories to the container.
         builder.Services.AddScoped<IWatchRepository, WatchRepository>();
         builder.Services.AddScoped<IWatchImageRepository, WatchImageRepository>();
+        builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
 
         builder.Services.AddControllers();
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

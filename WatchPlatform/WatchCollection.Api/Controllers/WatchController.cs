@@ -12,6 +12,7 @@ namespace WatchCollection.Api.Controllers
     [ApiController]
     public class WatchController(IWatchService _service) : ControllerBase
     {
+        
         [HttpPost]
         public async Task<ActionResult<WatchResponseContract>> CreateWatch([FromBody] WatchRequestContract contract)
         {
