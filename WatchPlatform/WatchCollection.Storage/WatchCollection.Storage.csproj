@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="../WatchCollection.Storage.Entities/WatchCollection.Storage.Entities.csproj" />
+    </ItemGroup>
+
 </Project>
