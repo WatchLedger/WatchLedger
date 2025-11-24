@@ -39,6 +39,12 @@ public class WatchService(IWatchRepository _repository) : IWatchService
         return watches.Select(wrc => wrc.AsModel().AsContract());
     }
 
+    public async Task<IEnumerable<WatchResponseContract>> GetWatchesByBrand(string brand)
+    {
+        var watches = await _repository.GetWatchesByBrand(brand);
+        return watches.Select(wrc => wrc.AsModel().AsContract());
+    }
+
     public async Task<WatchResponseContract> UpdateWatch(Guid watchId, WatchRequestContract contract)
     {
         try

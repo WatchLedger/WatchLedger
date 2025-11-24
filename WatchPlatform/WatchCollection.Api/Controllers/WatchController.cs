@@ -44,10 +44,14 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllWatches()
+        public async Task<IActionResult> GetAllWatches([FromQuery] string? brand = null)
         {
             try
             {
+                if (!string.IsNullOrWhiteSpace(brand))
+                {
+                    return Ok(await _service.GetWatchesByBrand(brand));
+                }
                 return Ok(await _service.GetAll());
             }
             catch (Exception)
