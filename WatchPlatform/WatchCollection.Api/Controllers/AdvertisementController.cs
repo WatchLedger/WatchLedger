@@ -7,9 +7,13 @@ namespace WatchCollection.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class AdvertisementController(IAdvertisementService _advertisementService) : ControllerBase
     {
         [HttpPost]
+        
+        //only possible for logged in users and admins
+        //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult<AdvertisementResponseContract>> CreateAdvertisement([FromBody] AdvertisementRequestContract request)
         {
             try
@@ -24,6 +28,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet("{advertisementId:Guid}")]
+        //possible for all users
         public async Task<ActionResult<AdvertisementResponseContract>> GetById([FromRoute] Guid advertisementId)
         {
             try
@@ -36,6 +41,53 @@ namespace WatchCollection.Api.Controllers
             catch (Exception)
             {
                 return Problem("An error occurred while retrieving the advertisement.");
+            }
+        }
+
+        [HttpPut("{advertisementId:Guid}")]
+        // only possible for logged in users and admins
+        //[RoleAuthorize("User", "Admin")]
+        public async Task<ActionResult<AdvertisementResponseContract>> UpdateAdvertisement([FromRoute] Guid advertisementId, [FromBody] AdvertisementRequestContract request)
+        {
+            try
+            {
+                //var updated = await _advertisementService.UpdateAdvertisement(advertisementId, request);
+                return Ok(null); //to be implemented
+            }
+            catch (Exception)
+            {
+                return Problem("An error occurred while updating the advertisement.");
+            }
+        }
+
+        [HttpGet]
+        //possible for all users
+        public async Task<ActionResult<IEnumerable<AdvertisementResponseContract>>> GetAllAdvertisements()
+        {
+            try
+            {
+                //var advertisements = await _advertisementService.GetAllAdvertisements();
+                return Ok(null); //to be implemented
+            }
+            catch (Exception)
+            {
+                return Problem("An error occurred while retrieving advertisements.");
+            }
+        }
+
+        [HttpDelete("{advertisementId:Guid}")]
+        // only possible for logged in users and admins
+        //[RoleAuthorize("User", "Admin")]
+        public async Task<ActionResult> DeleteAdvertisement([FromRoute] Guid advertisementId)
+        {
+            try
+            {
+                //await _advertisementService.DeleteAdvertisement(advertisementId); to be implemented
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return Problem("An error occurred while deleting the advertisement.");
             }
         }
     }
