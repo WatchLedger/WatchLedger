@@ -9,11 +9,17 @@ namespace WatchCollection.Storage;
 
 public class AdvertisementRepository(WatchServiceDbContext _context) : IAdvertisementRepository
 {
-    public async Task<Guid> CreateAdvertisementAsync(Advertisement advertisement)
+    public async Task<Advertisement> CreateAdvertisementAsync(Advertisement advertisement)
     {
-        var created = await _context.Advertisements.AddAsync(advertisement);
+        var createdAdvertisement = advertisement;
+        await  _context.Advertisements.AddAsync(createdAdvertisement);
         await _context.SaveChangesAsync();
-        return created.Entity.AdvertisementId;
+        return createdAdvertisement;
+    }
+
+    public Task DeleteAdvertisementAsync(Guid advertisementId)
+    {
+        throw new NotImplementedException();
     }
 
     public async Task<Advertisement> GetAdvertisementByIdAsync(Guid advertisementId)
@@ -22,5 +28,15 @@ public class AdvertisementRepository(WatchServiceDbContext _context) : IAdvertis
         if (advertisement is null)
             throw new AdvertisementNotFoundExceptions();
         return advertisement;
+    }
+
+    public Task<IEnumerable<Advertisement>> GetAllAdvertisementsAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<Advertisement> UpdateAdvertisementAsync(Advertisement advertisement)
+    {
+        throw new NotImplementedException();
     }
 }

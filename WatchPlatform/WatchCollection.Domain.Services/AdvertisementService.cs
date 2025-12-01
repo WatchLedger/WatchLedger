@@ -1,15 +1,25 @@
 using System;
+using Azure.Core.Pipeline;
 using WatchCollection.Api.Contracts;
 using WatchCollection.Domain.Services.Interfaces;
 using WatchCollection.Storage.Interfaces;
+using WatchCollection.Domain.Services.Mapping;
 
 namespace WatchCollection.Domain.Services;
 
 public class AdvertisementService(IAdvertisementRepository _repository) : IAdvertisementService
 {
-    public Task<AdvertisementResponseContract> CreateAdvertisement(AdvertisementRequestContract contract)
+    public async Task<AdvertisementResponseContract> CreateAdvertisement(AdvertisementRequestContract contract)
     {
-        throw new NotImplementedException();
+        var model = contract.AsModel();
+        var advertisementId = Guid.NewGuid();
+        model.AdvertisementId = advertisementId;
+        model.Status = "Active";
+        model.PublishedAt = DateTimeOffset.UtcNow;
+        var entity = model.AsEntity();
+        var createdEntity =  await _repository.CreateAdvertisementAsync(entity);
+
+        return createdEntity.AsModel().AsContract();
     }
 
     public Task DeleteAdvertisement(Guid advertisementId)
@@ -17,9 +27,12 @@ public class AdvertisementService(IAdvertisementRepository _repository) : IAdver
         throw new NotImplementedException();
     }
 
-    public Task<AdvertisementResponseContract?> GetAdvertisementById(Guid advertisementId)
+    public async Task<AdvertisementResponseContract?> GetAdvertisementById(Guid advertisementId)
     {
-        throw new NotImplementedException();
+        var entity =  await _repository.GetAdvertisementByIdAsync(advertisementId);
+        if (entity is null)
+            return null;
+        return entity.AsModel().AsContract();
     }
 
     public Task<IEnumerable<AdvertisementResponseContract>> GetAdvertisementsByWatchId(Guid watchId)

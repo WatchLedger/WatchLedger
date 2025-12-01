@@ -6,7 +6,7 @@ using WatchCollection.Storage.Entities.Models;
 
 namespace WatchCollection.Domain.Services.Mapping;
 
-public static class AdvertisementMappingExtensions
+internal static class AdvertisementMappingExtensions
 {
     public static AdvertisementModel AsModel(this AdvertisementRequestContract contract)
     {
@@ -72,11 +72,11 @@ public static class AdvertisementMappingExtensions
             AskingPrice = entity.AskingPrice,
             Status = entity.Status,
             ViewCount = entity.ViewCount,
-            PublishedAt = entity.PublishedAt?.UtcDateTime,
-            ExpiresAt = entity.ExpiresAt?.UtcDateTime,
-            SoldAt = entity.SoldAt?.UtcDateTime,
-            CreatedAt = entity.CreatedAt?.UtcDateTime ?? throw new MappingException(),
-            UpdatedAt = entity.UpdatedAt?.UtcDateTime,
+            PublishedAt = entity.PublishedAt,
+            ExpiresAt = entity.ExpiresAt,
+            SoldAt = entity.SoldAt,
+            CreatedAt = entity.CreatedAt ?? throw new MappingException(),
+            UpdatedAt = entity.UpdatedAt,
         };
     }
 }
