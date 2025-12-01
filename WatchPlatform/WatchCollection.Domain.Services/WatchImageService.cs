@@ -9,7 +9,7 @@ using WatchCollection.Domain.Services.Validators;
 
 namespace WatchCollection.Domain.Services;
 
-public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlobStorageService _blobStorageService, IWatchService _watchService) : IWatchImageService
+public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlobStorageService _blobStorageService, IWatchRepository _watchRepository) : IWatchImageService
 {
 
     public async Task<WatchImageResponseContract> UploadImageAsync(Guid watchId, string fileName, string contentType, long fileSize, WatchImageRequestContract contract, Stream imageStream)
@@ -17,7 +17,7 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
         FileValidator.ValidateImageFile(fileName, contentType, fileSize);
 
 
-        var watch = await _watchService.GetWatchById(watchId);
+        var watch = await _watchRepository.GetWatchById(watchId);
         if (watch is null)
             throw new WatchNotFoundException();
 
@@ -42,7 +42,7 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
 
     public async Task<List<WatchImageResponseContract>> GetAllImagesByWatchIdAsync(Guid watchId)
     {
-        var watch = await _watchService.GetWatchById(watchId);
+        var watch = await _watchRepository.GetWatchById(watchId);
         if (watch is null)
             throw new WatchNotFoundException();
 
@@ -52,7 +52,7 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
 
     public async Task DeleteImageAsync(Guid watchId, Guid imageId)
     {
-        var watch = await _watchService.GetWatchById(watchId);
+        var watch = await _watchRepository.GetWatchById(watchId);
         if (watch is null)
             throw new WatchNotFoundException();
 
@@ -62,7 +62,7 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
 
     public async Task DeleteImagesByWatchIdAsync(Guid watchId)
     {
-        var watch = await _watchService.GetWatchById(watchId);
+        var watch = await _watchRepository.GetWatchById(watchId);
         if (watch is null)
             throw new WatchNotFoundException();
 
@@ -75,7 +75,7 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
 
     public async Task<WatchImageResponseContract> SetMainImageAsync(Guid watchId, Guid imageId)
     {
-        var watch = await _watchService.GetWatchById(watchId);
+        var watch = await _watchRepository.GetWatchById(watchId);
         if (watch is null)
             throw new WatchNotFoundException();
 
