@@ -12,9 +12,9 @@ public class AdvertisementModel
     public decimal AskingPrice { get; set; }
     public string? Status { get; set; } = null!;
     public int? ViewCount { get; set; }
-    public DateTime? PublishedAt { get; set; }
-    public DateTime? ExpiresAt { get; set; }
-    public DateTime? SoldAt { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime? UpdatedAt { get; set; }
+    public DateTimeOffset? PublishedAt { get; set; }
+    public DateTimeOffset? ExpiresAt { get; set; }
+    public DateTimeOffset? SoldAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset? UpdatedAt { get; set; }
 }
