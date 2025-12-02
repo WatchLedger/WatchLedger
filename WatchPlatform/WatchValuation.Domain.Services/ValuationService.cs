@@ -1,0 +1,67 @@
+using System;
+using System.Runtime.CompilerServices;
+using System.Text.Json;
+using WatchValuation.Api.Contracts;
+using WatchValuation.Domain.Services.Interfaces;
+
+namespace WatchValuation.Domain.Services;
+
+public class ValuationService : IValuationService
+{
+    public async Task<ValuationResponseContract> GetValuation(ValuationRequestContract request)
+    {
+        var token = "YOUR_API_TOKEN";
+        string url = $"https://api.thewatchapi.com/v1/reference/price/history?reference_number={request.ReferenceNumber}&api_token={token}";
+
+        var client = new HttpClient();
+        var response = await client.GetAsync(url);
+        response.EnsureSuccessStatusCode();
+        
+        await using var responseStream = await response.Content.ReadAsStreamAsync();
+
+        var apiResponse = await
+            JsonSerializer.DeserializeAsync<WatchPriceHistoryResponse>(
+                responseStream,
+                new JsonSerializerOptions 
+                { 
+                    PropertyNameCaseInsensitive = true 
+                });
+
+        if (apiResponse is null || apiResponse.Data is null || apiResponse.Data.Count == 0 || apiResponse.Meta is null)
+            throw new Exception("Failed to retrieve valuation data.");
+        
+        var sixMonthsAgo = DateTime.UtcNow.AddMonths(-6);
+        var pricesLastSixMonths = apiResponse.Data
+            .Where(p => p.Date >= sixMonthsAgo)
+            .Select(p => p.Price)
+            .ToList();
+
+        if (pricesLastSixMonths.Count == 0)
+            throw new Exception("No price data available for the last six months.");
+
+        var averagePrice = pricesLastSixMonths.Average();
+        return new ValuationResponseContract
+        {
+            AveragePriveLastSixMonths = averagePrice
+        };
+    }
+
+    // temporarily here for simple testing purposes, will be moved later
+    private record WatchPriceHistoryResponse
+    {
+        public WatchMeta Meta { get; set; } = default!;
+        public List<WatchPricePoint> Data { get; set; } = new();
+    }
+
+    private record WatchMeta
+    {
+        public string Brand { get; set; } = string.Empty;
+        public string Reference_Number { get; set; } = string.Empty;
+    }
+
+    private record WatchPricePoint
+    {
+        public DateTime Date { get; set; }
+        public decimal Price { get; set; }
+    }
+}

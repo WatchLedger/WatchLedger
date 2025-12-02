@@ -11,7 +11,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers/" />
+      <ProjectReference Include="../WatchValuation.Api.Contracts/WatchValuation.Api.Contracts.csproj" />
+      <ProjectReference Include="../WatchValuation.Domain.Services/WatchValuation.Domain.Services.csproj" />
     </ItemGroup>
 
 </Project>
