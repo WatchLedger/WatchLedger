@@ -45,6 +45,9 @@ public class Program
             });
         });
 
+        // Add authorization
+        builder.Services.AddAuthorization();
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -90,9 +93,8 @@ public class Program
     {
         try
         {
-            // Placeholder - implement based on your service
-            //var result = await service.GetBrands();
-            return Results.Ok(null);
+            var result = await service.GetBrands();
+            return Results.Ok(result);
         }
         catch (Exception)
         {
