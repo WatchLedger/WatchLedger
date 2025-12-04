@@ -3,6 +3,8 @@ using WatchValuation.Domain.Services;
 using WatchValuation.Domain.Services.Interfaces;
 using WatchValuation.Api.Contracts;
 using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 public class Program
 {
@@ -68,7 +70,7 @@ public class Program
         }
         catch (Exception)
         {
-            return Results.Problem("An error occurred while processing the valuation request.");
+            return  Results.BadRequest("An error occurred while retrieving the valuation.");
         }
     }
 
@@ -82,7 +84,7 @@ public class Program
         }
         catch (Exception)
         {
-            return Results.Problem("An error occurred while retrieving brands.");
+            return Results.BadRequest("An error occurred while retrieving brands.");
         }
     }
 }
