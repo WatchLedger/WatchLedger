@@ -3,8 +3,7 @@ using WatchValuation.Domain.Services;
 using WatchValuation.Domain.Services.Interfaces;
 using WatchValuation.Api.Contracts;
 using Microsoft.AspNetCore.RateLimiting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Azure.Identity;
 
 public class Program
 {
@@ -12,8 +11,21 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        // Add Azure Key Vault configuration
+        var keyVaultUrl = builder.Configuration["KeyVault:Url"];
+        if (!string.IsNullOrEmpty(keyVaultUrl))
+        {
+            builder.Configuration.AddAzureKeyVault(
+                new Uri(keyVaultUrl),
+                new DefaultAzureCredential());
+        }
+
         // Add services to the container.
         builder.Services.AddScoped<IValuationService, ValuationService>();
+        builder.Services.AddScoped<IBrandsService, BrandsService>();
+        builder.Services.AddHttpClient<ValuationService>();
+        builder.Services.AddHttpClient<BrandsService>();
+
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
@@ -74,7 +86,7 @@ public class Program
         }
     }
 
-    private static async Task<IResult> GetBrands(IValuationService service)
+    private static async Task<IResult> GetBrands(IBrandsService service)
     {
         try
         {

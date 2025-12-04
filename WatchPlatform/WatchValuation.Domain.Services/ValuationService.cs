@@ -3,18 +3,19 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using WatchValuation.Api.Contracts;
 using WatchValuation.Domain.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace WatchValuation.Domain.Services;
 
-public class ValuationService : IValuationService
+public class ValuationService(HttpClient _httpClient, IConfiguration _configuration) : IValuationService
 {
     public async Task<ValuationResponseContract> GetValuation(ValuationRequestContract request)
     {
-        var token = "YOUR_API_TOKEN";
+        var token = _configuration["ApiKeys:WatchApi"] 
+            ?? throw new InvalidOperationException("Watch API token is not configured. Set it via user secrets or configuration.");
         string url = $"https://api.thewatchapi.com/v1/reference/price/history?reference_number={request.ReferenceNumber}&api_token={token}";
 
-        var client = new HttpClient();
-        var response = await client.GetAsync(url);
+        var response = await _httpClient.GetAsync(url);
         response.EnsureSuccessStatusCode();
         
         await using var responseStream = await response.Content.ReadAsStreamAsync();
