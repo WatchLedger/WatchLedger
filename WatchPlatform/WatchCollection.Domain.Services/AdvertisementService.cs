@@ -44,4 +44,9 @@ public class AdvertisementService(IAdvertisementRepository _repository) : IAdver
     {
         throw new NotImplementedException();
     }
+
+    public Task<decimal> GetWatchValuation(string referenceNumber)
+    {
+        throw new NotImplementedException();
+    }
 }

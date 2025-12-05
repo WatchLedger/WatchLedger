@@ -68,4 +68,9 @@ public class WatchService(IWatchRepository _repository, IWatchImageService _watc
         await _repository.DeleteWatch(watchId);
         await _watchImageService.DeleteImagesByWatchIdAsync(watchId);
     }
+
+    public async Task<IEnumerable<string>> GetWatchBrands()
+    {
+        throw new NotImplementedException();
+    }
 }

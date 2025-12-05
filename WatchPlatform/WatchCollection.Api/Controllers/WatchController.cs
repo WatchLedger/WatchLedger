@@ -109,5 +109,18 @@ namespace WatchCollection.Api.Controllers
                 return Problem("An error occured while deleting the watch. Please try again later.", statusCode: (int)HttpStatusCode.InternalServerError);
             }
         }
+
+        public async Task<ActionResult<IEnumerable<string>>> GetWatchBrands()
+        {
+            try
+            {
+                var brands = await _service.GetWatchBrands();
+                return Ok(brands);
+            }
+            catch (Exception)
+            {
+                return Problem("An error occured while retrieving watch brands. Please try again later.", statusCode: (int)HttpStatusCode.InternalServerError);
+            }
+        }
     }
 }

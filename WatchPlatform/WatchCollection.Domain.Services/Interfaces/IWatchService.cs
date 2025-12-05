@@ -11,4 +11,5 @@ public interface IWatchService
     Task<IEnumerable<WatchResponseContract>> GetWatchesByBrand(string brand);
     Task<WatchResponseContract> UpdateWatch(Guid watchId, WatchRequestContract contract);
     Task DeleteWatch(Guid watchId);
+    Task<IEnumerable<string>> GetWatchBrands();
 }

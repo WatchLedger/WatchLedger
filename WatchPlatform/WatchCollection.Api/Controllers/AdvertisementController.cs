@@ -90,5 +90,19 @@ namespace WatchCollection.Api.Controllers
                 return Problem("An error occurred while deleting the advertisement.");
             }
         }
+
+        [HttpGet("valuation")]
+        public async Task<ActionResult<decimal>> GetWatchValuation([FromQuery] string referenceNumber)
+        {
+            try 
+            {
+                var valuation = await _advertisementService.GetWatchValuation(referenceNumber);
+                return Ok(valuation);
+            }
+            catch (Exception)
+            {
+                return Problem("An error occurred while retrieving the watch valuation.");
+            }
+        }
     }
 }
