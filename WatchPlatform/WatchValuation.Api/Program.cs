@@ -1,12 +1,10 @@
 using WatchValuation.Domain.Services;
 using WatchValuation.Domain.Services.Interfaces;
-using WatchValuation.Api.Contracts;
 using Microsoft.AspNetCore.RateLimiting;
 using Azure.Identity;
 using WatchValuation.Storage;
 using WatchValuation.Storage.Interfaces;
-
-
+using WatchValuation.Domain.Services.Exceptions;
 
 namespace WatchValuation.Api;
 public class Program
@@ -65,7 +63,7 @@ public class Program
             .WithName("Valuation")
             .WithOpenApi();
 
-        valuationGroup.MapPost("/valuation", GetValuation)
+        valuationGroup.MapGet("/valuation", GetValuation)
             .WithName("GetValuation")
             .WithDescription("Get valuation for a watch")
             .RequireRateLimiting("valuation");
@@ -78,12 +76,20 @@ public class Program
         app.Run();
     }
 
-    private static async Task<IResult> GetValuation(IValuationService service, ValuationRequestContract request)
+    private static async Task<IResult> GetValuation(IValuationService service, string referenceNumber)
     {
         try
         {
-            var result = await service.GetValuation(request);
+            var result = await service.GetWatchValuationFromCacheAsync(referenceNumber);
             return Results.Ok(result);
+        }
+        catch (WatchValuationUnavailableException ex)
+        {
+            return Results.Ok(new { ex.Message });
+        }
+        catch (WatchValuationException ex)
+        {
+            return Results.NotFound(ex.Message);
         }
         catch (Exception)
         {
@@ -95,8 +101,12 @@ public class Program
     {
         try
         {
-            var result = await service.GetBrands();
+            var result = await service.GetWatchBrandsFromCacheAsync();
             return Results.Ok(result);
+        }
+        catch (WatchBrandListException ex)
+        {
+            return Results.Problem(ex.Message);
         }
         catch (Exception)
         {

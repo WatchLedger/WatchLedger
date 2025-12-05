@@ -2,7 +2,6 @@ using Microsoft.Azure.Cosmos;
 using WatchValuation.Storage.Interfaces;
 using WatchValuation.Storage.Records;
 using Microsoft.Extensions.Configuration;
-using Container = Microsoft.Azure.Cosmos.Container;
 
 namespace WatchValuation.Storage;
 

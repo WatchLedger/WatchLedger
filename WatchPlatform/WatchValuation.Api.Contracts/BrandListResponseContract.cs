@@ -1,5 +1,3 @@
-using System;
-
 namespace WatchValuation.Api.Contracts;
 
 public class BrandListResponseContract

@@ -6,37 +6,61 @@ using WatchValuation.Domain.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using WatchValuation.Storage.Interfaces;
 using WatchValuation.Storage.Records;
-using Microsoft.Azure.Cosmos.Linq;
+using WatchValuation.Domain.Services.Exceptions;
 
 namespace WatchValuation.Domain.Services;
 
 public class ValuationService(HttpClient _httpClient, IConfiguration _configuration, IValuationCacheRepository _cacheRepository) : IValuationService
 {
-    public async Task<ValuationResponseContract> GetValuation(ValuationRequestContract request)
+
+    public async Task<ValuationResponseContract> GetWatchValuationFromCacheAsync(string referenceNumber)
     {
-        var cachedValuation = await GetCachedValuation(request.ReferenceNumber);
-        if (cachedValuation is not null)
-            return cachedValuation;
-
-        var token = _configuration["WatchApi"] 
-            ?? throw new InvalidOperationException("Watch API token is not configured. Set it via user secrets or configuration.");
-        string url = $"https://api.thewatchapi.com/v1/reference/price/history?reference_number={request.ReferenceNumber}&api_token={token}";
-
-        var response = await _httpClient.GetAsync(url);
-        response.EnsureSuccessStatusCode();
+        var cachedValuation = await _cacheRepository.GetCachedValuationAsync(referenceNumber);
+        if (cachedValuation is not null && cachedValuation.AveragePriceLastSixMonths > 0)
+            return new ValuationResponseContract { AveragePriceLastSixMonths = cachedValuation.AveragePriceLastSixMonths };
         
-        await using var responseStream = await response.Content.ReadAsStreamAsync();
+        var valuation = await GetWatchValuationFromApiAsync(referenceNumber) 
+            ?? throw new WatchValuationException("Failed to retrieve watch valuation from API.");
+        
+        return new ValuationResponseContract { AveragePriceLastSixMonths = valuation.AveragePriceLastSixMonths };
+    }
 
-        var apiResponse = await
-            JsonSerializer.DeserializeAsync<WatchPriceHistoryResponse>(
-                responseStream,
-                new JsonSerializerOptions 
-                { 
-                    PropertyNameCaseInsensitive = true 
-                });
+    private async Task<ValuationResponseContract> GetWatchValuationFromApiAsync(string referenceNumber)
+    {
+        //var token = _configuration["WatchApi"] 
+        //     ?? throw new InvalidOperationException("Watch API token is not configured. Set it via user secrets or configuration.");
+        // string url = $"https://api.thewatchapi.com/v1/reference/price/history?reference_number={request.ReferenceNumber}&api_token={token}";
+
+        // var response = await _httpClient.GetAsync(url);
+        // response.EnsureSuccessStatusCode();
+        
+        // await using var responseStream = await response.Content.ReadAsStreamAsync();
+        // var apiResponse = await
+        //     JsonSerializer.DeserializeAsync<WatchPriceHistoryResponse>(
+        //         responseStream,
+        //         new JsonSerializerOptions 
+        //         { 
+        //             PropertyNameCaseInsensitive = true 
+        //         });
+
+        // temporarily mocked response bacause API access is not available right now
+        var apiResponse = new WatchPriceHistoryResponse
+        {
+            Meta = new WatchMeta
+            {
+                Brand = "Rolex",
+                Reference_Number = referenceNumber
+            },
+            Data = new List<WatchPricePoint>
+            {
+                new WatchPricePoint { Date = DateTime.UtcNow.AddMonths(-1), Price = 12000 },
+                new WatchPricePoint { Date = DateTime.UtcNow.AddMonths(-3), Price = 11500 },
+                new WatchPricePoint { Date = DateTime.UtcNow.AddMonths(-5), Price = 11800 },
+            }
+        };
 
         if (apiResponse is null || apiResponse.Data is null || apiResponse.Data.Count == 0 || apiResponse.Meta is null)
-            throw new Exception("Failed to retrieve valuation data.");
+            throw new WatchValuationException("Failed to retrieve valuation data.");
         
         var sixMonthsAgo = DateTime.UtcNow.AddMonths(-6);
         var pricesLastSixMonths = apiResponse.Data
@@ -45,33 +69,27 @@ public class ValuationService(HttpClient _httpClient, IConfiguration _configurat
             .ToList();
 
         if (pricesLastSixMonths.Count == 0)
-            throw new Exception("No price data available for the last six months.");
+            throw new WatchValuationUnavailableException("No price data available for the last six months.");
 
-        var averagePrice = pricesLastSixMonths.Average();
-        return new ValuationResponseContract
-        {
-            AveragePriveLastSixMonths = averagePrice
-        };
+        var watchValuation = new ValuationResponseContract{ AveragePriceLastSixMonths = pricesLastSixMonths.Average() };
+        await SetCachedValuation(watchValuation, referenceNumber);
+        return watchValuation;
     }
 
-    public async Task<ValuationResponseContract?> GetCachedValuation(string referenceNumber)
+    private async Task SetCachedValuation(ValuationResponseContract valuation, string referenceNumber)
     {
-        //goes to DB to check cached valuation first (not implemented yet)
-        var cachedValuation = await _cacheRepository.GetCachedValuationAsync(referenceNumber);
-        if (cachedValuation is not null)
-        {
-            return new ValuationResponseContract
+        try{
+            var cachedValuation = new CachedValuation
             {
-                AveragePriveLastSixMonths = cachedValuation.AveragePriceValuation
+                id = referenceNumber,
+                AveragePriceLastSixMonths = valuation.AveragePriceLastSixMonths
             };
+            await _cacheRepository.SetCachedValuationAsync(cachedValuation);
         }
-        return null;
-    }
-
-    public async Task SetCachedValuation(ValuationResponseContract valuation)
-    {
-        //goes to DB to set cached valuation (not implemented yet)
-        throw new NotImplementedException();
+        catch(Exception ex)
+        {
+            Console.WriteLine($"Error caching valuation: {ex.Message}");
+        }
     }
 
     // temporarily here for simple testing purposes, will be moved later

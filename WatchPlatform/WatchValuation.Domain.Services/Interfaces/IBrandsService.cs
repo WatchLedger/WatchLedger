@@ -5,5 +5,5 @@ namespace WatchValuation.Domain.Services.Interfaces;
 
 public interface IBrandsService
 {
-    Task<BrandListResponseContract> GetBrands();
+    Task<BrandListResponseContract> GetWatchBrandsFromCacheAsync();
 }
