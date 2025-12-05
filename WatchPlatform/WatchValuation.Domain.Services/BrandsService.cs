@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using WatchValuation.Api.Contracts;
 using System.Text.Json;
 using WatchValuation.Storage.Interfaces;
+using WatchValuation.Storage.Records;
 
 namespace WatchValuation.Domain.Services;
 
@@ -33,23 +34,31 @@ public class BrandsService(HttpClient _httpClient, IConfiguration _configuration
         if (apiResponse is null || apiResponse.Data is null || apiResponse.Data.Count == 0)
             throw new Exception("Failed to retrieve brand data.");
 
-        return new BrandListResponseContract
-        {
-            Brands = apiResponse.Data
-        };
+        var brandList = new BrandListResponseContract { Brands = apiResponse.Data };
+        await SetWatchBrands(brandList);
+
+        return brandList;
     }
 
     public async Task<BrandListResponseContract?> GetWatchBrands()
     {
-        //goes to DB to check cached brands first (not implemented yet)
         var cachedBrands = await _cacheRepository.GetCachedBrandsAsync();
         if (cachedBrands is null)
             return null;
-            
+
         return new BrandListResponseContract
         {
             Brands = cachedBrands.Brands
         };
+    }
+
+    public async Task SetWatchBrands(BrandListResponseContract brands)
+    {
+        var cachedBrands = new CachedBrands {
+            Brands = brands.Brands,
+            Ttl = 86400 // 1 day
+        };
+        await _cacheRepository.SetCachedBrandsAsync(cachedBrands);
     }
 
     public record WatchBrandsResponse

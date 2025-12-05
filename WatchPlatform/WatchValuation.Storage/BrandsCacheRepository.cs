@@ -1,21 +1,54 @@
-//using Microsoft.Azure.Cosmos;
+using Microsoft.Azure.Cosmos;
 using WatchValuation.Storage.Interfaces;
 using WatchValuation.Storage.Records;
 using Microsoft.Extensions.Configuration;
-using System.Data.Common;
+using Container = Microsoft.Azure.Cosmos.Container;
 
 namespace WatchValuation.Storage;
 
 public class BrandsCacheRepository(IConfiguration _configuration) : IBrandsCacheRepository
 {
-    public Task<CachedBrands?> GetCachedBrandsAsync()
+    public async Task<CachedBrands?> GetCachedBrandsAsync()
+    {
+        try
+        {
+            var container = GetCosmosContainer(_configuration);
+            var response = await container.ReadItemAsync<CachedBrands>(
+                partitionKey: new PartitionKey("BrandsCache"),
+                id: "BrandsCache");
+            return response.Resource;
+        }
+        catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            return default;
+        }
+    }
+
+    public async Task SetCachedBrandsAsync(CachedBrands cachedBrands)
+    {
+        try
+        {
+            var container = GetCosmosContainer(_configuration);
+            await container.UpsertItemAsync(
+                item: cachedBrands,
+                partitionKey: new PartitionKey("BrandsCache"));
+        }
+        catch (CosmosException ex)
+        {
+            Console.WriteLine($"Cosmos DB error: {ex.StatusCode} - {ex.Message}");
+        }
+    }
+
+    private static Container GetCosmosContainer(IConfiguration _configuration)
     {
         var constring = _configuration["watchplatformcache-connectionstring"];
-        System.Console.WriteLine(constring);
-        throw new NotImplementedException();    }
+        var client = new CosmosClient(constring);
+        var database = client.GetDatabase("watchplatform");
+        var container = database.GetContainer("WatchPlatformCache");
 
-    public Task SetCachedBrandsAsync(CachedBrands cachedBrands)
-    {
-        throw new NotImplementedException();
+        if (container is null)
+            throw new Exception("Failed to get Cosmos DB container.");
+        
+        return container;
     }
 }

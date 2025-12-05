@@ -5,6 +5,8 @@ using WatchValuation.Api.Contracts;
 using WatchValuation.Domain.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using WatchValuation.Storage.Interfaces;
+using WatchValuation.Storage.Records;
+using Microsoft.Azure.Cosmos.Linq;
 
 namespace WatchValuation.Domain.Services;
 
@@ -64,6 +66,12 @@ public class ValuationService(HttpClient _httpClient, IConfiguration _configurat
             };
         }
         return null;
+    }
+
+    public async Task SetCachedValuation(ValuationResponseContract valuation)
+    {
+        //goes to DB to set cached valuation (not implemented yet)
+        throw new NotImplementedException();
     }
 
     // temporarily here for simple testing purposes, will be moved later
