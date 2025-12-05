@@ -56,7 +56,6 @@ public class BrandsService(HttpClient _httpClient, IConfiguration _configuration
     {
         var cachedBrands = new CachedBrands {
             Brands = brands.Brands,
-            Ttl = 86400 // 1 day
         };
         await _cacheRepository.SetCachedBrandsAsync(cachedBrands);
     }

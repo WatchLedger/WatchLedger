@@ -9,8 +9,6 @@ public class ValuationCacheRepository(IConfiguration _configuration) : IValuatio
 {
     public Task<CachedValuation?> GetCachedValuationAsync(string watchReference)
     {
-        var constring = _configuration["watchplatformcache-connectionstring"];
-        System.Console.WriteLine(constring);
         throw new NotImplementedException();
     }
 
