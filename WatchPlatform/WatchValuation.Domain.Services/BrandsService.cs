@@ -3,10 +3,11 @@ using WatchValuation.Domain.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using WatchValuation.Api.Contracts;
 using System.Text.Json;
+using WatchValuation.Storage.Interfaces;
 
 namespace WatchValuation.Domain.Services;
 
-public class BrandsService(HttpClient _httpClient, IConfiguration _configuration) : IBrandsService
+public class BrandsService(HttpClient _httpClient, IConfiguration _configuration, IBrandsCacheRepository _cacheRepository) : IBrandsService
 {
     public async Task<BrandListResponseContract> GetBrands()
     {
@@ -14,8 +15,8 @@ public class BrandsService(HttpClient _httpClient, IConfiguration _configuration
         if (brands is not null)
             return brands;
 
-        var token = _configuration["ApiKeys:WatchApi"];
-        //     ?? throw new InvalidOperationException("Watch API token is not configured. Set it via user secrets or configuration.");
+        var token = _configuration["WatchApi"]
+             ?? throw new InvalidOperationException("Watch API token is not configured. Set it via user secrets or configuration.");
         string url = $"https://api.thewatchapi.com/v1/brand/list?api_token={token}";
         var response = await _httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
         response.EnsureSuccessStatusCode();
@@ -41,7 +42,14 @@ public class BrandsService(HttpClient _httpClient, IConfiguration _configuration
     public async Task<BrandListResponseContract?> GetWatchBrands()
     {
         //goes to DB to check cached brands first (not implemented yet)
-        return null;
+        var cachedBrands = await _cacheRepository.GetCachedBrandsAsync();
+        if (cachedBrands is null)
+            return null;
+            
+        return new BrandListResponseContract
+        {
+            Brands = cachedBrands.Brands
+        };
     }
 
     public record WatchBrandsResponse

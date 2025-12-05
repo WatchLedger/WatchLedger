@@ -10,4 +10,8 @@
       <ProjectReference Include="../WatchValuation.Storage.Records/WatchValuation.Storage.Records.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
+    </ItemGroup>
+
 </Project>

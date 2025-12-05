@@ -1,16 +1,18 @@
 //using Microsoft.Azure.Cosmos;
-//using Microsoft.Extensions.Options;
 using WatchValuation.Storage.Interfaces;
 using WatchValuation.Storage.Records;
+using Microsoft.Extensions.Configuration;
+using System.Data.Common;
 
 namespace WatchValuation.Storage;
 
-public class BrandsCacheRepository : IBrandsCacheRepository
+public class BrandsCacheRepository(IConfiguration _configuration) : IBrandsCacheRepository
 {
     public Task<CachedBrands?> GetCachedBrandsAsync()
     {
-        throw new NotImplementedException();
-    }
+        var constring = _configuration["watchplatformcache-connectionstring"];
+        System.Console.WriteLine(constring);
+        throw new NotImplementedException();    }
 
     public Task SetCachedBrandsAsync(CachedBrands cachedBrands)
     {

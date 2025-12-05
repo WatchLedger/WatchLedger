@@ -1,10 +1,14 @@
-namespace WatchValuation.Api;
 using WatchValuation.Domain.Services;
 using WatchValuation.Domain.Services.Interfaces;
 using WatchValuation.Api.Contracts;
 using Microsoft.AspNetCore.RateLimiting;
 using Azure.Identity;
+using WatchValuation.Storage;
+using WatchValuation.Storage.Interfaces;
 
+
+
+namespace WatchValuation.Api;
 public class Program
 {
     public static void Main(string[] args)
@@ -12,17 +16,15 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add Azure Key Vault configuration
-        var keyVaultUrl = builder.Configuration["KeyVault:Url"];
-        if (!string.IsNullOrEmpty(keyVaultUrl))
-        {
-            builder.Configuration.AddAzureKeyVault(
-                new Uri(keyVaultUrl),
-                new DefaultAzureCredential());
-        }
+        builder.Configuration.AddAzureKeyVault(
+            new Uri("https://watchplatform-keyvault.vault.azure.net/"),
+            new DefaultAzureCredential());
 
         // Add services to the container.
         builder.Services.AddScoped<IValuationService, ValuationService>();
         builder.Services.AddScoped<IBrandsService, BrandsService>();
+        builder.Services.AddScoped<IValuationCacheRepository, ValuationCacheRepository>();
+        builder.Services.AddScoped<IBrandsCacheRepository, BrandsCacheRepository>();
         builder.Services.AddHttpClient<ValuationService>();
         builder.Services.AddHttpClient<BrandsService>();
 
@@ -85,7 +87,7 @@ public class Program
         }
         catch (Exception)
         {
-            return  Results.BadRequest("An error occurred while retrieving the valuation.");
+            return  Results.Problem("An error occurred while retrieving the valuation.");
         }
     }
 
@@ -98,7 +100,7 @@ public class Program
         }
         catch (Exception)
         {
-            return Results.BadRequest("An error occurred while retrieving brands.");
+            return Results.Problem("An error occurred while retrieving brands.");
         }
     }
 }
