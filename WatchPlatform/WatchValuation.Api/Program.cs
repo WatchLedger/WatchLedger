@@ -5,6 +5,9 @@ using Azure.Identity;
 using WatchValuation.Storage;
 using WatchValuation.Storage.Interfaces;
 using WatchValuation.Domain.Services.Exceptions;
+using Polly;
+using Polly.Extensions.Http;
+using System.Net;
 
 namespace WatchValuation.Api;
 public class Program
@@ -23,8 +26,20 @@ public class Program
         builder.Services.AddScoped<IBrandsService, BrandsService>();
         builder.Services.AddScoped<IValuationCacheRepository, ValuationCacheRepository>();
         builder.Services.AddScoped<IBrandsCacheRepository, BrandsCacheRepository>();
-        builder.Services.AddHttpClient<ValuationService>();
-        builder.Services.AddHttpClient<BrandsService>();
+        builder.Services
+            .AddHttpClient<ValuationService>()
+            .AddPolicyHandler(GetRetryPolicy());
+        builder.Services
+            .AddHttpClient<BrandsService>()
+            .AddPolicyHandler(GetRetryPolicy());
+
+        static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+        {
+            return HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .OrResult(r => r.StatusCode == HttpStatusCode.TooManyRequests)
+                .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+        }
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
