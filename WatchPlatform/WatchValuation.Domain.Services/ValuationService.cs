@@ -11,6 +11,10 @@ public class ValuationService(HttpClient _httpClient, IConfiguration _configurat
 {
     public async Task<ValuationResponseContract> GetValuation(ValuationRequestContract request)
     {
+        var cachedValuation = await GetCachedValuation(request.ReferenceNumber);
+        if (cachedValuation is not null)
+            return cachedValuation;
+
         var token = _configuration["ApiKeys:WatchApi"] 
             ?? throw new InvalidOperationException("Watch API token is not configured. Set it via user secrets or configuration.");
         string url = $"https://api.thewatchapi.com/v1/reference/price/history?reference_number={request.ReferenceNumber}&api_token={token}";
@@ -45,6 +49,12 @@ public class ValuationService(HttpClient _httpClient, IConfiguration _configurat
         {
             AveragePriveLastSixMonths = averagePrice
         };
+    }
+
+    public async Task<ValuationResponseContract?> GetCachedValuation(string referenceNumber)
+    {
+        //goes to DB to check cached valuation first (not implemented yet)
+        return null;
     }
 
     // temporarily here for simple testing purposes, will be moved later

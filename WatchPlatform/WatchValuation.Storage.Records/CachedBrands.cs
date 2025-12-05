@@ -1,3 +1,3 @@
 namespace WatchValuation.Storage.Records;
 
-public record CachedBrands(string id, string type, List<string> Brands, int? Ttl);
+public record CachedBrands(string Id, string Type, List<string> Brands, int? Ttl);

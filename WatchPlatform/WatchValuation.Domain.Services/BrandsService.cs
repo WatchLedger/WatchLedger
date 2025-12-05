@@ -16,8 +16,8 @@ public class BrandsService(HttpClient _httpClient, IConfiguration _configuration
 
         var token = _configuration["ApiKeys:WatchApi"];
         //     ?? throw new InvalidOperationException("Watch API token is not configured. Set it via user secrets or configuration.");
-        string url = $"https://api.thewatchapi.com/v1/brand/list?api_token=LM0WEhxAS1N5Goz22zrYzj1pS0GhaBvvLI7lIjaq";
-        var response = await _httpClient.GetAsync(url);
+        string url = $"https://api.thewatchapi.com/v1/brand/list?api_token={token}";
+        var response = await _httpClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
         response.EnsureSuccessStatusCode();
 
         await using var responseStream = await response.Content.ReadAsStreamAsync();

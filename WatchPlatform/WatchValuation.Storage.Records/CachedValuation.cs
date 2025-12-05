@@ -1,3 +1,3 @@
 namespace WatchValuation.Storage.Records;
 
-public record CachedValuation(string id, string type, decimal averagePriceValuation, int? Ttl);
+public record CachedValuation(string Id, string Type, decimal AveragePriceValuation, int? Ttl);
