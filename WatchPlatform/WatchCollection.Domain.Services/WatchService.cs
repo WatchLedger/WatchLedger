@@ -1,5 +1,6 @@
 using System;
 using WatchCollection.Api.Contracts;
+using WatchCollection.Domain.Services.Exceptions;
 using WatchCollection.Domain.Services.Interfaces;
 using WatchCollection.Domain.Services.Mapping;
 using WatchCollection.Storage.Exceptions;
@@ -7,7 +8,7 @@ using WatchCollection.Storage.Interfaces;
 
 namespace WatchCollection.Domain.Services;
 
-public class WatchService(IWatchRepository _repository, IWatchImageService _watchImageService) : IWatchService
+public class WatchService(IWatchRepository _repository, IWatchImageService _watchImageService, IWatchValuationHttpClient _watchValuationClient) : IWatchService
 {
     public async Task<WatchResponseContract> CreateWatch(WatchRequestContract contract)
     {
@@ -67,5 +68,20 @@ public class WatchService(IWatchRepository _repository, IWatchImageService _watc
     {
         await _repository.DeleteWatch(watchId);
         await _watchImageService.DeleteImagesByWatchIdAsync(watchId);
+    }
+
+    public async Task<IEnumerable<string>> GetWatchBrands()
+    {
+        try
+        {
+            var brands = await _watchValuationClient.GetWatchBrandsAsync();
+            if (brands is null || !brands.Any())
+                throw new BrandsUnavailableException("No watch brands available.");
+            return brands;
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 }
