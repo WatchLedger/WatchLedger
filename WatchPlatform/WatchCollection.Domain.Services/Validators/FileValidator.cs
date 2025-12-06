@@ -2,7 +2,7 @@ using System;
 
 namespace WatchCollection.Domain.Services.Validators;
 
-public class FileValidator
+public static class FileValidator
 {
     private static readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png" };
     private static readonly string[] AllowedContentTypes = { "image/jpeg", "image/png" };

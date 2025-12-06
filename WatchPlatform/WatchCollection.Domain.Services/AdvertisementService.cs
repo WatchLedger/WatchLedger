@@ -4,10 +4,11 @@ using WatchCollection.Api.Contracts;
 using WatchCollection.Domain.Services.Interfaces;
 using WatchCollection.Storage.Interfaces;
 using WatchCollection.Domain.Services.Mapping;
+using WatchCollection.Domain.Services.Exceptions;
 
 namespace WatchCollection.Domain.Services;
 
-public class AdvertisementService(IAdvertisementRepository _repository) : IAdvertisementService
+public class AdvertisementService(IAdvertisementRepository _repository, IWatchValuationHttpClient _watchValuationClient) : IAdvertisementService
 {
     public async Task<AdvertisementResponseContract> CreateAdvertisement(AdvertisementRequestContract contract)
     {
@@ -45,8 +46,18 @@ public class AdvertisementService(IAdvertisementRepository _repository) : IAdver
         throw new NotImplementedException();
     }
 
-    public Task<decimal> GetWatchValuation(string referenceNumber)
+    public async Task<decimal> GetWatchValuation(string referenceNumber)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var valuation = await _watchValuationClient.GetWatchValuationAsync(referenceNumber);
+            if(valuation == default)
+                throw new ValuationUnavailableException("No valuation available for the provided reference number.");
+            return valuation;
+        }
+        catch (Exception)
+        {   
+            throw;
+        }
     }
 }

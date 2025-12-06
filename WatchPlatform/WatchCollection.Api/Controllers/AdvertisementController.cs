@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WatchCollection.Api.Contracts;
+using WatchCollection.Domain.Services.Exceptions;
 using WatchCollection.Domain.Services.Interfaces;
 
 namespace WatchCollection.Api.Controllers
@@ -97,10 +98,19 @@ namespace WatchCollection.Api.Controllers
             try 
             {
                 var valuation = await _advertisementService.GetWatchValuation(referenceNumber);
+                if (valuation == default)
+                {
+                    return NotFound(new { Message = "No valuation available for the provided reference number." });
+                }
                 return Ok(valuation);
             }
-            catch (Exception)
+            catch (ValuationUnavailableException ex)
             {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
                 return Problem("An error occurred while retrieving the watch valuation.");
             }
         }

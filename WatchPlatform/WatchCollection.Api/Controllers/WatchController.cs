@@ -110,11 +110,14 @@ namespace WatchCollection.Api.Controllers
             }
         }
 
+        [HttpGet("brands")]
         public async Task<ActionResult<IEnumerable<string>>> GetWatchBrands()
         {
             try
             {
                 var brands = await _service.GetWatchBrands();
+                if (brands is null || !brands.Any())
+                    return NotFound(new { Message = "No watch brands available." });
                 return Ok(brands);
             }
             catch (Exception)
