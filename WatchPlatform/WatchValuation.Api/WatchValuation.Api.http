@@ -1,6 +1,0 @@
-@WatchValuation.Api_HostAddress = http://localhost:5005
-
-GET {{WatchValuation.Api_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
