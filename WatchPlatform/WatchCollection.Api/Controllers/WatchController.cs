@@ -10,10 +10,13 @@ namespace WatchCollection.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class WatchController(IWatchService _service) : ControllerBase
     {
         
         [HttpPost]
+        //only possible for logged in users and admins
+        //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult<WatchResponseContract>> CreateWatch([FromBody] WatchRequestContract contract)
         {
             try
@@ -29,6 +32,8 @@ namespace WatchCollection.Api.Controllers
 
         [HttpGet]
         [Route("{watchId:Guid}")]
+        // only possible for logged in users and admins
+        //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult<WatchResponseContract>> GetWatchById([FromRoute] Guid watchId)
         {
             try
@@ -45,6 +50,8 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet]
+        // only possible for logged in users and admins
+        //[RoleAuthorize("User", "Admin")]
         public async Task<IActionResult> GetAllWatches([FromQuery] string? brand = null)
         {
             try
@@ -63,6 +70,8 @@ namespace WatchCollection.Api.Controllers
 
         [HttpPut]
         [Route("{watchId:Guid}")]
+        // only possible for logged in users and admins
+        //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult<WatchResponseContract>> Update([FromRoute] Guid watchId, [FromBody] WatchRequestContract contract)
         {
             try
@@ -82,6 +91,8 @@ namespace WatchCollection.Api.Controllers
 
         [HttpDelete]
         [Route("{watchId:Guid}")]
+        // only possible for logged in users and admins
+        //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult> DeleteWatch([FromRoute] Guid watchId)
         {
             try
@@ -96,6 +107,22 @@ namespace WatchCollection.Api.Controllers
             catch (Exception)
             {
                 return Problem("An error occured while deleting the watch. Please try again later.", statusCode: (int)HttpStatusCode.InternalServerError);
+            }
+        }
+
+        [HttpGet("brands")]
+        public async Task<ActionResult<IEnumerable<string>>> GetWatchBrands()
+        {
+            try
+            {
+                var brands = await _service.GetWatchBrands();
+                if (brands is null || !brands.Any())
+                    return NotFound(new { Message = "No watch brands available." });
+                return Ok(brands);
+            }
+            catch (Exception)
+            {
+                return Problem("An error occured while retrieving watch brands. Please try again later.", statusCode: (int)HttpStatusCode.InternalServerError);
             }
         }
     }
