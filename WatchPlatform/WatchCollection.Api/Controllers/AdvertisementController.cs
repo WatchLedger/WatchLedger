@@ -108,6 +108,10 @@ namespace WatchCollection.Api.Controllers
             {
                 return NotFound(new { Message = ex.Message });
             }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);

@@ -55,6 +55,10 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
                 throw new ValuationUnavailableException("No valuation available for the provided reference number.");
             return valuation;
         }
+        catch(ArgumentException)
+        {
+            throw;
+        }
         catch (Exception)
         {   
             throw;
