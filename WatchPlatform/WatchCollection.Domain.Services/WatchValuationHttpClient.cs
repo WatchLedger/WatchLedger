@@ -14,7 +14,7 @@ public sealed class WatchValuationHttpClient(HttpClient _httpClient) : IWatchVal
 
     public async Task<IReadOnlyList<string>> GetWatchBrandsAsync(CancellationToken cancellationToken = default)
     {
-        var dto = await _httpClient.GetFromJsonAsync<ValuationResponse>("brands", cancellationToken);
+        var dto = await _httpClient.GetFromJsonAsync<ValuationResponse>("http://localhost:5005/api/brands", cancellationToken);
         return dto?.Brands ?? new List<string>();
     }
 
@@ -25,7 +25,7 @@ public sealed class WatchValuationHttpClient(HttpClient _httpClient) : IWatchVal
             throw new ArgumentException("Reference number is required.", nameof(referenceNumber));
         }
 
-        var response = await _httpClient.GetAsync($"valuation/{Uri.EscapeDataString(referenceNumber)}", cancellationToken);
+        var response = await _httpClient.GetAsync($"http://localhost:5005/api/valuation?referenceNumber={Uri.EscapeDataString(referenceNumber)}", cancellationToken);
         response.EnsureSuccessStatusCode();
 
         var dto = await response.Content.ReadFromJsonAsync<ValuationResponse>(cancellationToken: cancellationToken);
