@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WatchCollection.Api.Contracts;
 using WatchCollection.Domain.Services.Exceptions;
 using WatchCollection.Domain.Services.Interfaces;
+using WatchCollection.Storage.Exceptions;
 
 namespace WatchCollection.Api.Controllers
 {
@@ -52,8 +53,12 @@ namespace WatchCollection.Api.Controllers
         {
             try
             {
-                //var updated = await _advertisementService.UpdateAdvertisement(advertisementId, request);
-                return Ok(null); //to be implemented
+                var updated = await _advertisementService.UpdateAdvertisement(advertisementId, request);
+                return Ok(updated);
+            }
+            catch (AdvertisementNotFoundExceptions)
+            {
+                return NotFound(new { Message = $"Advertisement with id {advertisementId} not found." });
             }
             catch (Exception)
             {

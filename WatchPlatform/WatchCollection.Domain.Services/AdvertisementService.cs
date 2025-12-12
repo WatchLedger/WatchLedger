@@ -23,9 +23,9 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         return createdEntity.AsModel().AsContract();
     }
 
-    public Task DeleteAdvertisement(Guid advertisementId)
+    public async Task DeleteAdvertisement(Guid advertisementId)
     {
-        throw new NotImplementedException();
+        await _repository.DeleteAdvertisementAsync(advertisementId);
     }
 
     public async Task<AdvertisementResponseContract?> GetAdvertisementById(Guid advertisementId)
@@ -36,14 +36,21 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         return entity.AsModel().AsContract();
     }
 
-    public Task<IEnumerable<AdvertisementResponseContract>> GetAdvertisementsByWatchId(Guid watchId)
+    public async Task<IEnumerable<AdvertisementResponseContract>> GetAllAdvertisements()
     {
-        throw new NotImplementedException();
+        var entities = await _repository.GetAllAdvertisementsAsync();
+        return entities.Select(e => e.AsModel().AsContract());
     }
 
-    public Task<AdvertisementResponseContract> UpdateAdvertisement(Guid advertisementId, AdvertisementRequestContract request)
+    public async Task<AdvertisementResponseContract> UpdateAdvertisement(Guid advertisementId, AdvertisementRequestContract request)
     {
-        throw new NotImplementedException();
+        var model = request.AsModel();
+        model.AdvertisementId = advertisementId;
+
+        var entity = model.AsEntity();
+        
+        var updatedEntity =  await _repository.UpdateAdvertisementAsync(entity);
+        return updatedEntity.AsModel().AsContract();
     }
 
     public async Task<decimal> GetWatchValuation(string referenceNumber)

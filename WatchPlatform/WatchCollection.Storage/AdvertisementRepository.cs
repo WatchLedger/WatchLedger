@@ -17,9 +17,13 @@ public class AdvertisementRepository(WatchServiceDbContext _context) : IAdvertis
         return createdAdvertisement;
     }
 
-    public Task DeleteAdvertisementAsync(Guid advertisementId)
+    public async Task DeleteAdvertisementAsync(Guid advertisementId)
     {
-        throw new NotImplementedException();
+        var advertisement =  _context.Advertisements.FirstOrDefault(a => a.AdvertisementId == advertisementId);
+        if (advertisement is null)
+            throw new AdvertisementNotFoundExceptions();
+        _context.Advertisements.Remove(advertisement);
+        await _context.SaveChangesAsync();
     }
 
     public async Task<Advertisement> GetAdvertisementByIdAsync(Guid advertisementId)
@@ -30,13 +34,20 @@ public class AdvertisementRepository(WatchServiceDbContext _context) : IAdvertis
         return advertisement;
     }
 
-    public Task<IEnumerable<Advertisement>> GetAllAdvertisementsAsync()
-    {
-        throw new NotImplementedException();
+    public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsAsync()
+    {   
+        var advertisements =  await _context.Advertisements.ToListAsync();
+        return advertisements;
     }
 
-    public Task<Advertisement> UpdateAdvertisementAsync(Advertisement advertisement)
+    public async Task<Advertisement> UpdateAdvertisementAsync(Advertisement advertisement)
     {
-        throw new NotImplementedException();
+        var existingAdvertisement =  _context.Advertisements.FirstOrDefault(a => a.AdvertisementId == advertisement.AdvertisementId);
+        if (existingAdvertisement is null)
+            throw new AdvertisementNotFoundExceptions();
+        
+        _context.Entry(existingAdvertisement).CurrentValues.SetValues(advertisement);
+        await _context.SaveChangesAsync();
+        return existingAdvertisement;
     }
 }
