@@ -31,5 +31,9 @@ public partial class Advertisement
 
     public DateTimeOffset? UpdatedAt { get; set; }
 
+    public bool AllowBids { get; set; }
+
+    public virtual ICollection<Bid> Bids { get; set; } = new List<Bid>();
+
     public virtual Watch Watch { get; set; } = null!;
 }

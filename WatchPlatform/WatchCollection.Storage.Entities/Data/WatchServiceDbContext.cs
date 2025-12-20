@@ -7,10 +7,6 @@ namespace WatchCollection.Storage.Entities.Data;
 
 public partial class WatchServiceDbContext : DbContext
 {
-    public WatchServiceDbContext()
-    {
-    }
-
     public WatchServiceDbContext(DbContextOptions<WatchServiceDbContext> options)
         : base(options)
     {
@@ -18,11 +14,13 @@ public partial class WatchServiceDbContext : DbContext
 
     public virtual DbSet<Advertisement> Advertisements { get; set; }
 
+    public virtual DbSet<Bid> Bids { get; set; }
+
     public virtual DbSet<Watch> Watches { get; set; }
 
     public virtual DbSet<WatchImage> WatchImages { get; set; }
 
-       protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Advertisement>(entity =>
         {
@@ -50,6 +48,20 @@ public partial class WatchServiceDbContext : DbContext
                 .HasConstraintName("FK_Advertisements_Watches");
         });
 
+        modelBuilder.Entity<Bid>(entity =>
+        {
+            entity.HasKey(e => e.BidId).HasName("PK__Bids__4A733D92EEB43A23");
+
+            entity.Property(e => e.BidId).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysdatetimeoffset())");
+
+            entity.HasOne(d => d.Advertisement).WithMany(p => p.Bids)
+                .HasForeignKey(d => d.AdvertisementId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Bids_Advertisements");
+        });
+
         modelBuilder.Entity<Watch>(entity =>
         {
             entity.HasKey(e => e.WatchId).HasName("PK__Watches__3BA3DAA34CEBC149");
@@ -60,7 +72,7 @@ public partial class WatchServiceDbContext : DbContext
 
             entity.HasIndex(e => e.OwnerUserId, "IX_Watches_OwnerUserId");
 
-            //entity.Property(e => e.WatchId).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.WatchId).HasDefaultValueSql("(newid())");
             entity.Property(e => e.Brand).HasMaxLength(100);
             entity.Property(e => e.Condition).HasMaxLength(50);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysdatetimeoffset())");

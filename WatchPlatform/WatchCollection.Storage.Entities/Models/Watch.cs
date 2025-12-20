@@ -5,9 +5,9 @@ namespace WatchCollection.Storage.Entities.Models;
 
 public partial class Watch
 {
-    public Guid? WatchId { get; set; }
+    public Guid WatchId { get; set; }
 
-    public Guid? OwnerUserId { get; set; }
+    public Guid OwnerUserId { get; set; }
 
     public string Brand { get; set; } = null!;
 
