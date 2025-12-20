@@ -18,6 +18,7 @@ public class AdvertisementResponseContract
     public string? Status { get; set; }
 
     public int? ViewCount { get; set; }
+    public required bool AllowBids { get; set; }
 
     public DateTimeOffset? PublishedAt { get; set; }
 
@@ -28,5 +29,4 @@ public class AdvertisementResponseContract
     public DateTimeOffset? CreatedAt { get; set; }
 
     public DateTimeOffset? UpdatedAt { get; set; }
-
 }

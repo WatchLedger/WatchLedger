@@ -17,4 +17,6 @@ public class AdvertisementRequestContract
     [Required]
     [Range(0.01, double.MaxValue, ErrorMessage = "Asking price must be greater than zero.")]
     public decimal AskingPrice { get; set; }
+    [Required]
+    public bool AllowBids { get; set; }
 }
