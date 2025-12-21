@@ -17,6 +17,7 @@ internal static class AdvertisementMappingExtensions
             Title = contract.Title,
             Description = contract.Description,
             AskingPrice = contract.AskingPrice,
+            AllowBids = contract.AllowBids
         };
     } 
 
@@ -37,6 +38,7 @@ internal static class AdvertisementMappingExtensions
             SoldAt = model.SoldAt,
             CreatedAt = model.CreatedAt,
             UpdatedAt = model.UpdatedAt,
+            AllowBids = model.AllowBids
         };
     }  
 
@@ -57,6 +59,7 @@ internal static class AdvertisementMappingExtensions
             SoldAt = model.SoldAt,
             CreatedAt = model.CreatedAt,
             UpdatedAt = model.UpdatedAt,
+            AllowBids = model.AllowBids
         };
     }
 
@@ -77,6 +80,7 @@ internal static class AdvertisementMappingExtensions
             SoldAt = entity.SoldAt,
             CreatedAt = entity.CreatedAt ?? throw new MappingException(),
             UpdatedAt = entity.UpdatedAt,
+            AllowBids = entity.AllowBids
         };
     }
 }
