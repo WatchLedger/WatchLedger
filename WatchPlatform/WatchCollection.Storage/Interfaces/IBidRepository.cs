@@ -5,7 +5,7 @@ namespace WatchCollection.Storage.Interfaces;
 
 public interface IBidRepository
 {
-    Task<IEnumerable<Bid>> GetAllBidsByAdvertisementId(Guid advertisementId);
+    Task<List<Bid>> GetAllBidsByAdvertisementId(Guid advertisementId);
     Task<Bid> AddBidAsync(Bid bid);
-    Task RemoveBidAsync(Bid bid);
+    Task RemoveBidAsync(Guid bidId);
 }

@@ -1,23 +1,34 @@
 using System;
+using Microsoft.EntityFrameworkCore;
+using WatchCollection.Storage.Entities.Data;
 using WatchCollection.Storage.Entities.Models;
+using WatchCollection.Storage.Exceptions;
 using WatchCollection.Storage.Interfaces;
 
 namespace WatchCollection.Storage;
 
-public class BidRepository : IBidRepository
+public class BidRepository(WatchServiceDbContext _context) : IBidRepository
 {
-    public Task<Bid> AddBidAsync(Bid bid)
+    public async Task<Bid> AddBidAsync(Bid bid)
     {
-        throw new NotImplementedException();
+        var created = await _context.AddAsync(bid);
+        await _context.SaveChangesAsync();
+        return created.Entity;
     }
 
-    public Task<IEnumerable<Bid>> GetAllBidsByAdvertisementId(Guid advertisementId)
+    public async Task<List<Bid>> GetAllBidsByAdvertisementId(Guid advertisementId)
     {
-        throw new NotImplementedException();
+        var bids = await _context.Bids.ToListAsync();
+        return bids;
     }
 
-    public Task RemoveBidAsync(Bid bid)
+    public async Task RemoveBidAsync(Guid bidId)
     {
-        throw new NotImplementedException();
+        var entity = _context.Bids.FirstOrDefault(b => b.BidId == bidId);
+        if(entity is null)
+            throw new BidNotFoundExceptions();
+
+        _context.Remove(entity);
+        await _context.SaveChangesAsync();
     }
 }

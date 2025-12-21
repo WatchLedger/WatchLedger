@@ -1,23 +1,47 @@
 using System;
 using WatchCollection.Api.Contracts;
 using WatchCollection.Domain.Services.Interfaces;
+using WatchCollection.Domain.Services.Mapping;
+using WatchCollection.Storage.Exceptions;
+using WatchCollection.Storage.Interfaces;
 
 namespace WatchCollection.Domain.Services;
 
-public class BidService : IBidService
+public class BidService(IBidRepository _bidRepository, IAdvertisementRepository _adverisementRepository) : IBidService
 {
     public async Task<BidResponseContract> AddBidAsync(Guid advertisementId, BidRequestContract bidRequestContract)
     {
-        throw new NotImplementedException();
+        var advertisement = await _adverisementRepository.GetAdvertisementByIdAsync(advertisementId);
+        if(advertisement is null)
+            throw new AdvertisementNotFoundExceptions();
+
+        bidRequestContract.AdvertisementId = advertisementId;
+        var model = bidRequestContract.AsModel();
+
+        var entity = model.AsEntity();
+        var createdEntity = await _bidRepository.AddBidAsync(entity);
+
+        return createdEntity.AsModel().AsContract();
     }
 
     public async Task DeleteBidAsync(Guid bidId)
     {
-        throw new NotImplementedException();
+        try
+        {
+            await _bidRepository.RemoveBidAsync(bidId);
+        } catch (EntityNotFoundException)
+        {
+            throw;
+        } 
     }
 
     public async Task<IEnumerable<BidResponseContract>> GetBidsByAdvertisementIdAsync(Guid advertisementId)
     {
-        throw new NotImplementedException();
+        var advertisement = await _adverisementRepository.GetAdvertisementByIdAsync(advertisementId);
+        if(advertisement is null)
+            throw new AdvertisementNotFoundExceptions();
+
+        var bids = await _bidRepository.GetAllBidsByAdvertisementId(advertisementId);
+        return bids.Select(b => b.AsModel().AsContract());
     }
 }
