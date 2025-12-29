@@ -22,7 +22,6 @@ internal static class WatchMappingExtensions
             Description = contract.Description,
             PurchasePrice = contract.PurchasePrice,
             PurchaseDate = contract.PurchaseDate,
-            IsForSale = contract.IsForSale,
         };
     }
 
@@ -43,7 +42,6 @@ internal static class WatchMappingExtensions
             Description = model.Description,
             PurchasePrice = model.PurchasePrice,
             PurchaseDate = model.PurchaseDate,
-            IsForSale = model.IsForSale,
             CreatedAt = model.CreatedAt ?? throw new MappingException("CreatedAt is required."),
             UpdatedAt = model.UpdatedAt ?? throw new MappingException("UpdatedAt is required.")
         };
@@ -66,7 +64,6 @@ internal static class WatchMappingExtensions
             Description = model.Description,
             PurchasePrice = model.PurchasePrice,
             PurchaseDate = model.PurchaseDate,
-            IsForSale = model.IsForSale,
             CreatedAt = model.CreatedAt ?? throw new MappingException("CreatedAt is required."),
             UpdatedAt = model.UpdatedAt ?? throw new MappingException("UpdatedAt is required.")
         };
@@ -87,7 +84,6 @@ internal static class WatchMappingExtensions
             Description = entity.Description,
             PurchasePrice = entity.PurchasePrice,
             PurchaseDate = entity.PurchaseDate,
-            IsForSale = entity.IsForSale,
             CreatedAt = entity.CreatedAt != default // Ensure CreatedAt is not default
                 ? entity.CreatedAt
                 : throw new MappingException("CreatedAt is required."), 

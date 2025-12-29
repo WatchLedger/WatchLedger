@@ -56,8 +56,6 @@ public partial class WatchServiceDbContext : DbContext
         {
             entity.HasIndex(e => e.Brand, "IX_Watches_Brand");
 
-            entity.HasIndex(e => e.IsForSale, "IX_Watches_IsForSale");
-
             entity.HasIndex(e => e.OwnerUserId, "IX_Watches_OwnerUserId");
 
             entity.Property(e => e.WatchId).ValueGeneratedNever();

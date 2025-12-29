@@ -28,6 +28,7 @@ public class Program
         builder.Services.AddScoped<IWatchRepository, WatchRepository>();
         builder.Services.AddScoped<IWatchImageRepository, WatchImageRepository>();
         builder.Services.AddScoped<IAdvertisementRepository, AdvertisementRepository>();
+        builder.Services.AddScoped<IBidRepository, BidRepository>();
         builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
 
         builder.Services.AddControllers();

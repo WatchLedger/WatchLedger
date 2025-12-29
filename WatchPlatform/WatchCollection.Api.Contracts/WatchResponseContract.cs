@@ -15,7 +15,6 @@ public class WatchResponseContract
     public string? Description { get; set; }
     public decimal? PurchasePrice { get; set; }
     public DateOnly? PurchaseDate { get; set; }
-    public required bool IsForSale { get; set; }
     public required DateTimeOffset CreatedAt { get; set; }
     public required DateTimeOffset UpdatedAt { get; set; }
     public IEnumerable<WatchImageResponseContract>? Images { get; set; }

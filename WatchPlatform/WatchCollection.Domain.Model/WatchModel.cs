@@ -15,7 +15,6 @@ public class WatchModel
     public string? Description { get; set; }
     public decimal? PurchasePrice { get; set; }
     public DateOnly? PurchaseDate { get; set; }
-    public required bool IsForSale { get; set; }
     public DateTimeOffset? CreatedAt { get; set; } // same reasoning as WatchId
     public DateTimeOffset? UpdatedAt { get; set; } // same reasoning as WatchId
 }

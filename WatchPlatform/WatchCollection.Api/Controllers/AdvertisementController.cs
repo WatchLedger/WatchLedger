@@ -23,7 +23,7 @@ namespace WatchCollection.Api.Controllers
                 var created = await _advertisementService.CreateAdvertisement(request);
                 return CreatedAtAction(nameof(GetById), new { advertisementId = created.AdvertisementId}, created);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return Problem("An error occurred while creating the advertisement.");
             }

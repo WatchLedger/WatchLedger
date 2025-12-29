@@ -18,5 +18,4 @@ public class WatchRequestContract
     public string? Description { get; set; }
     public decimal? PurchasePrice { get; set; }
     public DateOnly? PurchaseDate { get; set; }
-    public required bool IsForSale { get; set; }
 }
