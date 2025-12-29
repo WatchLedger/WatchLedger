@@ -13,8 +13,8 @@ public class WatchService(IWatchRepository _repository, IWatchImageService _watc
     public async Task<WatchResponseContract> CreateWatch(WatchRequestContract contract)
     {
         var model = contract.AsModel();
-        model.OwnerId = Guid.NewGuid();
         model.WatchId = Guid.NewGuid();
+        model.OwnerId = Guid.NewGuid(); // will be replaced with actual user id from auth context
         model.CreatedAt = DateTimeOffset.Now;
         model.UpdatedAt = model.CreatedAt;
 

@@ -49,21 +49,9 @@ public class WatchRepository(WatchServiceDbContext _context) : IWatchRepository
         if (existingWatch is null)
             throw new WatchNotFoundException(watchId);
 
-        existingWatch.Brand = watch.Brand;
-        existingWatch.Model = watch.Model;
-        existingWatch.ReferenceNumber = watch.ReferenceNumber;
-        existingWatch.SerialNumber = watch.SerialNumber;
-        existingWatch.YearOfProduction = watch.YearOfProduction;
-        existingWatch.Condition = watch.Condition;
-        existingWatch.Description = watch.Description;
-        existingWatch.PurchasePrice = watch.PurchasePrice;
-        existingWatch.PurchaseDate = watch.PurchaseDate;
-        existingWatch.IsForSale = watch.IsForSale;
-        existingWatch.UpdatedAt = watch.UpdatedAt;
-
-        _context.Entry(existingWatch).State = EntityState.Modified;
+        _context.Entry(existingWatch).CurrentValues.SetValues(watch);
+        
         await _context.SaveChangesAsync();
-
         return existingWatch;
     }
 

@@ -12,12 +12,13 @@ internal static class WatchMappingExtensions
     {
         return new WatchModel
         {
-            Brand = contract.Brand ?? throw new MappingException(),
-            Model = contract.Model ?? throw new MappingException(),
-            ReferenceNumber = contract.RefereceNumber,
+            OwnerId = Guid.Empty, // temp
+            Brand = contract.Brand ?? throw new MappingException("Brand is required."),
+            Model = contract.Model ?? throw new MappingException("Model is required."),
+            ReferenceNumber = contract.ReferenceNumber,
             SerialNumber = contract.SerialNumber,
             YearOfProduction = contract.YearOfProduction,
-            Condition = contract.Condition ?? throw new MappingException(),
+            Condition = contract.Condition ?? throw new MappingException("Condition is required."),
             Description = contract.Description,
             PurchasePrice = contract.PurchasePrice,
             PurchaseDate = contract.PurchaseDate,
@@ -29,20 +30,22 @@ internal static class WatchMappingExtensions
     {
         return new Watch
         {
-            WatchId = model.WatchId,
-            OwnerUserId = model.OwnerId,
-            Brand = model.Brand ?? throw new MappingException(),
-            Model = model.Model ?? throw new MappingException(),
+            WatchId = model.WatchId ?? throw new MappingException("WatchId is required."),
+            OwnerUserId = model.OwnerId is Guid ownerId && ownerId != Guid.Empty
+                ? ownerId
+                : throw new MappingException("OwnerId is required."),
+            Brand = model.Brand ?? throw new MappingException("Brand is required."),
+            Model = model.Model ?? throw new MappingException("Model is required."),
             ReferenceNumber = model.ReferenceNumber,
             SerialNumber = model.SerialNumber,
             YearOfProduction = model.YearOfProduction,
-            Condition = model.Condition ?? throw new MappingException(),
+            Condition = model.Condition ?? throw new MappingException("Condition is required."),
             Description = model.Description,
             PurchasePrice = model.PurchasePrice,
             PurchaseDate = model.PurchaseDate,
             IsForSale = model.IsForSale,
-            CreatedAt = model.CreatedAt,
-            UpdatedAt = model.UpdatedAt
+            CreatedAt = model.CreatedAt ?? throw new MappingException("CreatedAt is required."),
+            UpdatedAt = model.UpdatedAt ?? throw new MappingException("UpdatedAt is required.")
         };
     }
 
@@ -50,20 +53,22 @@ internal static class WatchMappingExtensions
     {
         return new WatchResponseContract
         {
-            WatchId = model.WatchId ?? throw new MappingException(),
-            OwnerId = model.OwnerId ?? throw new MappingException(),
-            Brand = model.Brand ?? throw new MappingException(),
-            Model = model.Model ?? throw new MappingException(),
+            WatchId = model.WatchId ?? throw new MappingException("WatchId is required."),
+            OwnerUserId = model.OwnerId is Guid ownerId && ownerId != Guid.Empty
+                ? ownerId
+                : throw new MappingException("OwnerId is required."),
+            Brand = model.Brand ?? throw new MappingException("Brand is required."),
+            Model = model.Model ?? throw new MappingException("Model is required."),
             ReferenceNumber = model.ReferenceNumber,
             SerialNumber = model.SerialNumber,
             YearOfProduction = model.YearOfProduction,
-            Condition = model.Condition ?? throw new MappingException(),
+            Condition = model.Condition ?? throw new MappingException("Condition is required."),
             Description = model.Description,
             PurchasePrice = model.PurchasePrice,
             PurchaseDate = model.PurchaseDate,
             IsForSale = model.IsForSale,
-            CreatedAt = model.CreatedAt,
-            UpdatedAt = model.UpdatedAt
+            CreatedAt = model.CreatedAt ?? throw new MappingException("CreatedAt is required."),
+            UpdatedAt = model.UpdatedAt ?? throw new MappingException("UpdatedAt is required.")
         };
     }
 
@@ -73,18 +78,22 @@ internal static class WatchMappingExtensions
         {
             WatchId = entity.WatchId,
             OwnerId = entity.OwnerUserId,
-            Brand = entity.Brand ?? throw new MappingException(),
-            Model = entity.Model ?? throw new MappingException(),
+            Brand = entity.Brand ?? throw new MappingException("Brand is required."),
+            Model = entity.Model ?? throw new MappingException("Model is required."),
             ReferenceNumber = entity.ReferenceNumber,
             SerialNumber = entity.SerialNumber,
             YearOfProduction = entity.YearOfProduction,
-            Condition = entity.Condition ?? throw new MappingException(),
+            Condition = entity.Condition ?? throw new MappingException("Condition is required."),
             Description = entity.Description,
             PurchasePrice = entity.PurchasePrice,
             PurchaseDate = entity.PurchaseDate,
             IsForSale = entity.IsForSale,
-            CreatedAt = entity.CreatedAt,
-            UpdatedAt = entity.UpdatedAt
+            CreatedAt = entity.CreatedAt != default // Ensure CreatedAt is not default
+                ? entity.CreatedAt
+                : throw new MappingException("CreatedAt is required."), 
+            UpdatedAt = entity.UpdatedAt != default // Ensure UpdatedAt is not default
+                ? entity.UpdatedAt
+                : throw new MappingException("UpdatedAt is required.")
         };
     }
 }

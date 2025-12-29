@@ -11,13 +11,20 @@ internal static class WatchImageMappingExtensions
     {
         return new WatchImage
         {
-            WatchId = model.WatchId,
-            BlobUrl = model.BlobUrl,
-            FileName = model.FileName,
+            ImageId = model.ImageId is Guid imageId && imageId != Guid.Empty
+                ? imageId
+                : throw new MappingException("ImageId is required"),
+            WatchId = model.WatchId is Guid watchId && watchId != Guid.Empty
+                ? watchId
+                : throw new MappingException("WatchId is required"),
+            BlobUrl = model.BlobUrl ?? throw new MappingException("BlobUrl is required"),
+            FileName = model.FileName ?? throw new MappingException("FileName is required"),
             FileSize = model.FileSize,
             ContentType = model.ContentType,
             IsPrimary = model.IsPrimary,
-            UploadedAt = model.UploadedAt
+            UploadedAt = model.UploadedAt != default
+                ? model.UploadedAt
+                : throw new MappingException("UploadedAt is required")
         };
     }
 
@@ -27,27 +34,36 @@ internal static class WatchImageMappingExtensions
         {
             ImageId = entity.ImageId,
             WatchId = entity.WatchId,
-            BlobUrl = entity.BlobUrl,
-            FileName = entity.FileName,
+            BlobUrl = entity.BlobUrl ?? throw new MappingException("BlobUrl is required"),
+            FileName = entity.FileName ?? throw new MappingException("FileName is required"),
             FileSize = entity.FileSize,
             ContentType = entity.ContentType,
             IsPrimary = entity.IsPrimary,
-            UploadedAt = entity.UploadedAt
+            UploadedAt = entity.UploadedAt != default
+                ? entity.UploadedAt
+                : throw new MappingException("UploadedAt is required")
         };
     }
 
-    public static WatchImageResponseContract AsResponseContract(this WatchImageModel model)
+    public static WatchImageResponseContract AsContract(this WatchImageModel model)
     {
         return new WatchImageResponseContract
         {
-            ImageId = model.ImageId ?? throw new MappingException() ,
-            WatchId = model.WatchId,
-            BlobUrl = model.BlobUrl,
-            FileName = model.FileName,
+            ImageId = model.ImageId is Guid imageId && imageId != Guid.Empty
+                ? imageId
+                : throw new MappingException("ImageId is required"),
+            WatchId = model.WatchId is Guid watchId && watchId != Guid.Empty
+                ? watchId
+                : throw new MappingException("WatchId is required"),
+            BlobUrl = model.BlobUrl ?? throw new MappingException("BlobUrl is required"),
+            FileName = model.FileName ?? throw new MappingException("FileName is required"),
             FileSize = model.FileSize,
             ContentType = model.ContentType,
             IsPrimary = model.IsPrimary,
-            UploadedAt = model.UploadedAt
+            UploadedAt = model.UploadedAt != default // ensure UploadedAt is not default
+                ? model.UploadedAt
+                : throw new MappingException("UploadedAt is required")
         };
     }
+
 }

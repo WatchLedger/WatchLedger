@@ -4,9 +4,9 @@ namespace WatchCollection.Api.Contracts;
 
 public class BidResponseContract
 {
-    public Guid? BidId { get; set; }
-    public Guid AdvertisementId { get; set; }
-    public Guid BidderId { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
-    public decimal Amount { get; set; }
+    public required Guid BidId { get; set; }
+    public required Guid AdvertisementId { get; set; }
+    public required Guid BidderId { get; set; }
+    public required DateTimeOffset CreatedAt { get; set; }
+    public required decimal Amount { get; set; }
 }

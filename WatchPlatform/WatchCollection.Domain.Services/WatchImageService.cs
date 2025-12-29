@@ -12,10 +12,9 @@ namespace WatchCollection.Domain.Services;
 public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlobStorageService _blobStorageService, IWatchRepository _watchRepository) : IWatchImageService
 {
 
-    public async Task<WatchImageResponseContract> UploadImageAsync(Guid watchId, string fileName, string contentType, long fileSize, WatchImageRequestContract contract, Stream imageStream)
+    public async Task<WatchImageResponseContract> UploadImageAsync(Guid watchId, string fileName, string contentType, long fileSize, bool isPrimary, Stream imageStream)
     {
         FileValidator.ValidateImageFile(fileName, contentType, fileSize);
-
 
         var watch = await _watchRepository.GetWatchById(watchId);
         if (watch is null)
@@ -25,19 +24,20 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
         var imageUrl = await _blobStorageService.UploadImageAsync(updatedFileName, imageStream);
 
         var model = new WatchImageModel{
+            ImageId = Guid.NewGuid(),
             WatchId = watchId,
             BlobUrl = imageUrl,
             FileName = updatedFileName,
             FileSize = fileSize,
             ContentType = contentType,
-            IsPrimary = contract.IsPrimary,
+            IsPrimary = isPrimary,
             UploadedAt = DateTimeOffset.UtcNow
         };
 
         var entity = model.AsEntity();
         var addedEntity = await _watchImageRepository.AddWatchImageAsync(entity);
 
-        return addedEntity.AsModel().AsResponseContract();
+        return addedEntity.AsModel().AsContract();
     }
 
     public async Task<List<WatchImageResponseContract>> GetAllImagesByWatchIdAsync(Guid watchId)
@@ -47,7 +47,7 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
             throw new WatchNotFoundException();
 
         var entities =  await _watchImageRepository.GetAllImagesByWatchIdAsync(watchId);
-        return entities.Select(e => e.AsModel().AsResponseContract()).ToList();
+        return entities.Select(e => e.AsModel().AsContract()).ToList();
     }
 
     public async Task DeleteImageAsync(Guid watchId, Guid imageId)
@@ -80,6 +80,6 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
             throw new WatchNotFoundException();
 
         var updatedEntity = await _watchImageRepository.SetMainImageAsync(watchId, imageId);
-        return updatedEntity.AsModel().AsResponseContract();
+        return updatedEntity.AsModel().AsContract();
     }
 }
