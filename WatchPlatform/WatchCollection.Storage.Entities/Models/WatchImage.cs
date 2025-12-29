@@ -17,9 +17,9 @@ public partial class WatchImage
 
     public string? ContentType { get; set; }
 
-    public bool? IsPrimary { get; set; }
+    public bool IsPrimary { get; set; }
 
-    public DateTimeOffset? UploadedAt { get; set; }
+    public DateTimeOffset UploadedAt { get; set; }
 
     public virtual Watch Watch { get; set; } = null!;
 }

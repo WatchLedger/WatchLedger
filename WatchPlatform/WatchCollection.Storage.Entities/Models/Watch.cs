@@ -27,11 +27,11 @@ public partial class Watch
 
     public DateOnly? PurchaseDate { get; set; }
 
-    public bool? IsForSale { get; set; }
+    public bool IsForSale { get; set; }
 
-    public DateTimeOffset? CreatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
 
-    public DateTimeOffset? UpdatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
 
     public virtual ICollection<Advertisement> Advertisements { get; set; } = new List<Advertisement>();
 
