@@ -42,6 +42,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchCollection.Shared", "W
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchValuation.Infrastructure", "WatchValuation\WatchValuation.Infrastructure\WatchValuation.Infrastructure.csproj", "{1BD59321-DC6D-4EB8-9F81-9692AA2E204E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchCollection.Infrastructure", "WatchCollection\WatchCollection.Infrastructure\WatchCollection.Infrastructure.csproj", "{3CBF99D8-8F06-41FB-B2F7-D272123743B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -268,6 +270,18 @@ Global
 		{1BD59321-DC6D-4EB8-9F81-9692AA2E204E}.Release|x64.Build.0 = Release|Any CPU
 		{1BD59321-DC6D-4EB8-9F81-9692AA2E204E}.Release|x86.ActiveCfg = Release|Any CPU
 		{1BD59321-DC6D-4EB8-9F81-9692AA2E204E}.Release|x86.Build.0 = Release|Any CPU
+		{3CBF99D8-8F06-41FB-B2F7-D272123743B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CBF99D8-8F06-41FB-B2F7-D272123743B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CBF99D8-8F06-41FB-B2F7-D272123743B7}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3CBF99D8-8F06-41FB-B2F7-D272123743B7}.Debug|x64.Build.0 = Debug|Any CPU
+		{3CBF99D8-8F06-41FB-B2F7-D272123743B7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3CBF99D8-8F06-41FB-B2F7-D272123743B7}.Debug|x86.Build.0 = Debug|Any CPU
+		{3CBF99D8-8F06-41FB-B2F7-D272123743B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CBF99D8-8F06-41FB-B2F7-D272123743B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CBF99D8-8F06-41FB-B2F7-D272123743B7}.Release|x64.ActiveCfg = Release|Any CPU
+		{3CBF99D8-8F06-41FB-B2F7-D272123743B7}.Release|x64.Build.0 = Release|Any CPU
+		{3CBF99D8-8F06-41FB-B2F7-D272123743B7}.Release|x86.ActiveCfg = Release|Any CPU
+		{3CBF99D8-8F06-41FB-B2F7-D272123743B7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -291,5 +305,6 @@ Global
 		{B274637C-654D-4279-B648-1119DDD53A35} = {62B53EB5-2B1D-404A-B282-CC8AB2F4BD2A}
 		{44F5F0EF-34EF-4983-881B-4F0C1803ACE0} = {826251A1-B2F5-4FFA-9F80-D449FBBF254E}
 		{1BD59321-DC6D-4EB8-9F81-9692AA2E204E} = {62B53EB5-2B1D-404A-B282-CC8AB2F4BD2A}
+		{3CBF99D8-8F06-41FB-B2F7-D272123743B7} = {826251A1-B2F5-4FFA-9F80-D449FBBF254E}
 	EndGlobalSection
 EndGlobal

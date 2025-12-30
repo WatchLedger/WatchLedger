@@ -1,7 +1,9 @@
 using System.Text.Json.Serialization;
+using Azure.Identity;
 using Microsoft.EntityFrameworkCore;
 using WatchCollection.Domain.Services;
 using WatchCollection.Domain.Services.Interfaces;
+using WatchCollection.Infrastructure;
 using WatchCollection.Shared.Converters;
 using WatchCollection.Storage;
 using WatchCollection.Storage.Entities.Data;
@@ -16,7 +18,21 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        var connectionString = builder.Configuration.GetConnectionString("WatchCollection");
+        var keyVaultUri = builder.Configuration["AzureKeyVault:VaultUri"]
+            ?? throw new InvalidOperationException("Azure Key Vault URI is not configured.");
+        builder.Configuration.AddAzureKeyVault(
+            new Uri(keyVaultUri),
+            new DefaultAzureCredential());
+
+        builder.Services.Configure<BlobStorageOptions>( options =>{
+            options.BlobStorageConnectionString = builder.Configuration["BlobConnectionString"]
+                ?? throw new InvalidOperationException("Blob storage connection string is not configured in Key Vault.");
+            options.ContainerName = builder.Configuration["BlobStorage:ContainerName"]
+                ?? throw new InvalidOperationException("Blob storage container name is not configured.");
+        });
+
+        var connectionString = builder.Configuration["ProductionSqlString"]
+            ?? throw new InvalidOperationException("SQL Database connection string is not configured in Key Vault.");
         builder.Services.AddDbContext<WatchServiceDbContext>(options => 
             options.UseSqlServer(connectionString));
 
