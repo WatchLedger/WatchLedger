@@ -68,4 +68,14 @@ public class WatchImageRepository(WatchServiceDbContext _dbContext) : IWatchImag
 
         return images.First(img => img.ImageId == imageId);
     }
+
+    public async Task<IEnumerable<string>> GetFilenamesByWatchIdAsync(Guid watchId)
+    {
+        var fileNames = await _dbContext.WatchImages
+            .Where(wi => wi.WatchId == watchId)
+            .Select(wi => wi.FileName)
+            .ToListAsync();
+
+        return fileNames;
+    }
 }

@@ -7,7 +7,7 @@ namespace WatchCollection.Storage.Entities.Data;
 
 public partial class WatchServiceDbContext : DbContext 
 {
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Watch>(entity =>
         {
@@ -44,5 +44,26 @@ public partial class WatchServiceDbContext : DbContext
                   .ValueGeneratedOnAdd()
                   .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
         });
+
+         modelBuilder.Entity<Advertisement>()
+            .HasOne(a => a.Watch)
+            .WithMany(w => w.Advertisements)
+            .HasForeignKey(a => a.WatchId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .HasConstraintName("FK_Advertisements_Watches");
+
+        modelBuilder.Entity<WatchImage>()
+            .HasOne(wi => wi.Watch)
+            .WithMany(w => w.WatchImages)
+            .HasForeignKey(wi => wi.WatchId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .HasConstraintName("FK_WatchImages_Watches");
+
+        modelBuilder.Entity<Bid>()
+            .HasOne(b => b.Advertisement)
+            .WithMany(a => a.Bids)
+            .HasForeignKey(b => b.AdvertisementId)
+            .OnDelete(DeleteBehavior.Cascade)
+            .HasConstraintName("FK_Bids_Advertisements");
     }
 }
