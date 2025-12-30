@@ -49,7 +49,12 @@ public class WatchRepository(WatchServiceDbContext _context) : IWatchRepository
         if (existingWatch is null)
             throw new WatchNotFoundException(watchId);
 
-        _context.Entry(existingWatch).CurrentValues.SetValues(watch);
+        var entry = _context.Entry(existingWatch);
+        entry.CurrentValues.SetValues(watch);
+        
+        // Ensure CreatedAt and UpdatedAt are not modified manually
+        entry.Property(e => e.CreatedAt).IsModified = false;
+        entry.Property(e => e.UpdatedAt).IsModified = false;
         
         await _context.SaveChangesAsync();
         return existingWatch;

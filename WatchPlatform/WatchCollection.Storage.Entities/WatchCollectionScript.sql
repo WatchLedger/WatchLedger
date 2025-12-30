@@ -1,11 +1,15 @@
--- Drop tables if they exist (order matters because of FKs)
+-- =========================================
+-- Drop tables if they exist (order matters)
+-- =========================================
 IF OBJECT_ID('dbo.Bids', 'U') IS NOT NULL DROP TABLE dbo.Bids;
 IF OBJECT_ID('dbo.WatchImages', 'U') IS NOT NULL DROP TABLE dbo.WatchImages;
 IF OBJECT_ID('dbo.Advertisements', 'U') IS NOT NULL DROP TABLE dbo.Advertisements;
 IF OBJECT_ID('dbo.Watches', 'U') IS NOT NULL DROP TABLE dbo.Watches;
 GO
 
+-- =========
 -- Watches
+-- =========
 CREATE TABLE dbo.Watches
 (
     WatchId           UNIQUEIDENTIFIER   NOT NULL,
@@ -35,7 +39,20 @@ CREATE INDEX IX_Watches_OwnerUserId
     ON dbo.Watches (OwnerUserId);
 GO
 
+-- Defaults for Watches timestamps
+ALTER TABLE dbo.Watches
+ADD CONSTRAINT DF_Watches_CreatedAt
+    DEFAULT (SYSUTCDATETIME()) FOR CreatedAt;
+GO
+
+ALTER TABLE dbo.Watches
+ADD CONSTRAINT DF_Watches_UpdatedAt
+    DEFAULT (SYSUTCDATETIME()) FOR UpdatedAt;
+GO
+
+-- =========
 -- Advertisements
+-- =========
 CREATE TABLE dbo.Advertisements
 (
     AdvertisementId   UNIQUEIDENTIFIER   NOT NULL,
@@ -44,13 +61,13 @@ CREATE TABLE dbo.Advertisements
     Title             NVARCHAR(200)      NOT NULL,
     Description       NVARCHAR(MAX)      NULL,
     AskingPrice       DECIMAL(18, 2)     NOT NULL,
-    Status            NVARCHAR(50)       NOT NULL,           -- non-null
-    ViewCount         INT                NOT NULL,           -- treat as required
-    PublishedAt       DATETIMEOFFSET(7)  NULL,               -- nullable if watch still a draft
-    ExpiresAt         DATETIMEOFFSET(7)  NULL,           -- nullable only filled in when also published
+    Status            NVARCHAR(50)       NOT NULL,
+    ViewCount         INT                NOT NULL,
+    PublishedAt       DATETIMEOFFSET(7)  NULL,
+    ExpiresAt         DATETIMEOFFSET(7)  NULL,
     SoldAt            DATETIMEOFFSET(7)  NULL,
-    CreatedAt         DATETIMEOFFSET(7)  NOT NULL,           -- non-null
-    UpdatedAt         DATETIMEOFFSET(7)  NOT NULL,           -- non-null
+    CreatedAt         DATETIMEOFFSET(7)  NOT NULL,
+    UpdatedAt         DATETIMEOFFSET(7)  NOT NULL,
     AllowBids         BIT                NOT NULL,
 
     CONSTRAINT PK_Advertisements PRIMARY KEY (AdvertisementId),
@@ -73,7 +90,20 @@ CREATE INDEX IX_Advertisements_WatchId
     ON dbo.Advertisements (WatchId);
 GO
 
+-- Defaults for Advertisements timestamps
+ALTER TABLE dbo.Advertisements
+ADD CONSTRAINT DF_Advertisements_CreatedAt
+    DEFAULT (SYSUTCDATETIME()) FOR CreatedAt;
+GO
+
+ALTER TABLE dbo.Advertisements
+ADD CONSTRAINT DF_Advertisements_UpdatedAt
+    DEFAULT (SYSUTCDATETIME()) FOR UpdatedAt;
+GO
+
+-- =========
 -- WatchImages
+-- =========
 CREATE TABLE dbo.WatchImages
 (
     ImageId      UNIQUEIDENTIFIER   NOT NULL,
@@ -82,8 +112,8 @@ CREATE TABLE dbo.WatchImages
     FileName     NVARCHAR(255)      NOT NULL,
     FileSize     BIGINT             NULL,
     ContentType  NVARCHAR(100)      NULL,
-    IsPrimary    BIT                NOT NULL,           -- treat as required
-    UploadedAt   DATETIMEOFFSET(7)  NOT NULL,           -- non-null
+    IsPrimary    BIT                NOT NULL,
+    UploadedAt   DATETIMEOFFSET(7)  NOT NULL,
 
     CONSTRAINT PK_WatchImages PRIMARY KEY (ImageId),
 
@@ -97,13 +127,21 @@ CREATE INDEX IX_WatchImages_WatchId
     ON dbo.WatchImages (WatchId);
 GO
 
+-- Defaults for WatchImages timestamps
+ALTER TABLE dbo.WatchImages
+ADD CONSTRAINT DF_WatchImages_UploadedAt
+    DEFAULT (SYSUTCDATETIME()) FOR UploadedAt;
+GO
+
+-- =========
 -- Bids
+-- =========
 CREATE TABLE dbo.Bids
 (
     BidId           UNIQUEIDENTIFIER   NOT NULL,
     AdvertisementId UNIQUEIDENTIFIER   NOT NULL,
     BidderId        UNIQUEIDENTIFIER   NOT NULL,
-    CreatedAt       DATETIMEOFFSET(7)  NOT NULL,      
+    CreatedAt       DATETIMEOFFSET(7)  NOT NULL,
     Amount          DECIMAL(18, 2)     NOT NULL,
 
     CONSTRAINT PK_Bids PRIMARY KEY (BidId),
@@ -112,4 +150,59 @@ CREATE TABLE dbo.Bids
         FOREIGN KEY (AdvertisementId) REFERENCES dbo.Advertisements (AdvertisementId)
             ON DELETE NO ACTION
 );
+GO
+
+-- Defaults for Bids timestamps
+ALTER TABLE dbo.Bids
+ADD CONSTRAINT DF_Bids_CreatedAt
+    DEFAULT (SYSUTCDATETIME()) FOR CreatedAt;
+GO
+
+-- =====================================================
+-- Triggers to keep UpdatedAt / UploadedAt in sync
+-- =====================================================
+
+-- Watches: set UpdatedAt on UPDATE
+CREATE TRIGGER TR_Watches_SetUpdatedAt
+ON dbo.Watches
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE w
+    SET UpdatedAt = SYSUTCDATETIME()
+    FROM dbo.Watches w
+    INNER JOIN inserted i ON w.WatchId = i.WatchId;
+END;
+GO
+
+-- Advertisements: set UpdatedAt on UPDATE
+CREATE TRIGGER TR_Advertisements_SetUpdatedAt
+ON dbo.Advertisements
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE a
+    SET UpdatedAt = SYSUTCDATETIME()
+    FROM dbo.Advertisements a
+    INNER JOIN inserted i ON a.AdvertisementId = i.AdvertisementId;
+END;
+GO
+
+-- WatchImages: bump UploadedAt when record changes (optional)
+CREATE TRIGGER TR_WatchImages_SetUploadedAt
+ON dbo.WatchImages
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE wi
+    SET UploadedAt = SYSUTCDATETIME()
+    FROM dbo.WatchImages wi
+    INNER JOIN inserted i ON wi.ImageId = i.ImageId;
+END;
 GO

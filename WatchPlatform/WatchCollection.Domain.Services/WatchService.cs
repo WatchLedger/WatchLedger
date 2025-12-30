@@ -49,6 +49,8 @@ public class WatchService(IWatchRepository _repository, IWatchImageService _watc
         try
         {
             var model = contract.AsModel();
+            model.WatchId = watchId;
+            model.OwnerId = Guid.NewGuid(); // will be replaced with actual user id from auth context
 
             var entity = model.AsEntity();
             var updatedWatch = await _repository.UpdateWatch(watchId, entity);
