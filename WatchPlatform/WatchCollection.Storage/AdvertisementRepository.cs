@@ -46,7 +46,12 @@ public class AdvertisementRepository(WatchServiceDbContext _context) : IAdvertis
         if (existingAdvertisement is null)
             throw new AdvertisementNotFoundExceptions();
         
-        _context.Entry(existingAdvertisement).CurrentValues.SetValues(advertisement);
+        var entry = _context.Entry(existingAdvertisement);
+        entry.CurrentValues.SetValues(advertisement);
+
+        entry.Property(e => e.CreatedAt).IsModified = false;
+        entry.Property(e => e.UpdatedAt).IsModified = false;
+
         await _context.SaveChangesAsync();
         return existingAdvertisement;
     }

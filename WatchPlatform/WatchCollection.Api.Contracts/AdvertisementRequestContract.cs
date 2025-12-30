@@ -8,8 +8,6 @@ public class AdvertisementRequestContract
     [Required]
     public required Guid WatchId { get; set; }
     [Required]
-    public required Guid SellerUserId { get; set; }
-    [Required]
     [MaxLength(100)]
     public required string Title { get; set; }
     [MaxLength(1000)]

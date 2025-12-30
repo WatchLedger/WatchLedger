@@ -6,7 +6,7 @@ public class AdvertisementModel
 {
     public Guid? AdvertisementId { get; set; } // Nullable since value assignment happens in service after mapping to model
     public required Guid WatchId { get; set; }
-    public required Guid SellerUserId { get; set; }
+    public Guid? SellerUserId { get; set; } // Nullable since value assignment happens in service after mapping to model
     public required string Title { get; set; }
     public string? Description { get; set; }
     public required decimal AskingPrice { get; set; }

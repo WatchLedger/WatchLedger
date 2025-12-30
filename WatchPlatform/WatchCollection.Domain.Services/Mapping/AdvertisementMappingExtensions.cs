@@ -15,9 +15,6 @@ internal static class AdvertisementMappingExtensions
             WatchId = contract.WatchId is Guid watchId && watchId != Guid.Empty // ensure WatchId is not empty
                 ? watchId
                 : throw new MappingException("WatchId is required"),
-            SellerUserId = contract.SellerUserId is Guid sellerUserId && sellerUserId != Guid.Empty // ensure SellerUserId is not empty
-                ? sellerUserId
-                : throw new MappingException("SellerUserId is required"),
             Title = contract.Title ?? throw new MappingException(),
             Status = contract.Status ?? throw new MappingException(),
             Description = contract.Description,
@@ -45,9 +42,7 @@ internal static class AdvertisementMappingExtensions
                 ? model.AskingPrice
                 : throw new MappingException("AskingPrice must be greater than zero."),
             Status = model.Status ?? throw new MappingException(),
-            ViewCount = model.ViewCount != default // ensure ViewCount is not default
-                ? model.ViewCount
-                : throw new MappingException("ViewCount is required"),
+            ViewCount = model.ViewCount,
             PublishedAt = model.PublishedAt,
             ExpiresAt = model.ExpiresAt,
             SoldAt = model.SoldAt,
@@ -74,7 +69,6 @@ internal static class AdvertisementMappingExtensions
                 ? model.AskingPrice
                 : throw new MappingException("AskingPrice must be greater than zero."),
             Status = model.Status ?? throw new MappingException("Status is required"),
-            ViewCount = model.ViewCount ?? throw new MappingException("ViewCount is required"),
             PublishedAt = model.PublishedAt,
             ExpiresAt = model.ExpiresAt,
             SoldAt = model.SoldAt,
@@ -93,9 +87,7 @@ internal static class AdvertisementMappingExtensions
             Description = entity.Description,
             AskingPrice = entity.AskingPrice,
             Status = entity.Status ?? throw new MappingException("Status is required"),
-            ViewCount = entity.ViewCount != default // ensure ViewCount is not default
-                ? entity.ViewCount
-                : throw new MappingException("ViewCount is required"),
+            ViewCount = entity.ViewCount,
             PublishedAt = entity.PublishedAt,
             ExpiresAt = entity.ExpiresAt,
             SoldAt = entity.SoldAt,

@@ -14,8 +14,11 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
     {
         var model = contract.AsModel();
         var advertisementId = Guid.NewGuid();
+        var sellerUserId = Guid.NewGuid(); // This should be retrieved from the authenticated user's context in a real application.
         model.AdvertisementId = advertisementId;
+        model.SellerUserId = sellerUserId;
         model.Status = "Active";
+        model.ViewCount = 0;
         var entity = model.AsEntity();
         var createdEntity =  await _repository.CreateAdvertisementAsync(entity);
 
@@ -45,6 +48,7 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
     {
         var model = request.AsModel();
         model.AdvertisementId = advertisementId;
+        model.SellerUserId = Guid.NewGuid(); // This should be retrieved from the authenticated user's context in a real application.
 
         var entity = model.AsEntity();
         
