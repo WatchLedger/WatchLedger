@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using WatchCollection.Storage.Entities.Models;
@@ -41,7 +41,6 @@ public partial class WatchServiceDbContext : DbContext
 
             entity.HasOne(d => d.Watch).WithMany(p => p.Advertisements)
                 .HasForeignKey(d => d.WatchId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Advertisements_Watches");
         });
 
@@ -53,7 +52,6 @@ public partial class WatchServiceDbContext : DbContext
 
             entity.HasOne(d => d.Advertisement).WithMany(p => p.Bids)
                 .HasForeignKey(d => d.AdvertisementId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Bids_Advertisements");
         });
 
@@ -92,7 +90,6 @@ public partial class WatchServiceDbContext : DbContext
 
             entity.HasOne(d => d.Watch).WithMany(p => p.WatchImages)
                 .HasForeignKey(d => d.WatchId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_WatchImages_Watches");
         });
 

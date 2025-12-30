@@ -39,7 +39,7 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
         return addedEntity.AsModel().AsContract();
     }
 
-    public async Task<List<WatchImageResponseContract>> GetAllImagesByWatchIdAsync(Guid watchId)
+    public async Task<IEnumerable<WatchImageResponseContract>> GetAllImagesByWatchIdAsync(Guid watchId)
     {
         var watch = await _watchRepository.GetWatchById(watchId);
         if (watch is null)
@@ -59,19 +59,6 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
         await _blobStorageService.DeleteImageAsync(blobUrl);
     }
 
-    public async Task DeleteImagesByWatchIdAsync(Guid watchId)
-    {
-        var watch = await _watchRepository.GetWatchById(watchId);
-        if (watch is null)
-            throw new WatchNotFoundException();
-
-        var fileNames = await _watchImageRepository.DeleteImagesByWatchIdAsync(watchId);
-        foreach (var filename in fileNames)
-        {
-            await _blobStorageService.DeleteImageAsync(filename);
-        }
-    }
-
     public async Task<WatchImageResponseContract> SetMainImageAsync(Guid watchId, Guid imageId)
     {
         var watch = await _watchRepository.GetWatchById(watchId);
@@ -80,5 +67,20 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
 
         var updatedEntity = await _watchImageRepository.SetMainImageAsync(watchId, imageId);
         return updatedEntity.AsModel().AsContract();
+    }
+
+    public async Task<IEnumerable<string>> GetFilenamesByWatchIdAsync(Guid watchId)
+    {
+        var watch = await _watchRepository.GetWatchById(watchId);
+        if (watch is null)
+            throw new WatchNotFoundException();
+
+        var fileNames = await _watchImageRepository.GetFilenamesByWatchIdAsync(watchId);
+        return fileNames;
+    }
+
+    public async Task DeleteBlobsAsync(string filename)
+    {
+        await _blobStorageService.DeleteImageAsync(filename);
     }
 }

@@ -11,4 +11,5 @@ public interface IWatchImageRepository
     Task<string> DeleteWatchImageDataAsync(Guid watchId, Guid imageId); // Returns the filename of the deleted image to facilitate blob deletion
     Task<List<string>> DeleteImagesByWatchIdAsync(Guid watchId);
     Task<WatchImage> SetMainImageAsync(Guid watchId, Guid imageId);
+    Task<IEnumerable<string>> GetFilenamesByWatchIdAsync(Guid watchId);
 }

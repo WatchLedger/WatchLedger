@@ -7,6 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.4.0" />
+        <PackageReference Include="Azure.Identity" Version="1.17.1" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.10" />
     </ItemGroup>
 
@@ -14,6 +16,7 @@
       <ProjectReference Include="../WatchCollection.Api.Contracts/WatchCollection.Api.Contracts.csproj" />
       <ProjectReference Include="../WatchCollection.Domain.Services/WatchCollection.Domain.Services.csproj" />
       <ProjectReference Include="../WatchCollection.Storage.Entities/WatchCollection.Storage.Entities.csproj" />
+      <ProjectReference Include="../WatchCollection/WatchCollection.Infrastructure/WatchCollection.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

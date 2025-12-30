@@ -19,6 +19,7 @@
       <ProjectReference Include="../WatchValuation.Api.Contracts/WatchValuation.Api.Contracts.csproj" />
       <ProjectReference Include="../WatchValuation.Domain.Services/WatchValuation.Domain.Services.csproj" />
       <ProjectReference Include="../WatchValuation.Storage/WatchValuation.Storage.csproj" />
+      <ProjectReference Include="../WatchValuation/WatchValuation.Infrastructure/WatchValuation.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

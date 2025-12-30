@@ -10,6 +10,7 @@
       <ProjectReference Include="../WatchCollection.Api.Contracts/WatchCollection.Api.Contracts.csproj" />
       <ProjectReference Include="../WatchCollection.Domain.Model/WatchCollection.Domain.Model.csproj" />
       <ProjectReference Include="../WatchCollection.Storage/WatchCollection.Storage.csproj" />
+      <ProjectReference Include="../WatchCollection/WatchCollection.Shared/WatchCollection.Shared.csproj" />
     </ItemGroup>
 
 </Project>
