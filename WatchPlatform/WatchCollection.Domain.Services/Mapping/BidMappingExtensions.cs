@@ -54,7 +54,6 @@ internal static class BidMappingExtensions
             BidderId = model.BidderId is Guid bidderId && bidderId != Guid.Empty
                 ? model.BidderId
                 : throw new MappingException("BidderId is required"),
-            CreatedAt = model.CreatedAt ?? throw new MappingException("CreatedAt is required"),
             Amount = model.Amount != default
                 ? model.Amount
                 : throw new MappingException("Amount is required")

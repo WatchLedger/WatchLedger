@@ -18,7 +18,6 @@ public class BidService(IBidRepository _bidRepository, IAdvertisementRepository 
         bidRequestContract.AdvertisementId = advertisementId;
         var model = bidRequestContract.AsModel();
         model.BidId = Guid.NewGuid();
-        model.CreatedAt = DateTimeOffset.UtcNow;
 
         var entity = model.AsEntity();
         var createdEntity = await _bidRepository.AddBidAsync(entity);

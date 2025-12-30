@@ -42,8 +42,6 @@ internal static class WatchMappingExtensions
             Description = model.Description,
             PurchasePrice = model.PurchasePrice,
             PurchaseDate = model.PurchaseDate,
-            CreatedAt = model.CreatedAt ?? throw new MappingException("CreatedAt is required."),
-            UpdatedAt = model.UpdatedAt ?? throw new MappingException("UpdatedAt is required.")
         };
     }
 

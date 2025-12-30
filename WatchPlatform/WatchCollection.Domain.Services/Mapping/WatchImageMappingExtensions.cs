@@ -22,9 +22,6 @@ internal static class WatchImageMappingExtensions
             FileSize = model.FileSize,
             ContentType = model.ContentType,
             IsPrimary = model.IsPrimary,
-            UploadedAt = model.UploadedAt != default
-                ? model.UploadedAt
-                : throw new MappingException("UploadedAt is required")
         };
     }
 

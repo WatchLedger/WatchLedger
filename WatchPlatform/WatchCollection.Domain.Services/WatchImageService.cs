@@ -31,7 +31,6 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
             FileSize = fileSize,
             ContentType = contentType,
             IsPrimary = isPrimary,
-            UploadedAt = DateTimeOffset.UtcNow
         };
 
         var entity = model.AsEntity();

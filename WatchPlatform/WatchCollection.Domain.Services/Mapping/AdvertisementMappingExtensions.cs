@@ -78,8 +78,6 @@ internal static class AdvertisementMappingExtensions
             PublishedAt = model.PublishedAt,
             ExpiresAt = model.ExpiresAt,
             SoldAt = model.SoldAt,
-            CreatedAt = model.CreatedAt ?? throw new MappingException("CreatedAt is required"),
-            UpdatedAt = model.UpdatedAt ?? throw new MappingException("UpdatedAt is required"),
             AllowBids = model.AllowBids
         };
     }

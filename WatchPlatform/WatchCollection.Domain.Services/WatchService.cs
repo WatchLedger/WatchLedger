@@ -15,8 +15,6 @@ public class WatchService(IWatchRepository _repository, IWatchImageService _watc
         var model = contract.AsModel();
         model.WatchId = Guid.NewGuid();
         model.OwnerId = Guid.NewGuid(); // will be replaced with actual user id from auth context
-        model.CreatedAt = DateTimeOffset.Now;
-        model.UpdatedAt = model.CreatedAt;
 
         var entity = model.AsEntity();
         var created = await _repository.Create(entity);
@@ -51,7 +49,6 @@ public class WatchService(IWatchRepository _repository, IWatchImageService _watc
         try
         {
             var model = contract.AsModel();
-            model.UpdatedAt = DateTimeOffset.Now;
 
             var entity = model.AsEntity();
             var updatedWatch = await _repository.UpdateWatch(watchId, entity);

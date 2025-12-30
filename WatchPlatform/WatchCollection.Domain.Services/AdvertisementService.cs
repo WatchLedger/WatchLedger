@@ -16,7 +16,6 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         var advertisementId = Guid.NewGuid();
         model.AdvertisementId = advertisementId;
         model.Status = "Active";
-        model.PublishedAt = DateTimeOffset.UtcNow;
         var entity = model.AsEntity();
         var createdEntity =  await _repository.CreateAdvertisementAsync(entity);
 
