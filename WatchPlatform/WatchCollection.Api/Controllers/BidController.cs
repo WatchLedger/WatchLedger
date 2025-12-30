@@ -7,7 +7,7 @@ using WatchCollection.Storage.Exceptions;
 
 namespace WatchCollection.Api.Controllers
 {
-    [Route("/Advertisements/{advertisementId}/[controller]")]
+    [Route("api/Advertisement/{advertisementId:Guid}/[controller]")]
     [ApiController]
     public class BidController(IBidService _service) : ControllerBase
     {

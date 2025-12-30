@@ -15,9 +15,10 @@ public class BidService(IBidRepository _bidRepository, IAdvertisementRepository 
         if(advertisement is null)
             throw new AdvertisementNotFoundExceptions();
 
-        bidRequestContract.AdvertisementId = advertisementId;
         var model = bidRequestContract.AsModel();
         model.BidId = Guid.NewGuid();
+        model.AdvertisementId = advertisementId;
+        model.BidderId = Guid.NewGuid(); // In a real scenario, this would come from the authenticated user context
 
         var entity = model.AsEntity();
         var createdEntity = await _bidRepository.AddBidAsync(entity);

@@ -13,12 +13,6 @@ internal static class BidMappingExtensions
     {
         return new BidsModel
         {
-            AdvertisementId = contract.AdvertisementId is Guid advertisementId && advertisementId != Guid.Empty
-                ? contract.AdvertisementId
-                : throw new MappingException("AdvertisementId is required"),
-            BidderId = contract.BidderId is Guid bidderId && bidderId != Guid.Empty
-                ? contract.BidderId
-                : throw new MappingException("BidderId is required"),
             Amount = contract.Amount  != default
                 ? contract.Amount
                 : throw new MappingException("Amount is required")
@@ -29,17 +23,13 @@ internal static class BidMappingExtensions
     {
         return new BidResponseContract
         {
-            BidId = model.BidId ?? throw new MappingException(),
-            AdvertisementId = model.AdvertisementId is Guid advertisementId && advertisementId != Guid.Empty
-                ? model.AdvertisementId
-                : throw new MappingException("AdvertisementId is required"),
-            BidderId = model.BidderId is Guid bidderId && bidderId != Guid.Empty
-                ? model.BidderId
-                : throw new MappingException("BidderId is required"),
-            CreatedAt = model.CreatedAt ?? throw new MappingException("CreatedAt is required"),
+            BidId = model.BidId ?? throw new MappingException("BidId is required"),
+            AdvertisementId = model.AdvertisementId ?? throw new MappingException("AdvertisementId is required"),
+            BidderId = model.BidderId ?? throw new MappingException("BidderId is required"),
             Amount = model.Amount != default
                 ? model.Amount
-                : throw new MappingException("Amount is required")
+                : throw new MappingException("Amount is required"),
+            CreatedAt = model.CreatedAt ?? throw new MappingException("CreatedAt is required")
         };
     }
 
@@ -48,15 +38,11 @@ internal static class BidMappingExtensions
         return new Bid
         {
             BidId = model.BidId ?? throw new MappingException(),
-            AdvertisementId = model.AdvertisementId is Guid advertisementId && advertisementId != Guid.Empty
-                ? model.AdvertisementId
-                : throw new MappingException("AdvertisementId is required"),
-            BidderId = model.BidderId is Guid bidderId && bidderId != Guid.Empty
-                ? model.BidderId
-                : throw new MappingException("BidderId is required"),
+            AdvertisementId = model.AdvertisementId ?? throw new MappingException(),
+            BidderId = model.BidderId ?? throw new MappingException(),
             Amount = model.Amount != default
                 ? model.Amount
-                : throw new MappingException("Amount is required")
+                : throw new MappingException("Amount is required"),
         };
     }
 
