@@ -5,6 +5,7 @@ using Azure.Identity;
 using WatchValuation.Storage;
 using WatchValuation.Storage.Interfaces;
 using WatchValuation.Domain.Services.Exceptions;
+using WatchValuation.Infrastructure;
 using Polly;
 using Polly.Extensions.Http;
 using System.Net;
@@ -16,14 +17,34 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add Azure Key Vault configuration
+        var keyVaultUri = builder.Configuration["AzureKeyVault:VaultUri"]
+            ?? throw new InvalidOperationException("Azure Key Vault URI is not configured.");
         builder.Configuration.AddAzureKeyVault(
-            new Uri("https://watchplatform-keyvault.vault.azure.net/"),
+            new Uri(keyVaultUri),
             new DefaultAzureCredential());
 
-        // Add services to the container.
+        builder.Services.Configure<ExternalApiOptions>(options =>
+        {
+            options.BaseUrl = builder.Configuration["ExternalApi:BaseUrl"]
+                ?? throw new InvalidOperationException("ExternalApi BaseUrl is not configured.");
+            options.ApiKey = builder.Configuration["TheWatchApi"]
+                ?? throw new InvalidOperationException("WatchApi key is not configured in Key Vault.");
+        });
+
+        builder.Services.Configure<CosmosDbOptions>(options =>
+        {
+            options.CosmosConnectionString = builder.Configuration["watchplatformcache-connectionstring"]
+                ?? throw new InvalidOperationException("Cosmos DB connection string is not configured in Key Vault.");
+            options.DatabaseName = builder.Configuration["CosmosDb:DatabaseName"]
+                ?? throw new InvalidOperationException("Cosmos DB database name is not configured.");
+            options.ContainerName = builder.Configuration["CosmosDb:ContainerName"]
+                ?? throw new InvalidOperationException("Cosmos DB container name is not configured.");
+        });
+
+
         builder.Services.AddScoped<IValuationService, ValuationService>();
         builder.Services.AddScoped<IBrandsService, BrandsService>();
+        builder.Services.AddSingleton<ICosmosContainerProvider, CosmosContainerProvider>();
         builder.Services.AddScoped<IValuationCacheRepository, ValuationCacheRepository>();
         builder.Services.AddScoped<IBrandsCacheRepository, BrandsCacheRepository>();
         builder.Services
@@ -44,7 +65,7 @@ public class Program
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
-        // Add rate limiting
+        // Add rate limiting to the endpoints
         builder.Services.AddRateLimiter(options =>
         {
             options.AddFixedWindowLimiter("valuation", limiterOptions =>
