@@ -19,7 +19,7 @@ steps:
 
 - task: MSBuild@1
   inputs:
-    solution: '$(solution)'
+    solution: '$(solution)'          # IMPORTANT: use $(solution), not solution
     msbuildArchitecture: 'x64'
     msbuildArguments: >
       /p:DeployOnBuild=true
