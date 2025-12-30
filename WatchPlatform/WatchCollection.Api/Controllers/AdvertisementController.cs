@@ -23,6 +23,10 @@ namespace WatchCollection.Api.Controllers
                 var created = await _advertisementService.CreateAdvertisement(request);
                 return CreatedAtAction(nameof(GetById), new { advertisementId = created.AdvertisementId}, created);
             }
+            catch (InvalidAdvertisementStatusException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
             catch (Exception)
             {
                 return Problem("An error occurred while creating the advertisement.");
@@ -59,6 +63,10 @@ namespace WatchCollection.Api.Controllers
             {
                 var updated = await _advertisementService.UpdateAdvertisement(advertisementId, request);
                 return Ok(updated);
+            }
+            catch (InvalidAdvertisementStatusException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
             }
             catch (AdvertisementNotFoundExceptions)
             {

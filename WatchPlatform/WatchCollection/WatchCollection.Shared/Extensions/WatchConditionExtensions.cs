@@ -5,7 +5,7 @@ namespace WatchCollection.Shared.Extensions;
 
 public static class WatchConditionExtensions
 {
-     public static WatchCondition ParseWatchCondition(this string value)
+    public static WatchCondition ParseWatchCondition(this string value)
     {
         if (Enum.TryParse<WatchCondition>(value, ignoreCase: true, out var result))
             return result;

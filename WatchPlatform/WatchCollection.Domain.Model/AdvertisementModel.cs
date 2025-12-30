@@ -1,4 +1,5 @@
 using System;
+using WatchCollection.Shared.Enums;
 
 namespace WatchCollection.Domain.Model;
 
@@ -10,7 +11,7 @@ public class AdvertisementModel
     public required string Title { get; set; }
     public string? Description { get; set; }
     public required decimal AskingPrice { get; set; }
-    public required string Status { get; set; }
+    public required AdvertisementStatus Status { get; set; }
     public int? ViewCount { get; set; } // same reasoning as AdvertisementId
     public required bool AllowBids { get; set; }
     public DateTimeOffset? PublishedAt { get; set; }

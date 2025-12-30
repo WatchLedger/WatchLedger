@@ -2,6 +2,7 @@ using System;
 using WatchCollection.Api.Contracts;
 using WatchCollection.Domain.Model;
 using WatchCollection.Domain.Services.Exceptions;
+using WatchCollection.Shared.Extensions;
 using WatchCollection.Storage.Entities.Models;
 
 namespace WatchCollection.Domain.Services.Mapping;
@@ -16,7 +17,7 @@ internal static class AdvertisementMappingExtensions
                 ? watchId
                 : throw new MappingException("WatchId is required"),
             Title = contract.Title ?? throw new MappingException(),
-            Status = contract.Status ?? throw new MappingException(),
+            Status = contract.Status,
             Description = contract.Description,
             AskingPrice = contract.AskingPrice != default // ensure AskingPrice is greater than zero
                 ? contract.AskingPrice
@@ -41,7 +42,7 @@ internal static class AdvertisementMappingExtensions
             AskingPrice = model.AskingPrice != default // ensure AskingPrice is greater than zero
                 ? model.AskingPrice
                 : throw new MappingException("AskingPrice must be greater than zero."),
-            Status = model.Status ?? throw new MappingException(),
+            Status = model.Status,
             ViewCount = model.ViewCount,
             PublishedAt = model.PublishedAt,
             ExpiresAt = model.ExpiresAt,
@@ -68,7 +69,7 @@ internal static class AdvertisementMappingExtensions
             AskingPrice = model.AskingPrice != default // ensure AskingPrice is greater than zero
                 ? model.AskingPrice
                 : throw new MappingException("AskingPrice must be greater than zero."),
-            Status = model.Status ?? throw new MappingException("Status is required"),
+            Status = model.Status.ToString(),
             PublishedAt = model.PublishedAt,
             ExpiresAt = model.ExpiresAt,
             SoldAt = model.SoldAt,
@@ -86,7 +87,7 @@ internal static class AdvertisementMappingExtensions
             Title = entity.Title ?? throw new MappingException("Title is required"),
             Description = entity.Description,
             AskingPrice = entity.AskingPrice,
-            Status = entity.Status ?? throw new MappingException("Status is required"),
+            Status = entity.Status.ParseAdvertisementStatus(),
             ViewCount = entity.ViewCount,
             PublishedAt = entity.PublishedAt,
             ExpiresAt = entity.ExpiresAt,

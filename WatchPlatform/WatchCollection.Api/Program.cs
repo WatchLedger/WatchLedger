@@ -53,7 +53,9 @@ public class Program
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new WatchConditionJsonConverter());
+                options.JsonSerializerOptions.Converters.Add(new AdvertisementStatusJsonConverter());
             });
+
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 

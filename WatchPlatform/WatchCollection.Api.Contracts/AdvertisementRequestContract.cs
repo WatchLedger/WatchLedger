@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using WatchCollection.Shared.Enums;
 
 namespace WatchCollection.Api.Contracts;
 
@@ -13,7 +14,7 @@ public class AdvertisementRequestContract
     [MaxLength(1000)]
     public string? Description { get; set; }
     [Required]
-    public required string Status { get; set; }
+    public required AdvertisementStatus Status { get; set; }
     [Required]
     [Range(0.01, double.MaxValue, ErrorMessage = "Asking price must be greater than zero.")]
     public required decimal AskingPrice { get; set; }

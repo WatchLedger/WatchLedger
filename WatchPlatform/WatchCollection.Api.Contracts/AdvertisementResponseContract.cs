@@ -1,4 +1,5 @@
 using System;
+using WatchCollection.Shared.Enums;
 
 namespace WatchCollection.Api.Contracts;
 
@@ -15,7 +16,7 @@ public class AdvertisementResponseContract
 
     public required decimal AskingPrice { get; set; }
 
-    public string? Status { get; set; }
+    public required AdvertisementStatus Status { get; set; }
 
     public int? ViewCount { get; set; }
     public required bool AllowBids { get; set; }

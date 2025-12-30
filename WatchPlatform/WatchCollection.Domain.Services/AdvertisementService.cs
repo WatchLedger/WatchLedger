@@ -5,6 +5,7 @@ using WatchCollection.Domain.Services.Interfaces;
 using WatchCollection.Storage.Interfaces;
 using WatchCollection.Domain.Services.Mapping;
 using WatchCollection.Domain.Services.Exceptions;
+using WatchCollection.Shared.Enums;
 
 namespace WatchCollection.Domain.Services;
 
@@ -12,12 +13,14 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
 {
     public async Task<AdvertisementResponseContract> CreateAdvertisement(AdvertisementRequestContract contract)
     {
+        if(contract.Status is AdvertisementStatus.Sold || contract.Status is AdvertisementStatus.Expired)
+            throw new InvalidAdvertisementStatusException("Cannot create an advertisement with status Sold or Expired.");
+
         var model = contract.AsModel();
         var advertisementId = Guid.NewGuid();
         var sellerUserId = Guid.NewGuid(); // This should be retrieved from the authenticated user's context in a real application.
         model.AdvertisementId = advertisementId;
         model.SellerUserId = sellerUserId;
-        model.Status = "Active";
         model.ViewCount = 0;
         var entity = model.AsEntity();
         var createdEntity =  await _repository.CreateAdvertisementAsync(entity);
@@ -44,9 +47,12 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         return entities.Select(e => e.AsModel().AsContract());
     }
 
-    public async Task<AdvertisementResponseContract> UpdateAdvertisement(Guid advertisementId, AdvertisementRequestContract request)
+    public async Task<AdvertisementResponseContract> UpdateAdvertisement(Guid advertisementId, AdvertisementRequestContract contract)
     {
-        var model = request.AsModel();
+        if (contract.Status is AdvertisementStatus.Expired || contract.Status is AdvertisementStatus.Draft)
+            throw new InvalidAdvertisementStatusException("Cannot update an advertisement to status Expired or Draft");
+            
+        var model = contract.AsModel();
         model.AdvertisementId = advertisementId;
         model.SellerUserId = Guid.NewGuid(); // This should be retrieved from the authenticated user's context in a real application.
 
