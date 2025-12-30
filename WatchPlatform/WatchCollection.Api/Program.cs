@@ -1,6 +1,8 @@
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using WatchCollection.Domain.Services;
 using WatchCollection.Domain.Services.Interfaces;
+using WatchCollection.Shared.Converters;
 using WatchCollection.Storage;
 using WatchCollection.Storage.Entities.Data;
 using WatchCollection.Storage.Interfaces;
@@ -31,7 +33,11 @@ public class Program
         builder.Services.AddScoped<IBidRepository, BidRepository>();
         builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new WatchConditionJsonConverter());
+            });
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 

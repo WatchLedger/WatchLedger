@@ -3,6 +3,8 @@ using WatchCollection.Storage.Entities.Models;
 using WatchCollection.Api.Contracts;
 using WatchCollection.Domain.Model;
 using WatchCollection.Domain.Services.Exceptions;
+using WatchCollection.Shared.Enums;
+using WatchCollection.Shared.Extensions;
 
 namespace WatchCollection.Domain.Services.Mapping;
 
@@ -18,7 +20,7 @@ internal static class WatchMappingExtensions
             ReferenceNumber = contract.ReferenceNumber,
             SerialNumber = contract.SerialNumber,
             YearOfProduction = contract.YearOfProduction,
-            Condition = contract.Condition ?? throw new MappingException("Condition is required."),
+            Condition = contract.Condition,
             Description = contract.Description,
             PurchasePrice = contract.PurchasePrice,
             PurchaseDate = contract.PurchaseDate,
@@ -38,8 +40,7 @@ internal static class WatchMappingExtensions
             ReferenceNumber = model.ReferenceNumber,
             SerialNumber = model.SerialNumber,
             YearOfProduction = model.YearOfProduction,
-            Condition = model.Condition ?? throw new MappingException("Condition is required."),
-            Description = model.Description,
+            Condition = model.Condition.ToString(),
             PurchasePrice = model.PurchasePrice,
             PurchaseDate = model.PurchaseDate,
         };
@@ -58,7 +59,7 @@ internal static class WatchMappingExtensions
             ReferenceNumber = model.ReferenceNumber,
             SerialNumber = model.SerialNumber,
             YearOfProduction = model.YearOfProduction,
-            Condition = model.Condition ?? throw new MappingException("Condition is required."),
+            Condition = model.Condition,
             Description = model.Description,
             PurchasePrice = model.PurchasePrice,
             PurchaseDate = model.PurchaseDate,
@@ -78,14 +79,14 @@ internal static class WatchMappingExtensions
             ReferenceNumber = entity.ReferenceNumber,
             SerialNumber = entity.SerialNumber,
             YearOfProduction = entity.YearOfProduction,
-            Condition = entity.Condition ?? throw new MappingException("Condition is required."),
+            Condition = entity.Condition.ParseWatchCondition(),
             Description = entity.Description,
             PurchasePrice = entity.PurchasePrice,
             PurchaseDate = entity.PurchaseDate,
-            CreatedAt = entity.CreatedAt != default // Ensure CreatedAt is not default
+            CreatedAt = entity.CreatedAt != default
                 ? entity.CreatedAt
                 : throw new MappingException("CreatedAt is required."), 
-            UpdatedAt = entity.UpdatedAt != default // Ensure UpdatedAt is not default
+            UpdatedAt = entity.UpdatedAt != default
                 ? entity.UpdatedAt
                 : throw new MappingException("UpdatedAt is required.")
         };
