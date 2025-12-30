@@ -1,4 +1,5 @@
 using System;
+using WatchCollection.Shared.Enums;
 
 namespace WatchCollection.Domain.Model;
 
@@ -11,7 +12,7 @@ public class WatchModel
     public string? ReferenceNumber { get; set; }
     public string? SerialNumber { get; set; }
     public int? YearOfProduction { get; set; }
-    public required string Condition { get; set; }
+    public required WatchCondition Condition { get; set; }
     public string? Description { get; set; }
     public decimal? PurchasePrice { get; set; }
     public DateOnly? PurchaseDate { get; set; }

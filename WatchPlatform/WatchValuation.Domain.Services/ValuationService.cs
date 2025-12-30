@@ -3,14 +3,15 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using WatchValuation.Api.Contracts;
 using WatchValuation.Domain.Services.Interfaces;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
+using WatchValuation.Infrastructure;
 using WatchValuation.Storage.Interfaces;
 using WatchValuation.Storage.Records;
 using WatchValuation.Domain.Services.Exceptions;
 
 namespace WatchValuation.Domain.Services;
 
-public class ValuationService(HttpClient _httpClient, IConfiguration _configuration, IValuationCacheRepository _cacheRepository) : IValuationService
+public class ValuationService(HttpClient _httpClient, IOptions<ExternalApiOptions> _options, IValuationCacheRepository _cacheRepository) : IValuationService
 {
 
     public async Task<ValuationResponseContract> GetWatchValuationFromCacheAsync(string referenceNumber)
@@ -27,42 +28,27 @@ public class ValuationService(HttpClient _httpClient, IConfiguration _configurat
 
     private async Task<ValuationResponseContract> GetWatchValuationFromApiAsync(string referenceNumber)
     {
-        //var token = _configuration["WatchApi"] 
-        //     ?? throw new InvalidOperationException("Watch API token is not configured. Set it via user secrets or configuration.");
-        // string url = $"https://api.thewatchapi.com/v1/reference/price/history?reference_number={request.ReferenceNumber}&api_token={token}";
+        var apiOptions = _options.Value;
+        string url = $"{apiOptions.BaseUrl}/reference/price/history?reference_number={referenceNumber}&api_token={apiOptions.ApiKey}";
 
-        // var response = await _httpClient.GetAsync(url);
-        // response.EnsureSuccessStatusCode();
+        var response = await _httpClient.GetAsync(url);
+        response.EnsureSuccessStatusCode();
         
-        // await using var responseStream = await response.Content.ReadAsStreamAsync();
-        // var apiResponse = await
-        //     JsonSerializer.DeserializeAsync<WatchPriceHistoryResponse>(
-        //         responseStream,
-        //         new JsonSerializerOptions 
-        //         { 
-        //             PropertyNameCaseInsensitive = true 
-        //         });
-
-        // temporarily mocked response bacause API access is not available right now
-        var apiResponse = new WatchPriceHistoryResponse
-        {
-            Meta = new WatchMeta
-            {
-                Brand = "Rolex",
-                Reference_Number = referenceNumber
-            },
-            Data = new List<WatchPricePoint>
-            {
-                new WatchPricePoint { Date = DateTime.UtcNow.AddMonths(-1), Price = 12000 },
-                new WatchPricePoint { Date = DateTime.UtcNow.AddMonths(-3), Price = 11500 },
-                new WatchPricePoint { Date = DateTime.UtcNow.AddMonths(-5), Price = 11800 },
-            }
-        };
+        await using var responseStream = await response.Content.ReadAsStreamAsync();
+        var apiResponse = await
+            JsonSerializer.DeserializeAsync<WatchPriceHistoryResponse>(
+                responseStream,
+                new JsonSerializerOptions 
+                { 
+                    PropertyNameCaseInsensitive = true 
+                });
 
         if (apiResponse is null || apiResponse.Data is null || apiResponse.Data.Count == 0 || apiResponse.Meta is null)
             throw new WatchValuationException("Failed to retrieve valuation data.");
         
-        var sixMonthsAgo = DateTime.UtcNow.AddMonths(-6);
+        // I had to alter this slightly since the data is outdated and stops at 2024-07-.. so it's the last six months from the latest date available
+        var anchorDate = apiResponse.Data.Max(p => p.Date);
+        var sixMonthsAgo = anchorDate.AddMonths(-6);
         var pricesLastSixMonths = apiResponse.Data
             .Where(p => p.Date >= sixMonthsAgo)
             .Select(p => p.Price)
@@ -71,7 +57,9 @@ public class ValuationService(HttpClient _httpClient, IConfiguration _configurat
         if (pricesLastSixMonths.Count == 0)
             throw new WatchValuationUnavailableException("No price data available for the last six months.");
 
-        var watchValuation = new ValuationResponseContract{ AveragePriceLastSixMonths = pricesLastSixMonths.Average() };
+         var average = pricesLastSixMonths.Average();
+         var rounded = Math.Round(average, 2, MidpointRounding.AwayFromZero);
+         var watchValuation = new ValuationResponseContract { AveragePriceLastSixMonths = rounded };
         await SetCachedValuation(watchValuation, referenceNumber);
         return watchValuation;
     }

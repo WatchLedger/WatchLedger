@@ -1,17 +1,18 @@
 using WatchValuation.Storage.Interfaces;
 using WatchValuation.Storage.Records;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Azure.Cosmos;
+using Microsoft.Extensions.Options;
+using WatchValuation.Infrastructure;
 
 namespace WatchValuation.Storage;
 
-public class ValuationCacheRepository(IConfiguration _configuration) : IValuationCacheRepository
+public class ValuationCacheRepository(ICosmosContainerProvider _containerProvider) : IValuationCacheRepository
 {
     public async Task<CachedValuation?> GetCachedValuationAsync(string watchReference)
     {
         try
         {
-            var container = GetCosmosContainer(_configuration);
+            var container = _containerProvider.GetContainer();
             var response = await container.ReadItemAsync<CachedValuation>(
                 partitionKey: new PartitionKey(watchReference),
                 id: watchReference);
@@ -27,7 +28,7 @@ public class ValuationCacheRepository(IConfiguration _configuration) : IValuatio
     {
         try
         {
-            var container = GetCosmosContainer(_configuration);
+            var container = _containerProvider.GetContainer();
             await container.UpsertItemAsync(
                 item: cachedValuation,
                 partitionKey: new PartitionKey(cachedValuation.id));
@@ -38,16 +39,4 @@ public class ValuationCacheRepository(IConfiguration _configuration) : IValuatio
         }
     }
 
-    private static Container GetCosmosContainer(IConfiguration _configuration)
-    {
-        var constring = _configuration["watchplatformcache-connectionstring"];
-        var client = new CosmosClient(constring);
-        var database = client.GetDatabase("watchplatform");
-        var container = database.GetContainer("WatchPlatformCache");
-
-        if (container is null)
-            throw new Exception("Failed to get Cosmos DB container.");
-        
-        return container;
-    }
 }
