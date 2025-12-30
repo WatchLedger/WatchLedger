@@ -5,7 +5,7 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: 'WatchPlatform/WatchCollection/WatchCollection.sln'
+  solution: 'WatchPlatform/Watchplatfrom.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
