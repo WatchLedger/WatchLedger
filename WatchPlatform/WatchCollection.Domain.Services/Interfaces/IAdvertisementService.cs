@@ -9,6 +9,6 @@ public interface IAdvertisementService
     Task<AdvertisementResponseContract?> GetAdvertisementById(Guid advertisementId);
     Task<AdvertisementResponseContract> UpdateAdvertisement(Guid advertisementId, AdvertisementRequestContract request);
     Task DeleteAdvertisement(Guid advertisementId);
-    Task<IEnumerable<AdvertisementResponseContract>> GetAdvertisementsByWatchId(Guid watchId);
+    Task<IEnumerable<AdvertisementResponseContract>> GetAllAdvertisements();
     Task<decimal> GetWatchValuation(string referenceNumber);
 }

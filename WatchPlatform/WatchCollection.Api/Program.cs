@@ -22,11 +22,13 @@ public class Program
         builder.Services.AddScoped<IWatchService, WatchService>();
         builder.Services.AddScoped<IWatchImageService, WatchImageService>();
         builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
+        builder.Services.AddScoped<IBidService, BidService>();
         builder.Services.AddHttpClient<IWatchValuationHttpClient, WatchValuationHttpClient>();
         // Add repositories to the container.
         builder.Services.AddScoped<IWatchRepository, WatchRepository>();
         builder.Services.AddScoped<IWatchImageRepository, WatchImageRepository>();
         builder.Services.AddScoped<IAdvertisementRepository, AdvertisementRepository>();
+        builder.Services.AddScoped<IBidRepository, BidRepository>();
         builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
 
         builder.Services.AddControllers();

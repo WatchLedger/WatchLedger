@@ -14,18 +14,20 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
     {
         var model = contract.AsModel();
         var advertisementId = Guid.NewGuid();
+        var sellerUserId = Guid.NewGuid(); // This should be retrieved from the authenticated user's context in a real application.
         model.AdvertisementId = advertisementId;
+        model.SellerUserId = sellerUserId;
         model.Status = "Active";
-        model.PublishedAt = DateTimeOffset.UtcNow;
+        model.ViewCount = 0;
         var entity = model.AsEntity();
         var createdEntity =  await _repository.CreateAdvertisementAsync(entity);
 
         return createdEntity.AsModel().AsContract();
     }
 
-    public Task DeleteAdvertisement(Guid advertisementId)
+    public async Task DeleteAdvertisement(Guid advertisementId)
     {
-        throw new NotImplementedException();
+        await _repository.DeleteAdvertisementAsync(advertisementId);
     }
 
     public async Task<AdvertisementResponseContract?> GetAdvertisementById(Guid advertisementId)
@@ -36,14 +38,22 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         return entity.AsModel().AsContract();
     }
 
-    public Task<IEnumerable<AdvertisementResponseContract>> GetAdvertisementsByWatchId(Guid watchId)
+    public async Task<IEnumerable<AdvertisementResponseContract>> GetAllAdvertisements()
     {
-        throw new NotImplementedException();
+        var entities = await _repository.GetAllAdvertisementsAsync();
+        return entities.Select(e => e.AsModel().AsContract());
     }
 
-    public Task<AdvertisementResponseContract> UpdateAdvertisement(Guid advertisementId, AdvertisementRequestContract request)
+    public async Task<AdvertisementResponseContract> UpdateAdvertisement(Guid advertisementId, AdvertisementRequestContract request)
     {
-        throw new NotImplementedException();
+        var model = request.AsModel();
+        model.AdvertisementId = advertisementId;
+        model.SellerUserId = Guid.NewGuid(); // This should be retrieved from the authenticated user's context in a real application.
+
+        var entity = model.AsEntity();
+        
+        var updatedEntity =  await _repository.UpdateAdvertisementAsync(entity);
+        return updatedEntity.AsModel().AsContract();
     }
 
     public async Task<decimal> GetWatchValuation(string referenceNumber)

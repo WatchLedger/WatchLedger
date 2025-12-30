@@ -13,10 +13,8 @@ public class WatchService(IWatchRepository _repository, IWatchImageService _watc
     public async Task<WatchResponseContract> CreateWatch(WatchRequestContract contract)
     {
         var model = contract.AsModel();
-        model.OwnerId = Guid.NewGuid();
         model.WatchId = Guid.NewGuid();
-        model.CreatedAt = DateTimeOffset.Now;
-        model.UpdatedAt = model.CreatedAt;
+        model.OwnerId = Guid.NewGuid(); // will be replaced with actual user id from auth context
 
         var entity = model.AsEntity();
         var created = await _repository.Create(entity);
@@ -51,7 +49,8 @@ public class WatchService(IWatchRepository _repository, IWatchImageService _watc
         try
         {
             var model = contract.AsModel();
-            model.UpdatedAt = DateTimeOffset.Now;
+            model.WatchId = watchId;
+            model.OwnerId = Guid.NewGuid(); // will be replaced with actual user id from auth context
 
             var entity = model.AsEntity();
             var updatedWatch = await _repository.UpdateWatch(watchId, entity);
@@ -66,8 +65,8 @@ public class WatchService(IWatchRepository _repository, IWatchImageService _watc
 
     public async Task DeleteWatch(Guid watchId)
     {
-        await _repository.DeleteWatch(watchId);
         await _watchImageService.DeleteImagesByWatchIdAsync(watchId);
+        await _repository.DeleteWatch(watchId);
     }
 
     public async Task<IEnumerable<string>> GetWatchBrands()

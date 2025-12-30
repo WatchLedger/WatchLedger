@@ -30,3 +30,10 @@ public class WatchImageNotFoundException : EntityNotFoundException
     public WatchImageNotFoundException(Guid id) : base(id: null, message: $"Watch entity '{id}' not found.") { }
     public WatchImageNotFoundException(Guid id, string message) : base(id, message) { }
 }
+
+public class BidNotFoundExceptions : EntityNotFoundException
+{
+    public BidNotFoundExceptions() : base() { }
+    public BidNotFoundExceptions(Guid id) : base(id: null, message: $"Bid entity '{id} not found'") { }
+    public BidNotFoundExceptions(Guid id, string message) : base(id, message) { }
+}

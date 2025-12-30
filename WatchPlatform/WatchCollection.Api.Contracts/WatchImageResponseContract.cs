@@ -10,6 +10,6 @@ public class WatchImageResponseContract
     public required string FileName { get; set; }
     public long? FileSize { get; set; }
     public string? ContentType { get; set; }
-    public bool? IsPrimary { get; set; }
-    public DateTimeOffset? UploadedAt { get; set; }
+    public required bool IsPrimary { get; set; }
+    public required DateTimeOffset UploadedAt { get; set; }
 }

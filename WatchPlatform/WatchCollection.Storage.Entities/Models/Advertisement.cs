@@ -17,9 +17,9 @@ public partial class Advertisement
 
     public decimal AskingPrice { get; set; }
 
-    public string? Status { get; set; }
+    public string Status { get; set; } = null!;
 
-    public int? ViewCount { get; set; }
+    public int ViewCount { get; set; }
 
     public DateTimeOffset? PublishedAt { get; set; }
 
@@ -27,9 +27,13 @@ public partial class Advertisement
 
     public DateTimeOffset? SoldAt { get; set; }
 
-    public DateTimeOffset? CreatedAt { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
 
-    public DateTimeOffset? UpdatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
+
+    public bool AllowBids { get; set; }
+
+    public virtual ICollection<Bid> Bids { get; set; } = new List<Bid>();
 
     public virtual Watch Watch { get; set; } = null!;
 }
