@@ -4,8 +4,7 @@ namespace WatchCollection.Domain.Model;
 
 public class WatchImageModel
 {
-    public Guid? ImageId { get; set; }
-
+    public Guid ImageId { get; set; } //non-nullable only for watchimage since there's no mapping from contract to model without it
     public Guid WatchId { get; set; }
 
     public string BlobUrl { get; set; } = null!;
@@ -16,7 +15,7 @@ public class WatchImageModel
 
     public string? ContentType { get; set; }
 
-    public bool? IsPrimary { get; set; }
+    public bool IsPrimary { get; set; }
 
-    public DateTimeOffset? UploadedAt { get; set; }
+    public DateTimeOffset UploadedAt { get; set; } // same exception here as ImageId
 }

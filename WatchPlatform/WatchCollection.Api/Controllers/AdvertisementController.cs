@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using WatchCollection.Api.Contracts;
 using WatchCollection.Domain.Services.Exceptions;
 using WatchCollection.Domain.Services.Interfaces;
+using WatchCollection.Storage.Exceptions;
 
 namespace WatchCollection.Api.Controllers
 {
@@ -39,6 +40,10 @@ namespace WatchCollection.Api.Controllers
                     return NotFound(new { Message = $"Advertisement with id {advertisementId} not found." });
                 return Ok(advertisement);
             }
+            catch (AdvertisementNotFoundExceptions)
+            {
+                return NotFound(new { Message = $"Advertisement with id {advertisementId} not found." });
+            }
             catch (Exception)
             {
                 return Problem("An error occurred while retrieving the advertisement.");
@@ -52,8 +57,12 @@ namespace WatchCollection.Api.Controllers
         {
             try
             {
-                //var updated = await _advertisementService.UpdateAdvertisement(advertisementId, request);
-                return Ok(null); //to be implemented
+                var updated = await _advertisementService.UpdateAdvertisement(advertisementId, request);
+                return Ok(updated);
+            }
+            catch (AdvertisementNotFoundExceptions)
+            {
+                return NotFound(new { Message = $"Advertisement with id {advertisementId} not found." });
             }
             catch (Exception)
             {
@@ -67,8 +76,8 @@ namespace WatchCollection.Api.Controllers
         {
             try
             {
-                //var advertisements = await _advertisementService.GetAllAdvertisements();
-                return Ok(null); //to be implemented
+                var advertisements = await _advertisementService.GetAllAdvertisements();
+                return Ok(advertisements);
             }
             catch (Exception)
             {
@@ -83,7 +92,7 @@ namespace WatchCollection.Api.Controllers
         {
             try
             {
-                //await _advertisementService.DeleteAdvertisement(advertisementId); to be implemented
+                await _advertisementService.DeleteAdvertisement(advertisementId);
                 return NoContent();
             }
             catch (Exception)

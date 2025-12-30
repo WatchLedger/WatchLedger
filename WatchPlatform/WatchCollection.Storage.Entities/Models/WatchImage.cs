@@ -5,7 +5,7 @@ namespace WatchCollection.Storage.Entities.Models;
 
 public partial class WatchImage
 {
-    public Guid? ImageId { get; set; }
+    public Guid ImageId { get; set; }
 
     public Guid WatchId { get; set; }
 
@@ -17,9 +17,9 @@ public partial class WatchImage
 
     public string? ContentType { get; set; }
 
-    public bool? IsPrimary { get; set; }
+    public bool IsPrimary { get; set; }
 
-    public DateTimeOffset? UploadedAt { get; set; }
+    public DateTimeOffset UploadedAt { get; set; }
 
     public virtual Watch Watch { get; set; } = null!;
 }

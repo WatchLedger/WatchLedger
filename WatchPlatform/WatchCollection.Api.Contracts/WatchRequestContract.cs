@@ -10,7 +10,7 @@ public class WatchRequestContract
     public required string Brand { get; set; }
     [Required]
     public required string Model { get; set; }
-    public string? RefereceNumber { get; set; }
+    public string? ReferenceNumber { get; set; }
     public string? SerialNumber { get; set; }
     public int? YearOfProduction { get; set; }
     [Required]
@@ -18,5 +18,4 @@ public class WatchRequestContract
     public string? Description { get; set; }
     public decimal? PurchasePrice { get; set; }
     public DateOnly? PurchaseDate { get; set; }
-    public bool? IsForSale { get; set; }
 }

@@ -3,7 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WatchCollection.Api.Contracts;
 
-public class WatchImageRequestContract
+public class BidRequestContract
 {
-    public bool? IsPrimary { get; set; }
+    [Required]
+    public required decimal Amount { get; set; }
 }

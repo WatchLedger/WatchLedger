@@ -19,7 +19,7 @@ namespace WatchCollection.Api.Controllers
         //only possible for logged in users and admins
         public async Task<ActionResult> UploadImage(
             [FromRoute] Guid watchId,
-            [FromForm] WatchImageRequestContract contract, 
+            [FromForm] bool isPrimary,
             [FromForm] IFormFile file)
         {
             try
@@ -29,7 +29,7 @@ namespace WatchCollection.Api.Controllers
                 var fileSize = file.Length;
 
                 using var stream = file.OpenReadStream();
-                var result =  await _service.UploadImageAsync(watchId, fileName, contentType, fileSize,contract, stream);
+                var result =  await _service.UploadImageAsync(watchId, fileName, contentType, fileSize, isPrimary, stream);
                 return CreatedAtAction(nameof(GetImages), new { watchId = watchId, imageId = result.ImageId }, result);
             }
             catch(EntityNotFoundException enfe)
