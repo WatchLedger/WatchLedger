@@ -1,7 +1,9 @@
 using System;
+using System.Linq.Expressions;
 using WatchCollection.Api.Contracts;
 using WatchCollection.Domain.Model;
 using WatchCollection.Domain.Services.Exceptions;
+using WatchCollection.Shared.Enums;
 using WatchCollection.Shared.Extensions;
 using WatchCollection.Storage.Entities.Models;
 
@@ -9,6 +11,19 @@ namespace WatchCollection.Domain.Services.Mapping;
 
 internal static class AdvertisementMappingExtensions
 {
+    // seperate method to wrap exception translation
+    private static AdvertisementStatus SafeParseAdvertisementStatus(string status)
+    {
+        try
+        {
+            return status.ParseAdvertisementStatus();
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new MappingException($"Invalid advertisement status: {ex.Message}");
+        }
+    }
+
     public static AdvertisementModel AsModel(this AdvertisementRequestContract contract)
     {
         return new AdvertisementModel
@@ -87,7 +102,7 @@ internal static class AdvertisementMappingExtensions
             Title = entity.Title ?? throw new MappingException("Title is required"),
             Description = entity.Description,
             AskingPrice = entity.AskingPrice,
-            Status = entity.Status.ParseAdvertisementStatus(),
+            Status = SafeParseAdvertisementStatus(entity.Status),
             ViewCount = entity.ViewCount,
             PublishedAt = entity.PublishedAt,
             ExpiresAt = entity.ExpiresAt,

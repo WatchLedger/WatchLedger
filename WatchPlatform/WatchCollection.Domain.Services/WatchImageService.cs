@@ -18,7 +18,7 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
 
         var watch = await _watchRepository.GetWatchById(watchId);
         if (watch is null)
-            throw new WatchNotFoundException();
+            throw new WatchNotFoundException(watchId, "Watch not found");
 
         var updatedFileName = Guid.NewGuid().ToString() + "_" + fileName; // Ensures unique filenames
         var imageUrl = await _blobStorageService.UploadImageAsync(updatedFileName, imageStream);
@@ -43,7 +43,7 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
     {
         var watch = await _watchRepository.GetWatchById(watchId);
         if (watch is null)
-            throw new WatchNotFoundException();
+            throw new WatchNotFoundException(watchId, "Watch not found");
 
         var entities =  await _watchImageRepository.GetAllImagesByWatchIdAsync(watchId);
         return entities.Select(e => e.AsModel().AsContract()).ToList();
@@ -53,7 +53,7 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
     {
         var watch = await _watchRepository.GetWatchById(watchId);
         if (watch is null)
-            throw new WatchNotFoundException();
+            throw new WatchNotFoundException(watchId, "Watch not found");
 
         var blobUrl = await _watchImageRepository.DeleteWatchImageDataAsync(watchId, imageId);
         await _blobStorageService.DeleteImageAsync(blobUrl);
@@ -63,7 +63,7 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
     {
         var watch = await _watchRepository.GetWatchById(watchId);
         if (watch is null)
-            throw new WatchNotFoundException();
+            throw new WatchNotFoundException(watchId, "Watch not found");
 
         var updatedEntity = await _watchImageRepository.SetMainImageAsync(watchId, imageId);
         return updatedEntity.AsModel().AsContract();
@@ -73,7 +73,7 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
     {
         var watch = await _watchRepository.GetWatchById(watchId);
         if (watch is null)
-            throw new WatchNotFoundException();
+        throw new WatchNotFoundException(watchId);
 
         var fileNames = await _watchImageRepository.GetFilenamesByWatchIdAsync(watchId);
         return fileNames;

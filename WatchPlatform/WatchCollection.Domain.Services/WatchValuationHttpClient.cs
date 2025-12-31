@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using WatchCollection.Domain.Services.Exceptions;
 using WatchCollection.Domain.Services.Interfaces;
 
 namespace WatchCollection.Domain.Services;
@@ -22,18 +23,16 @@ public sealed class WatchValuationHttpClient(HttpClient _httpClient) : IWatchVal
     {
         if (string.IsNullOrWhiteSpace(referenceNumber))
         {
-            throw new ArgumentException("Reference number is required.", nameof(referenceNumber));
+            throw new DomainInvalidOperationException("Reference number is required.");
         }
 
         var response = await _httpClient.GetAsync($"http://localhost:5005/api/valuation?referenceNumber={Uri.EscapeDataString(referenceNumber)}", cancellationToken);
         response.EnsureSuccessStatusCode();
 
-        var dto = await response.Content.ReadFromJsonAsync<ValuationResponse>(cancellationToken: cancellationToken);
+        var dto = await response.Content
+            .ReadFromJsonAsync<ValuationResponse>(cancellationToken: cancellationToken) ??
+            throw new ValuationUnavailableException("Valuation data is unavailable.");
 
-        if (dto is null)
-        {
-            throw new InvalidOperationException("Valuation response was empty.");
-        }
 
         return dto.AveragePriceLastSixMonths;
     }

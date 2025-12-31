@@ -27,10 +27,8 @@ public class WatchImageRepository(WatchServiceDbContext _dbContext) : IWatchImag
     public async Task<string> DeleteWatchImageDataAsync(Guid watchId, Guid imageId)
     {
         var watchImage = await _dbContext.WatchImages
-            .FirstOrDefaultAsync(wi => wi.WatchId == watchId && wi.ImageId == imageId);
-
-        if (watchImage is null)
-            throw new WatchImageNotFoundException();
+            .FirstOrDefaultAsync(wi => wi.WatchId == watchId && wi.ImageId == imageId) ??
+            throw new WatchImageNotFoundException(imageId, "Watch image not found");
 
         _dbContext.WatchImages.Remove(watchImage);
         await _dbContext.SaveChangesAsync();
@@ -57,7 +55,7 @@ public class WatchImageRepository(WatchServiceDbContext _dbContext) : IWatchImag
             .ToListAsync();
 
         if (!images.Any(img => img.ImageId == imageId))
-            throw new WatchImageNotFoundException();
+            throw new WatchImageNotFoundException(imageId, "Watch image not found");
 
         foreach (var img in images)
         {

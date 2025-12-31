@@ -46,9 +46,9 @@ public class BidRepository(WatchServiceDbContext _context) : IBidRepository
 
     public async Task RemoveBidAsync(Guid bidId)
     {
-        var entity = _context.Bids.FirstOrDefault(b => b.BidId == bidId);
-        if(entity is null)
-            throw new BidNotFoundExceptions();
+        var entity = _context.Bids
+            .FirstOrDefault(b => b.BidId == bidId) ??
+            throw new BidNotFoundExceptions(bidId, "Bid not found");
 
         _context.Remove(entity);
         await _context.SaveChangesAsync();
