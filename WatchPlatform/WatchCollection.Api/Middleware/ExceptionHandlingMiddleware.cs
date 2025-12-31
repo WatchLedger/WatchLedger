@@ -24,7 +24,8 @@ public class ExceptionHandlingMiddleware
         }
         catch (Exception ex)
         {
-            // Only log unexpected exceptions - expected business logic exceptions are noise
+            // Ensure only unexpected exceptions are logged as errors 
+            // since expected exceptions are part of normal flow
             var isExpectedException = ex is (
                 EntityNotFoundException or BidTooLowException 
                 or DomainInvalidOperationException or EntityUnavailableException 
@@ -67,7 +68,7 @@ public class ExceptionHandlingMiddleware
                      "Data conflict", 
                      due.InnerException?.Message ?? "Unable to save changes due to data integrity constraints."),
 
-                // Unhandled exceptions
+                // Unhandled exceptions (all other types)
                 _ =>
                     (StatusCodes.Status500InternalServerError,
                     "Unexpected error",
