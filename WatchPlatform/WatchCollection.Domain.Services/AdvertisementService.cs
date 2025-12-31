@@ -6,6 +6,7 @@ using WatchCollection.Storage.Interfaces;
 using WatchCollection.Domain.Services.Mapping;
 using WatchCollection.Domain.Services.Exceptions;
 using WatchCollection.Shared.Enums;
+using WatchCollection.Storage.Exceptions;
 
 namespace WatchCollection.Domain.Services;
 
@@ -47,14 +48,26 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         return entities.Select(e => e.AsModel().AsContract());
     }
 
-    public async Task<AdvertisementResponseContract> UpdateAdvertisement(Guid advertisementId, AdvertisementRequestContract contract)
+    public async Task<AdvertisementResponseContract> UpdateAdvertisement(Guid advertisementId, AdvertisementUpdateRequestContract contract)
     {
         if (contract.Status is AdvertisementStatus.Expired || contract.Status is AdvertisementStatus.Draft)
             throw new InvalidAdvertisementStatusException("Cannot update an advertisement to status Expired or Draft");
-            
-        var model = contract.AsModel();
+        var advertisement = await _repository.GetAdvertisementByIdAsync(advertisementId);
+        if (advertisement is null)
+            throw new AdvertisementNotFoundExceptions(advertisementId, "Advertisement not found");
+        
+        var contractWithWatchId = new AdvertisementRequestContract
+        {
+            WatchId = advertisement.WatchId,
+            Title = contract.Title,
+            Description = contract.Description,
+            AskingPrice = contract.AskingPrice,
+            Status = contract.Status,
+            AllowBids = contract.AllowBids
+        };
+        var model = contractWithWatchId.AsModel();
         model.AdvertisementId = advertisementId;
-        model.SellerUserId = Guid.NewGuid(); // This should be retrieved from the authenticated user's context in a real application.
+        model.SellerUserId = advertisement.SellerUserId; // This should be retrieved from the authenticated user's context in a real application.
 
         var entity = model.AsEntity();
         
@@ -64,20 +77,9 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
 
     public async Task<decimal> GetWatchValuation(string referenceNumber)
     {
-        try
-        {
-            var valuation = await _watchValuationClient.GetWatchValuationAsync(referenceNumber);
-            if(valuation == default)
-                throw new ValuationUnavailableException("No valuation available for the provided reference number.");
-            return valuation;
-        }
-        catch(ArgumentException)
-        {
-            throw;
-        }
-        catch (Exception)
-        {   
-            throw;
-        }
+        var valuation = await _watchValuationClient.GetWatchValuationAsync(referenceNumber);
+        if(valuation == default)
+            throw new ValuationUnavailableException("No valuation available for the provided reference number.");
+        return valuation;
     }
 }

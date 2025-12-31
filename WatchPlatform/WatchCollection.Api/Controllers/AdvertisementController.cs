@@ -13,84 +13,39 @@ namespace WatchCollection.Api.Controllers
     public class AdvertisementController(IAdvertisementService _advertisementService) : ControllerBase
     {
         [HttpPost]
-        
         //only possible for logged in users and admins
         //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult<AdvertisementResponseContract>> CreateAdvertisement([FromBody] AdvertisementRequestContract request)
         {
-            try
-            {
-                var created = await _advertisementService.CreateAdvertisement(request);
-                return CreatedAtAction(nameof(GetById), new { advertisementId = created.AdvertisementId}, created);
-            }
-            catch (InvalidAdvertisementStatusException ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
-            catch (Exception)
-            {
-                return Problem("An error occurred while creating the advertisement.");
-            }
+            var created = await _advertisementService.CreateAdvertisement(request);
+            return CreatedAtAction(nameof(GetById), new { advertisementId = created.AdvertisementId}, created);  
         }
 
         [HttpGet("{advertisementId:Guid}")]
         //possible for all users
         public async Task<ActionResult<AdvertisementResponseContract>> GetById([FromRoute] Guid advertisementId)
         {
-            try
-            {
-                var advertisement = await _advertisementService.GetAdvertisementById(advertisementId);
-                if (advertisement is null)
-                    return NotFound(new { Message = $"Advertisement with id {advertisementId} not found." });
-                return Ok(advertisement);
-            }
-            catch (AdvertisementNotFoundExceptions)
-            {
+            var advertisement = await _advertisementService.GetAdvertisementById(advertisementId);
+            if (advertisement is null)
                 return NotFound(new { Message = $"Advertisement with id {advertisementId} not found." });
-            }
-            catch (Exception)
-            {
-                return Problem("An error occurred while retrieving the advertisement.");
-            }
+            return Ok(advertisement);
         }
 
         [HttpPut("{advertisementId:Guid}")]
         // only possible for logged in users and admins
         //[RoleAuthorize("User", "Admin")]
-        public async Task<ActionResult<AdvertisementResponseContract>> UpdateAdvertisement([FromRoute] Guid advertisementId, [FromBody] AdvertisementRequestContract request)
+        public async Task<ActionResult<AdvertisementResponseContract>> UpdateAdvertisement([FromRoute] Guid advertisementId, [FromBody] AdvertisementUpdateRequestContract request)
         {
-            try
-            {
-                var updated = await _advertisementService.UpdateAdvertisement(advertisementId, request);
-                return Ok(updated);
-            }
-            catch (InvalidAdvertisementStatusException ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
-            catch (AdvertisementNotFoundExceptions)
-            {
-                return NotFound(new { Message = $"Advertisement with id {advertisementId} not found." });
-            }
-            catch (Exception)
-            {
-                return Problem("An error occurred while updating the advertisement.");
-            }
+            var updated = await _advertisementService.UpdateAdvertisement(advertisementId, request);
+            return Ok(updated);
         }
 
         [HttpGet]
         //possible for all users
         public async Task<ActionResult<IEnumerable<AdvertisementResponseContract>>> GetAllAdvertisements()
         {
-            try
-            {
-                var advertisements = await _advertisementService.GetAllAdvertisements();
-                return Ok(advertisements);
-            }
-            catch (Exception)
-            {
-                return Problem("An error occurred while retrieving advertisements.");
-            }
+            var advertisements = await _advertisementService.GetAllAdvertisements();
+            return Ok(advertisements);
         }
 
         [HttpDelete("{advertisementId:Guid}")]
@@ -98,42 +53,19 @@ namespace WatchCollection.Api.Controllers
         //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult> DeleteAdvertisement([FromRoute] Guid advertisementId)
         {
-            try
-            {
-                await _advertisementService.DeleteAdvertisement(advertisementId);
-                return NoContent();
-            }
-            catch (Exception)
-            {
-                return Problem("An error occurred while deleting the advertisement.");
-            }
+            await _advertisementService.DeleteAdvertisement(advertisementId);
+            return NoContent();
         }
 
         [HttpGet("valuation")]
         public async Task<ActionResult<decimal>> GetWatchValuation([FromQuery] string referenceNumber)
         {
-            try 
+            var valuation = await _advertisementService.GetWatchValuation(referenceNumber);
+            if (valuation == default)
             {
-                var valuation = await _advertisementService.GetWatchValuation(referenceNumber);
-                if (valuation == default)
-                {
-                    return NotFound(new { Message = "No valuation available for the provided reference number." });
-                }
-                return Ok(valuation);
+                return NotFound(new { Message = "No valuation available for the provided reference number." });
             }
-            catch (ValuationUnavailableException ex)
-            {
-                return NotFound(new { Message = ex.Message });
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return Problem("An error occurred while retrieving the watch valuation.");
-            }
+            return Ok(valuation);
         }
     }
 }

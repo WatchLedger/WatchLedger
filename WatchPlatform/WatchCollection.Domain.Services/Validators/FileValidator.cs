@@ -1,4 +1,5 @@
 using System;
+using WatchCollection.Domain.Services.Exceptions;
 
 namespace WatchCollection.Domain.Services.Validators;
 
@@ -11,22 +12,21 @@ public static class FileValidator
     public static void ValidateImageFile(string fileName, string contentType, long fileSize)
     {
         if (string.IsNullOrWhiteSpace(fileName))
-            throw new ArgumentException("File name cannot be empty.");
+            throw new FileValidationException("File name cannot be empty.");
 
         if (string.IsNullOrWhiteSpace(contentType))
-            throw new ArgumentException("Content type cannot be empty.");
+            throw new FileValidationException("Content type cannot be empty.");
 
         if (fileSize <= 0)
-            throw new ArgumentException("File size must be greater than 0.");
+            throw new FileValidationException("File size must be greater than 0.");
 
         if (fileSize > MaxFileSizeBytes)
-            throw new ArgumentException($"File size exceeds maximum allowed size of {MaxFileSizeBytes / (1024 * 1024)} MB.");
+            throw new FileValidationException($"File size exceeds maximum allowed size of {MaxFileSizeBytes / (1024 * 1024)} MB.");
 
         var extension = Path.GetExtension(fileName).ToLowerInvariant();
         if (!AllowedExtensions.Contains(extension))
-            throw new ArgumentException($"File extension '{extension}' is not allowed. Allowed extensions: {string.Join(", ", AllowedExtensions)}");
-
+            throw new FileValidationException($"File extension '{extension}' is not allowed. Allowed extensions: {string.Join(", ", AllowedExtensions)}");  
         if (!AllowedContentTypes.Contains(contentType.ToLowerInvariant()))
-            throw new ArgumentException($"Content type '{contentType}' is not allowed. Allowed types: {string.Join(", ", AllowedContentTypes)}");
+            throw new FileValidationException($"Content type '{contentType}' is not allowed. Allowed types: {string.Join(", ", AllowedContentTypes)}");
     }
 }

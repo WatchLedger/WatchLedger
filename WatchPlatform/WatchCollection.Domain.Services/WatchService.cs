@@ -46,21 +46,14 @@ public class WatchService(IWatchRepository _repository, IWatchImageService _watc
 
     public async Task<WatchResponseContract> UpdateWatch(Guid watchId, WatchRequestContract contract)
     {
-        try
-        {
-            var model = contract.AsModel();
-            model.WatchId = watchId;
-            model.OwnerId = Guid.NewGuid(); // will be replaced with actual user id from auth context
+        var model = contract.AsModel();
+        model.WatchId = watchId;
+        model.OwnerId = Guid.NewGuid(); // will be replaced with actual user id from auth context
 
-            var entity = model.AsEntity();
-            var updatedWatch = await _repository.UpdateWatch(watchId, entity);
+        var entity = model.AsEntity();
+        var updatedWatch = await _repository.UpdateWatch(watchId, entity);
         
-            return updatedWatch.AsModel().AsContract();
-        }
-        catch (EntityNotFoundException)
-        {
-            throw;
-        }
+        return updatedWatch.AsModel().AsContract();
     }
 
     public async Task DeleteWatch(Guid watchId)
@@ -75,16 +68,9 @@ public class WatchService(IWatchRepository _repository, IWatchImageService _watc
 
     public async Task<IEnumerable<string>> GetWatchBrands()
     {
-        try
-        {
-            var brands = await _watchValuationClient.GetWatchBrandsAsync();
-            if (brands is null || !brands.Any())
-                throw new BrandsUnavailableException("No watch brands available.");
-            return brands;
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        var brands = await _watchValuationClient.GetWatchBrandsAsync();
+        if (brands is null || !brands.Any())
+            throw new BrandsUnavailableException("No watch brands available.");
+        return brands;
     }
 }
