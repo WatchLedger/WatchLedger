@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Azure.Identity;
 using Microsoft.EntityFrameworkCore;
+using WatchCollection.Api.Middleware;
 using WatchCollection.Domain.Services;
 using WatchCollection.Domain.Services.Interfaces;
 using WatchCollection.Infrastructure;
@@ -61,6 +62,7 @@ public class Program
 
         var app = builder.Build();
 
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {

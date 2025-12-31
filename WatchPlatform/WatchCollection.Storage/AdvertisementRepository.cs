@@ -19,18 +19,19 @@ public class AdvertisementRepository(WatchServiceDbContext _context) : IAdvertis
 
     public async Task DeleteAdvertisementAsync(Guid advertisementId)
     {
-        var advertisement =  _context.Advertisements.FirstOrDefault(a => a.AdvertisementId == advertisementId);
-        if (advertisement is null)
-            throw new AdvertisementNotFoundExceptions();
+        var advertisement =  _context.Advertisements
+            .FirstOrDefault(a => a.AdvertisementId == advertisementId) ??
+            throw new AdvertisementNotFoundExceptions(advertisementId, "Advertisement not found.");
+
         _context.Advertisements.Remove(advertisement);
         await _context.SaveChangesAsync();
     }
 
     public async Task<Advertisement> GetAdvertisementByIdAsync(Guid advertisementId)
     {
-        var advertisement = await _context.Advertisements.FirstOrDefaultAsync(a => a.AdvertisementId == advertisementId);
-        if (advertisement is null)
-            throw new AdvertisementNotFoundExceptions();
+        var advertisement = await _context.Advertisements
+            .FirstOrDefaultAsync(a => a.AdvertisementId == advertisementId) ??
+            throw new AdvertisementNotFoundExceptions(advertisementId, "Advertisement not found.");
         return advertisement;
     }
 
@@ -42,9 +43,9 @@ public class AdvertisementRepository(WatchServiceDbContext _context) : IAdvertis
 
     public async Task<Advertisement> UpdateAdvertisementAsync(Advertisement advertisement)
     {
-        var existingAdvertisement =  _context.Advertisements.FirstOrDefault(a => a.AdvertisementId == advertisement.AdvertisementId);
-        if (existingAdvertisement is null)
-            throw new AdvertisementNotFoundExceptions();
+        var existingAdvertisement =  _context.Advertisements
+            .FirstOrDefault(a => a.AdvertisementId == advertisement.AdvertisementId) ??
+            throw new AdvertisementNotFoundExceptions(advertisement.AdvertisementId, "Advertisement not found.");
         
         var entry = _context.Entry(existingAdvertisement);
         entry.CurrentValues.SetValues(advertisement);

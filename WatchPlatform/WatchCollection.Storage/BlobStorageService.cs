@@ -27,5 +27,4 @@ public class BlobStorageService(IOptions<BlobStorageOptions> _options) : IBlobSt
         var blob = GetBlobClient(filename);
         await blob.DeleteIfExistsAsync();
     }
-
 }

@@ -10,6 +10,19 @@ namespace WatchCollection.Domain.Services.Mapping;
 
 internal static class WatchMappingExtensions
 {
+    // seperate method to wrap exception translation
+    private static WatchCondition SafeParseWatchCondition(string condition)
+    {
+        try
+        {
+            return condition.ParseWatchCondition();
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new MappingException($"Invalid watch condition: {ex.Message}");
+        }
+    }
+
     public static WatchModel AsModel(this WatchRequestContract contract)
     {
         return new WatchModel
@@ -79,7 +92,7 @@ internal static class WatchMappingExtensions
             ReferenceNumber = entity.ReferenceNumber,
             SerialNumber = entity.SerialNumber,
             YearOfProduction = entity.YearOfProduction,
-            Condition = entity.Condition.ParseWatchCondition(),
+            Condition = SafeParseWatchCondition(entity.Condition),
             Description = entity.Description,
             PurchasePrice = entity.PurchasePrice,
             PurchaseDate = entity.PurchaseDate,

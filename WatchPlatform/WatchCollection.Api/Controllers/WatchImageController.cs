@@ -22,43 +22,21 @@ namespace WatchCollection.Api.Controllers
             [FromForm] bool isPrimary,
             [FromForm] IFormFile file)
         {
-            try
-            {
-                var fileName = file.FileName;
-                var contentType = file.ContentType;
-                var fileSize = file.Length;
+            var fileName = file.FileName;
+            var contentType = file.ContentType;
+            var fileSize = file.Length;
 
-                using var stream = file.OpenReadStream();
-                var result =  await _service.UploadImageAsync(watchId, fileName, contentType, fileSize, isPrimary, stream);
-                return CreatedAtAction(nameof(GetImages), new { watchId = watchId, imageId = result.ImageId }, result);
-            }
-            catch(EntityNotFoundException enfe)
-            {
-                return NotFound( new {message = enfe.Message });
-            }
-            catch (Exception)
-            {
-                return Problem("An error occurred while uploading the image.", statusCode: (int)HttpStatusCode.InternalServerError);
-            }
+            using var stream = file.OpenReadStream();
+            var result =  await _service.UploadImageAsync(watchId, fileName, contentType, fileSize, isPrimary, stream);
+            return CreatedAtAction(nameof(GetImages), new { watchId = watchId, imageId = result.ImageId }, result);
         }
 
         [HttpGet]
         // only possible for logged in users and admins
         public async Task<ActionResult> GetImages([FromRoute] Guid watchId)
         {
-            try
-            {
-                var result = await _service.GetAllImagesByWatchIdAsync(watchId);
-                return Ok(result);
-            }
-            catch(EntityNotFoundException enfe)
-            {
-                return NotFound( new {message = enfe.Message });
-            }
-            catch (Exception)
-            {
-                return Problem("An error occurred while retrieving images.", statusCode: (int)HttpStatusCode.InternalServerError);
-            }
+            var result = await _service.GetAllImagesByWatchIdAsync(watchId);
+            return Ok(result);
         }
 
         [HttpDelete]
@@ -66,19 +44,8 @@ namespace WatchCollection.Api.Controllers
         // only possible for logged in users and admins
         public async Task<ActionResult> DeleteImage([FromRoute] Guid watchId, [FromRoute] Guid imageId)
         {
-            try
-            {
-                await _service.DeleteImageAsync(watchId, imageId);
-                return NoContent();
-            }
-            catch(EntityNotFoundException enfe)
-            {
-                return NotFound( new {message = enfe.Message });
-            }
-            catch (Exception)
-            {
-                return Problem("An error occurred while deleting the image.", statusCode: (int)HttpStatusCode.InternalServerError);
-            }
+            await _service.DeleteImageAsync(watchId, imageId);
+            return NoContent();
         }
 
         [HttpPut]
@@ -86,22 +53,11 @@ namespace WatchCollection.Api.Controllers
         // only possible for logged in users and admins
         public async Task<ActionResult> SetMainImage([FromRoute] Guid watchId, [FromRoute] Guid imageId)
         {
-            try
-            {
-                if (imageId == Guid.Empty || watchId == Guid.Empty)
-                    return BadRequest(new { message = "ImageId and WatchId cannot be empty." });
+            if (imageId == Guid.Empty || watchId == Guid.Empty)
+                return BadRequest(new { message = "ImageId and WatchId are required." });
                 
-                var updated = await _service.SetMainImageAsync(watchId, imageId);
-                return Ok(updated);
-            }
-            catch(EntityNotFoundException enfe)
-            {
-                return NotFound( new {message = enfe.Message });
-            }
-            catch (Exception)
-            {
-                return Problem("An error occurred while setting the main image.", statusCode: (int)HttpStatusCode.InternalServerError);
-            }
+            var updated = await _service.SetMainImageAsync(watchId, imageId);
+            return Ok(updated);
         }
     }
 }
