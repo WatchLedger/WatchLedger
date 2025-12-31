@@ -18,7 +18,12 @@ namespace WatchCollection.Api.Controllers
             {
                 var created = await _service.AddBidAsync(advertisementId, contract);
                 return CreatedAtAction(nameof(AddBid), new { bidId = created.BidId }, created);
-            } catch (Exception)
+            } 
+            catch (BidTooLowException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception)
             {
                 return Problem("An error occured while placing the bid. Please try again later.", statusCode: (int)HttpStatusCode.InternalServerError);
             }

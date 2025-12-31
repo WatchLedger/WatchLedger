@@ -1,4 +1,3 @@
-using System;
 using WatchCollection.Api.Contracts;
 using WatchCollection.Domain.Services.Interfaces;
 using WatchCollection.Domain.Services.Mapping;
