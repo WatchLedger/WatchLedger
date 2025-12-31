@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="../WatchCollection.Storage.Entities/WatchCollection.Storage.Entities.csproj" />
-      <ProjectReference Include="../WatchCollection/WatchCollection.Infrastructure/WatchCollection.Infrastructure.csproj" />
+      <PackageReference Include="Azure.Storage.Blobs" Version="12.26.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Azure.Storage.Blobs" Version="12.26.0" />
+      <ProjectReference Include="../WatchCollection.Infrastructure/WatchCollection.Infrastructure.csproj" />
+      <ProjectReference Include="../WatchCollection.Storage.Entities/WatchCollection.Storage.Entities.csproj" />
     </ItemGroup>
 
 </Project>

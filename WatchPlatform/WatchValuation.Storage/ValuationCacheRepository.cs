@@ -1,7 +1,6 @@
 using WatchValuation.Storage.Interfaces;
 using WatchValuation.Storage.Records;
 using Microsoft.Azure.Cosmos;
-using Microsoft.Extensions.Options;
 using WatchValuation.Infrastructure;
 
 namespace WatchValuation.Storage;

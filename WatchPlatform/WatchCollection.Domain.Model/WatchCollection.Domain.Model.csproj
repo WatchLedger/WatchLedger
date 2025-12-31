@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="../WatchCollection/WatchCollection.Shared/WatchCollection.Shared.csproj" />
+      <ProjectReference Include="../WatchCollection.Shared/WatchCollection.Shared.csproj" />
     </ItemGroup>
 
 </Project>

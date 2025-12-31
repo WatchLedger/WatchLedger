@@ -8,9 +8,9 @@
 
     <ItemGroup>
       <ProjectReference Include="../WatchValuation.Api.Contracts/WatchValuation.Api.Contracts.csproj" />
+      <ProjectReference Include="../WatchValuation.Infrastructure/WatchValuation.Infrastructure.csproj" />
       <ProjectReference Include="../WatchValuation.Storage.Records/WatchValuation.Storage.Records.csproj" />
       <ProjectReference Include="../WatchValuation.Storage/WatchValuation.Storage.csproj" />
-      <ProjectReference Include="../WatchValuation/WatchValuation.Infrastructure/WatchValuation.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

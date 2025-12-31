@@ -6,8 +6,4 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="../WatchCollection.Shared/WatchCollection.Shared.csproj" />
-    </ItemGroup>
-
 </Project>

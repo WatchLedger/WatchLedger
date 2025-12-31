@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="../WatchValuation.Infrastructure/WatchValuation.Infrastructure.csproj" />
       <ProjectReference Include="../WatchValuation.Storage.Records/WatchValuation.Storage.Records.csproj" />
-      <ProjectReference Include="../WatchValuation/WatchValuation.Infrastructure/WatchValuation.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

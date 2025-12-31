@@ -1,4 +1,3 @@
-using System;
 using WatchCollection.Storage.Interfaces;
 using Azure.Storage.Blobs;
 using Microsoft.Extensions.Options;

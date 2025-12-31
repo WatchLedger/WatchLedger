@@ -1,5 +1,3 @@
-using System;
-
 namespace WatchCollection.Infrastructure;
 
 public class BlobStorageOptions

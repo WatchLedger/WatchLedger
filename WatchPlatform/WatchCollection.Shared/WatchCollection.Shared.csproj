@@ -7,7 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="../WatchCollection.Shared/WatchCollection.Shared.csproj" />
+      <Folder Include="Converters/" />
+      <Folder Include="Enums/" />
+      <Folder Include="Extensions/" />
     </ItemGroup>
 
 </Project>
