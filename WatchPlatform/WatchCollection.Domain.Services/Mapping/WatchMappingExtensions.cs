@@ -53,6 +53,7 @@ internal static class WatchMappingExtensions
             ReferenceNumber = model.ReferenceNumber,
             SerialNumber = model.SerialNumber,
             YearOfProduction = model.YearOfProduction,
+            Description = model.Description,
             Condition = model.Condition.ToString(),
             PurchasePrice = model.PurchasePrice,
             PurchaseDate = model.PurchaseDate,
