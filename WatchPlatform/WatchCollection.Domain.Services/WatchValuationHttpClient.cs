@@ -27,12 +27,23 @@ public sealed class WatchValuationHttpClient(HttpClient _httpClient) : IWatchVal
         }
 
         var response = await _httpClient.GetAsync($"https://watchvaluationservice.azurewebsites.net/api/valuation?referenceNumber={Uri.EscapeDataString(referenceNumber)}", cancellationToken);
-        response.EnsureSuccessStatusCode();
+        try
+        {
+            response.EnsureSuccessStatusCode();
+        }
+        catch (HttpRequestException)
+        {
+            if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                throw new ValuationUnavailableException("No valuation available for the provided reference number.");
+            }
+            
+            throw new DomainInvalidOperationException($"Valuation service error: {response.StatusCode}");
+        }
 
         var dto = await response.Content
             .ReadFromJsonAsync<ValuationResponse>(cancellationToken: cancellationToken) ??
             throw new ValuationUnavailableException("Valuation data is unavailable.");
-
 
         return dto.AveragePriceLastSixMonths;
     }

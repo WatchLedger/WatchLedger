@@ -30,7 +30,7 @@ public class ExceptionHandlingMiddleware
                 EntityNotFoundException or BidTooLowException 
                 or DomainInvalidOperationException or EntityUnavailableException 
                 or InvalidAdvertisementStatusException or MappingException 
-                or FileValidationException or DbUpdateException);
+                or FileValidationException or DbUpdateException );
 
             if (!isExpectedException)
             {

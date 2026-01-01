@@ -32,7 +32,21 @@ public class ValuationService(HttpClient _httpClient, IOptions<ExternalApiOption
         string url = $"{apiOptions.BaseUrl}/reference/price/history?reference_number={referenceNumber}&api_token={apiOptions.ApiKey}";
 
         var response = await _httpClient.GetAsync(url);
-        response.EnsureSuccessStatusCode();
+        
+       if (!response.IsSuccessStatusCode)
+        {
+            if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                if (errorContent.Contains("malformed_parameters"))
+                {
+                    throw new WatchValuationUnavailableException("No valuation available for the provided reference number.");
+                }
+                throw new WatchValuationException("Invalid reference number format.");
+            }
+            
+            throw new WatchValuationUnavailableException($"External API error: {response.StatusCode}");
+        }
         
         await using var responseStream = await response.Content.ReadAsStreamAsync();
         var apiResponse = await
