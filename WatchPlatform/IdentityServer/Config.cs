@@ -22,7 +22,7 @@ public static class Config
     public static IEnumerable<Client> Clients =>
         new Client[]
         {
-            // postman => watchcollection api
+            // postman => [watchcollection api, watchvaluation api]
             new Client
             {
                 ClientId = "m2m.postman",
@@ -33,6 +33,7 @@ public static class Config
 
                 AllowedScopes = { "WatchCollection.Api.Read", "WatchCollection.Api.Write", "WatchValuation.Api.Read"}
             },
+            // watchcollection api => watchvaluation api
             new Client{
                 ClientId = "m2m.WatchCollection-WatchValuation",
                 ClientName = "WatchCollection to WatchValuation Client",
@@ -41,6 +42,15 @@ public static class Config
                 ClientSecrets = { new Secret("WatchCollectionSecretWoohoo".Sha256()) },
 
                 AllowedScopes = { "WatchValuation.Api.Read"}
+            },
+            // Frontend application => watchcollection api
+            new Client{
+                ClientId = "m2m.Frontend-WatchCollection-WatchValuation",
+                ClientName = "Frontend to WatchCollection and WatchValuation Client",
+
+                AllowedGrantTypes = GrantTypes.ClientCredentials,
+                ClientSecrets = { new Secret("FrontendSecretWoohoo".Sha256()) },
+                AllowedScopes = { "WatchCollection.Api.Read", "WatchCollection.Api.Write"}
             }
         };
 }
