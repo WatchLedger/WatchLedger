@@ -1,4 +1,5 @@
 using System.Net.Http.Json;
+using Duende.IdentityModel.Client;
 using WatchCollection.Domain.Services.Exceptions;
 using WatchCollection.Domain.Services.Interfaces;
 
@@ -15,6 +16,7 @@ public sealed class WatchValuationHttpClient(HttpClient _httpClient) : IWatchVal
 
     public async Task<IReadOnlyList<string>> GetWatchBrandsAsync(CancellationToken cancellationToken = default)
     {
+        await SetAccessTokenAsync();
         //var dto = await _httpClient.GetFromJsonAsync<ValuationResponse>("https://watchvaluationservice.azurewebsites.net/api/brands", cancellationToken);
         var response = await _httpClient.GetAsync("http://localhost:5005/api/brands", cancellationToken);
         try
@@ -39,6 +41,8 @@ public sealed class WatchValuationHttpClient(HttpClient _httpClient) : IWatchVal
 
     public async Task<decimal> GetWatchValuationAsync(string referenceNumber, CancellationToken cancellationToken = default)
     {
+        await SetAccessTokenAsync();
+        
         if (string.IsNullOrWhiteSpace(referenceNumber))
         {
             throw new DomainInvalidOperationException("Reference number is required.");
@@ -69,5 +73,21 @@ public sealed class WatchValuationHttpClient(HttpClient _httpClient) : IWatchVal
             throw new ValuationUnavailableException("Valuation data is unavailable.");
 
         return dto.AveragePriceLastSixMonths;
+    }
+
+    public async Task SetAccessTokenAsync()
+    {
+        var disco = await _httpClient.GetDiscoveryDocumentAsync("https://localhost:5001");
+        var tokenResponse = await _httpClient
+        .RequestClientCredentialsTokenAsync(
+            new ClientCredentialsTokenRequest
+            {
+                Address = disco.TokenEndpoint,
+                ClientId = "m2m.WatchCollection-WatchValuation",
+                ClientSecret = "WatchCollectionSecretWoohoo",
+                Scope = "WatchValuation.Api.Read"
+            });
+        
+        _httpClient.SetBearerToken(tokenResponse.AccessToken ?? throw new DomainInvalidOperationException("Token not found"));
     }
 }
