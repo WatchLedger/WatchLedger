@@ -14,6 +14,7 @@ namespace WatchCollection.Api.Controllers
     public class AdvertisementController(IAdvertisementService _advertisementService) : ControllerBase
     {
         [HttpPost]
+        [Authorize(Policy = "CollectionWritePolicy")]
         //only possible for logged in users and admins
         //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult<AdvertisementResponseContract>> CreateAdvertisement([FromBody] AdvertisementRequestContract request)
@@ -23,6 +24,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet("{advertisementId:Guid}")]
+        [Authorize(Policy = "CollectionReadPolicy")]
         //possible for all users
         public async Task<ActionResult<AdvertisementResponseContract>> GetById([FromRoute] Guid advertisementId)
         {
@@ -33,6 +35,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpPut("{advertisementId:Guid}")]
+        [Authorize(Policy = "CollectionWritePolicy")]
         // only possible for logged in users and admins
         //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult<AdvertisementResponseContract>> UpdateAdvertisement([FromRoute] Guid advertisementId, [FromBody] AdvertisementUpdateRequestContract request)
@@ -42,6 +45,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CollectionReadPolicy")]
         //possible for all users
         public async Task<ActionResult<IEnumerable<AdvertisementResponseContract>>> GetAllAdvertisements()
         {
@@ -50,6 +54,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpDelete("{advertisementId:Guid}")]
+        [Authorize(Policy = "CollectionWritePolicy")]
         // only possible for logged in users and admins
         //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult> DeleteAdvertisement([FromRoute] Guid advertisementId)
@@ -59,6 +64,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet("valuation")]
+        [Authorize(Policy = "CollectionReadPolicy")]
         public async Task<ActionResult<decimal>> GetWatchValuation([FromQuery] string referenceNumber)
         {
             var valuation = await _advertisementService.GetWatchValuation(referenceNumber);

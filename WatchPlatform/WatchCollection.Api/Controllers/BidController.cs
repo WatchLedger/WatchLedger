@@ -14,6 +14,7 @@ namespace WatchCollection.Api.Controllers
     public class BidController(IBidService _service) : ControllerBase
     {
         [HttpPost]
+        [Authorize(Policy = "CollectionWritePolicy")]
         public async Task<IActionResult> AddBid([FromBody] BidRequestContract contract, [FromRoute] Guid advertisementId)
         {
             var created = await _service.AddBidAsync(advertisementId, contract);
@@ -21,6 +22,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CollectionReadPolicy")]
         public async Task<IActionResult> GetBids([FromRoute] Guid advertisementId)
         {
             var bids = await _service.GetBidsByAdvertisementIdAsync(advertisementId);
@@ -28,6 +30,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpDelete("{bidId:Guid}")]
+        [Authorize(Policy = "CollectionWritePolicy")]
         public async Task<IActionResult> DeleteBid([FromRoute] Guid bidId)
         {
             await _service.DeleteBidAsync(bidId);

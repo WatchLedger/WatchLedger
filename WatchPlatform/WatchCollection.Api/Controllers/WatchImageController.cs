@@ -17,6 +17,7 @@ namespace WatchCollection.Api.Controllers
     public class WatchImageController(IWatchImageService _service) : ControllerBase
     {
         [HttpPost]
+        [Authorize(Policy = "CollectionWritePolicy")]
         //only possible for logged in users and admins
         public async Task<ActionResult> UploadImage(
             [FromRoute] Guid watchId,
@@ -33,6 +34,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CollectionReadPolicy")]
         // only possible for logged in users and admins
         public async Task<ActionResult> GetImages([FromRoute] Guid watchId)
         {
@@ -42,6 +44,7 @@ namespace WatchCollection.Api.Controllers
 
         [HttpDelete]
         [Route("{imageId:Guid}")]
+        [Authorize(Policy = "CollectionWritePolicy")]
         // only possible for logged in users and admins
         public async Task<ActionResult> DeleteImage([FromRoute] Guid watchId, [FromRoute] Guid imageId)
         {
@@ -51,6 +54,7 @@ namespace WatchCollection.Api.Controllers
 
         [HttpPut]
         [Route("{imageId:Guid}/set-primary")]
+        [Authorize(Policy = "CollectionWritePolicy")]
         // only possible for logged in users and admins
         public async Task<ActionResult> SetMainImage([FromRoute] Guid watchId, [FromRoute] Guid imageId)
         {
