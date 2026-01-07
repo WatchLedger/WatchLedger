@@ -9,6 +9,7 @@ using WatchValuation.Infrastructure;
 using Polly;
 using Polly.Extensions.Http;
 using System.Net;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace WatchValuation.Api;
 public class Program
@@ -22,6 +23,16 @@ public class Program
         builder.Configuration.AddAzureKeyVault(
             new Uri(keyVaultUri),
             new DefaultAzureCredential());
+
+
+        builder.Services.AddAuthentication()
+            .AddJwtBearer(options =>
+            {
+                options.Authority = "https://localhost:5001";
+                options.TokenValidationParameters.ValidateAudience = false;
+            });
+
+        builder.Services.AddAuthorization();
 
         builder.Services.Configure<ExternalApiOptions>(options =>
         {
@@ -81,9 +92,6 @@ public class Program
             });
         });
 
-        // Add authorization
-        builder.Services.AddAuthorization();
-
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -102,12 +110,14 @@ public class Program
         valuationGroup.MapGet("/valuation", GetValuation)
             .WithName("GetValuation")
             .WithDescription("Get valuation for a watch")
-            .RequireRateLimiting("valuation");
+            .RequireRateLimiting("valuation")
+            .RequireAuthorization();
 
         valuationGroup.MapGet("/brands", GetBrands)
             .WithName("GetBrands")
             .WithDescription("Get list of available watch brands")
-            .RequireRateLimiting("brands");
+            .RequireRateLimiting("brands")
+            .RequireAuthorization();
 
         app.Run();
     }
