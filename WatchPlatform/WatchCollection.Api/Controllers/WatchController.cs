@@ -16,6 +16,7 @@ namespace WatchCollection.Api.Controllers
     {
         
         [HttpPost]
+        [Authorize(Policy = "CollectionWritePolicy")]
         //only possible for logged in users and admins
         //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult<WatchResponseContract>> CreateWatch([FromBody] WatchRequestContract contract)
@@ -26,6 +27,7 @@ namespace WatchCollection.Api.Controllers
 
         [HttpGet]
         [Route("{watchId:Guid}")]
+        [Authorize(Policy = "CollectionReadPolicy")]
         // only possible for logged in users and admins
         //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult<WatchResponseContract>> GetWatchById([FromRoute] Guid watchId)
@@ -37,6 +39,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet]
+        [Authorize(Policy = "CollectionReadPolicy")]
         // only possible for logged in users and admins
         //[RoleAuthorize("User", "Admin")]
         public async Task<IActionResult> GetAllWatches([FromQuery] string? brand = null)
@@ -48,6 +51,7 @@ namespace WatchCollection.Api.Controllers
 
         [HttpPut]
         [Route("{watchId:Guid}")]
+        [Authorize(Policy = "CollectionWritePolicy")]
         // only possible for logged in users and admins
         //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult<WatchResponseContract>> Update([FromRoute] Guid watchId, [FromBody] WatchRequestContract contract)
@@ -58,6 +62,7 @@ namespace WatchCollection.Api.Controllers
 
         [HttpDelete]
         [Route("{watchId:Guid}")]
+        [Authorize(Policy = "CollectionWritePolicy")]
         // only possible for logged in users and admins
         //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult> DeleteWatch([FromRoute] Guid watchId)
@@ -67,6 +72,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet("brands")]
+        [Authorize(Policy = "CollectionReadPolicy")]
         public async Task<ActionResult<IEnumerable<string>>> GetWatchBrands()
         {
             var brands = await _service.GetWatchBrands();

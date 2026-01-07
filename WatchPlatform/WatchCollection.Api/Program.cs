@@ -32,7 +32,17 @@ public class Program
                 options.TokenValidationParameters.ValidateAudience = false;
             });
 
-        builder.Services.AddAuthorization();
+        builder.Services.AddAuthorizationBuilder()
+            .AddPolicy("CollectionReadPolicy", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "WatchCollection.Api.Read");
+                })
+            .AddPolicy("CollectionWritePolicy", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                    policy.RequireClaim("scope", "WatchCollection.Api.Write");
+                });
         
         builder.Services.Configure<BlobStorageOptions>( options =>{
             options.BlobStorageConnectionString = builder.Configuration["BlobConnectionString"]
