@@ -1,4 +1,5 @@
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WatchCollection.Api.Contracts;
@@ -9,8 +10,8 @@ using WatchCollection.Storage.Exceptions;
 namespace WatchCollection.Api.Controllers
 {
     [Route("api/Watch/{watchId:Guid}/Images")]
+    [Authorize]
     [ApiController]
-    //[Authorize]
     //[RoleAuthorize("User", "Admin")] 
     // //only possible for logged in users and admins
     public class WatchImageController(IWatchImageService _service) : ControllerBase

@@ -25,6 +25,15 @@ public class Program
             new Uri(keyVaultUri),
             new DefaultAzureCredential());
 
+        builder.Services.AddAuthentication()
+            .AddJwtBearer(options =>
+            {
+                options.Authority = "https://localhost:5001";
+                options.TokenValidationParameters.ValidateAudience = false;
+            });
+
+        builder.Services.AddAuthorization();
+        
         builder.Services.Configure<BlobStorageOptions>( options =>{
             options.BlobStorageConnectionString = builder.Configuration["BlobConnectionString"]
                 ?? throw new InvalidOperationException("Blob storage connection string is not configured in Key Vault.");
@@ -56,6 +65,7 @@ public class Program
                 options.JsonSerializerOptions.Converters.Add(new WatchConditionJsonConverter());
                 options.JsonSerializerOptions.Converters.Add(new AdvertisementStatusJsonConverter());
             });
+
 
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();

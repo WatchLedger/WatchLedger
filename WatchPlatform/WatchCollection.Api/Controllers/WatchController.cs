@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WatchCollection.Api.Contracts;
@@ -9,8 +10,8 @@ using WatchCollection.Storage.Exceptions;
 namespace WatchCollection.Api.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
-    //[Authorize]
     public class WatchController(IWatchService _service) : ControllerBase
     {
         

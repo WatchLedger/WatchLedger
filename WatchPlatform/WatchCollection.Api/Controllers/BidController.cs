@@ -1,4 +1,5 @@
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WatchCollection.Api.Contracts;
@@ -8,6 +9,7 @@ using WatchCollection.Storage.Exceptions;
 namespace WatchCollection.Api.Controllers
 {
     [Route("api/Advertisement/{advertisementId:Guid}/[controller]")]
+    [Authorize]
     [ApiController]
     public class BidController(IBidService _service) : ControllerBase
     {
