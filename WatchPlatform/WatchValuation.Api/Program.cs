@@ -32,7 +32,12 @@ public class Program
                 options.TokenValidationParameters.ValidateAudience = false;
             });
 
-        builder.Services.AddAuthorization();
+        builder.Services.AddAuthorizationBuilder()
+            .AddPolicy("ValuationReadPolicy", policy =>
+            {
+                policy.RequireAuthenticatedUser();
+                policy.RequireClaim("scope", "WatchValuation.Api.Read");
+            });
 
         builder.Services.Configure<ExternalApiOptions>(options =>
         {
@@ -111,13 +116,13 @@ public class Program
             .WithName("GetValuation")
             .WithDescription("Get valuation for a watch")
             .RequireRateLimiting("valuation")
-            .RequireAuthorization();
+            .RequireAuthorization("ValuationReadPolicy");
 
         valuationGroup.MapGet("/brands", GetBrands)
             .WithName("GetBrands")
             .WithDescription("Get list of available watch brands")
             .RequireRateLimiting("brands")
-            .RequireAuthorization();
+            .RequireAuthorization("ValuationReadPolicy");
 
         app.Run();
     }
