@@ -28,9 +28,18 @@ public static class Config
                 ClientName = "Postman-Client",
 
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
-                ClientSecrets = { new Secret("511536EF-F270-4058-80CA-1C89C192F69A".Sha256()) },
+                ClientSecrets = { new Secret("PostmanSecretWoohoo".Sha256()) },
 
                 AllowedScopes = { "WatchCollection.Api", "WatchValuation.Api"}
+            },
+            new Client{
+                ClientId = "m2m.WatchCollection-WatchValuation",
+                ClientName = "WatchCollection to WatchValuation Client",
+
+                AllowedGrantTypes = GrantTypes.ClientCredentials,
+                ClientSecrets = { new Secret("WatchCollectionSecretWoohoo".Sha256()) },
+
+                AllowedScopes = { "WatchValuation.Api"}
             }
         };
 }

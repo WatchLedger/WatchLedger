@@ -1,4 +1,6 @@
 ﻿using System.Security.Claims;
+using Duende.IdentityServer.EntityFramework.DbContexts;
+using Duende.IdentityServer.EntityFramework.Mappers;
 using IdentityModel;
 using IdentityServer.Data;
 using IdentityServer.Models;
@@ -87,5 +89,36 @@ public class SeedData
                 Log.Debug("bob already exists");
             }
         }
-    }
+
+        using (var scope = app.Services
+        .GetRequiredService<IServiceScopeFactory>().CreateScope()) 
+        {
+
+            var context = scope.ServiceProvider
+                .GetRequiredService<ConfigurationDbContext>();
+
+            Log.Debug("Overwriting db clients with Config.cs");
+            context.Clients.RemoveRange(context.Clients);
+            foreach (var client in Config.Clients)
+                context.Clients.Add(client.ToEntity());
+            context.SaveChanges();
+            Log.Debug("Clients overwrite done");
+
+            Log.Debug("Adding IdentityResources");
+            foreach (var resource in Config.IdentityResources)
+                if(!context.IdentityResources.Any(db =>
+                        resource.Name == db.Name))
+                    context.IdentityResources.Add(resource.ToEntity());
+            context.SaveChanges();
+            Log.Debug("Adding IdentityResources done");
+
+            Log.Debug("Adding ApiScopes");
+            foreach (var resource in Config.ApiScopes)
+                if(!context.ApiScopes.Any(db =>
+                        resource.Name == db.Name))
+                    context.ApiScopes.Add(resource.ToEntity());
+            context.SaveChanges();
+            Log.Debug("Adding ApiScopes done");     
+         } 
+     }
 }
