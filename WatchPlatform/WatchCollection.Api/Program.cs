@@ -80,6 +80,16 @@ public class Program
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.WithOrigins("http://localhost:5174", "https://watchplatform.nathangeleyn.com")
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
+            });
+        });
+
         var app = builder.Build();
 
         app.UseMiddleware<ExceptionHandlingMiddleware>();
