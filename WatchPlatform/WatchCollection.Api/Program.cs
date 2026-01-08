@@ -30,6 +30,7 @@ public class Program
             {
                 options.Authority = "https://localhost:5001";
                 options.TokenValidationParameters.ValidateAudience = false;
+                options.MapInboundClaims = false;
             });
 
         builder.Services.AddAuthorizationBuilder()

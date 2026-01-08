@@ -64,9 +64,9 @@ public static class Config
                         "WatchCollection.Api.Write",
                         "roles"
                     },
-                RedirectUris = { "http://localhost:5174/", "https://watchplatform.nathangeleyn.com/" },
-                PostLogoutRedirectUris = { "http://localhost:5174/", "https://watchplatform.nathangeleyn.com/" },
-                AllowedCorsOrigins = { "http://localhost:5174", "https://watchplatform.nathangeleyn.com" }
+                RedirectUris = { "http://localhost:5174/" },
+                PostLogoutRedirectUris = { "http://localhost:5174/" },
+                AllowedCorsOrigins = { "http://localhost:5174"}
             }
         };
 }
