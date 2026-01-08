@@ -9,7 +9,7 @@ namespace WatchCollection.Domain.Services;
 
 public class BidService(IBidRepository _bidRepository, IAdvertisementRepository _adverisementRepository) : IBidService
 {
-    public async Task<BidResponseContract> AddBidAsync(Guid advertisementId, BidRequestContract bidRequestContract)
+    public async Task<BidResponseContract> AddBidAsync(Guid advertisementId, string bidderIdString, BidRequestContract bidRequestContract)
     {
         var advertisement = await _adverisementRepository
             .GetAdvertisementByIdAsync(advertisementId) ??
@@ -21,7 +21,7 @@ public class BidService(IBidRepository _bidRepository, IAdvertisementRepository 
         var model = bidRequestContract.AsModel();
         model.BidId = Guid.NewGuid();
         model.AdvertisementId = advertisementId;
-        model.BidderId = Guid.NewGuid(); // In a real scenario, this would come from the authenticated user context
+        model.BidderId = Guid.TryParse(bidderIdString, out var bidderId) ? bidderId : throw new ArgumentException("Invalid bidder ID format."); // In a real scenario, this would come from the authenticated user context
 
         var entity = model.AsEntity();
         var createdEntity = await _bidRepository.AddBidAsync(entity);

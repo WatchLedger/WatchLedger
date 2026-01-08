@@ -1,4 +1,5 @@
 using System.Net;
+using System.Reflection.Metadata.Ecma335;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +18,9 @@ namespace WatchCollection.Api.Controllers
         [Authorize(Policy = "CollectionWritePolicy")]
         public async Task<IActionResult> AddBid([FromBody] BidRequestContract contract, [FromRoute] Guid advertisementId)
         {
-            var created = await _service.AddBidAsync(advertisementId, contract);
+            var bidderIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
+            Console.WriteLine($"BidderId: {bidderIdString}");
+            var created = await _service.AddBidAsync(advertisementId, bidderIdString, contract);
             return CreatedAtAction(nameof(AddBid), new { bidId = created.BidId }, created);
         }
 
