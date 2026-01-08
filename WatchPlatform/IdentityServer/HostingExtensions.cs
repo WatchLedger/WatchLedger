@@ -70,7 +70,6 @@ internal static class HostingExtensions
 
         app.UseStaticFiles();
         app.UseRouting();
-        app.UseCors("spa");
         app.UseIdentityServer();
         app.UseAuthorization();
 
