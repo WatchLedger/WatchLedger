@@ -1,5 +1,6 @@
 ﻿using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
+using IdentityModel;
 
 namespace IdentityServer;
 
@@ -11,10 +12,10 @@ public static class Config
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
             new IdentityResources.Email(),
-            // new IdentityResource(
-            //     name: "roles",
-            //     userClaims: new[] { JwtClaimTypes.Role }
-            // )
+            new IdentityResource(
+                name: "roles",
+                userClaims: new[] { JwtClaimTypes.Role }
+            )
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
@@ -60,7 +61,8 @@ public static class Config
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         "WatchCollection.Api.Read",
-                        "WatchCollection.Api.Write"
+                        "WatchCollection.Api.Write",
+                        "roles"
                     },
                 RedirectUris = { "http://localhost:5174/", "https://watchplatform.nathangeleyn.com/" },
                 PostLogoutRedirectUris = { "http://localhost:5174/", "https://watchplatform.nathangeleyn.com/" },
