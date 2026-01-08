@@ -1,4 +1,5 @@
-﻿using Duende.IdentityServer.Models;
+﻿using Duende.IdentityServer;
+using Duende.IdentityServer.Models;
 
 namespace IdentityServer;
 
@@ -45,12 +46,20 @@ public static class Config
             },
             // Frontend application => watchcollection api
             new Client{
-                ClientId = "m2m.Frontend-WatchCollection-WatchValuation",
+                ClientId = "m2m.webappp-watchcollection",
                 ClientName = "Frontend to WatchCollection and WatchValuation Client",
 
-                AllowedGrantTypes = GrantTypes.ClientCredentials,
+                AllowedGrantTypes = GrantTypes.Code,
                 ClientSecrets = { new Secret("FrontendSecretWoohoo".Sha256()) },
-                AllowedScopes = { "WatchCollection.Api.Read", "WatchCollection.Api.Write"}
+                AllowedScopes = { 
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "WatchCollection.Api.Read",
+                        "WatchCollection.Api.Write"
+                    },
+                RedirectUris = { "http://localhost:5174/", "https://watchplatform.nathangeleyn.com/" },
+                PostLogoutRedirectUris = { "http://localhost:5174/", "https://watchplatform.nathangeleyn.com/" },
+                AllowedCorsOrigins = { "http://localhost:5174", "https://watchplatform.nathangeleyn.com" }
             }
         };
 }
