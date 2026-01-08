@@ -64,7 +64,7 @@ public static class Config
                         "WatchCollection.Api.Write",
                         "roles"
                     },
-                RedirectUris = { "http://localhost:5174/" },
+                RedirectUris = { "http://localhost:5174/", "https://oauth.pstmn.io/v1/callback" },
                 PostLogoutRedirectUris = { "http://localhost:5174/" },
                 AllowedCorsOrigins = { "http://localhost:5174"}
             }

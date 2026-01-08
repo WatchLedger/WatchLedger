@@ -39,11 +39,11 @@ public class Program
         builder.Services.AddAuthorizationBuilder()
             .AddPolicy("CollectionReadPolicy", policy =>
                 {
-                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Read", "user"));
+                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Read", "User"));
                 })
             .AddPolicy("CollectionWritePolicy", policy =>
                 {
-                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Write", "user"));
+                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Write", "User"));
                 });
         
         builder.Services.Configure<BlobStorageOptions>( options =>{
@@ -103,6 +103,7 @@ public class Program
 
         app.UseRouting();
         app.UseCors();
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();
