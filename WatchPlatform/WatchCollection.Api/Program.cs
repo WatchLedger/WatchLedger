@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Azure.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using WatchCollection.Api.Middleware;
 using WatchCollection.Domain.Services;
@@ -18,6 +19,8 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddSingleton<IAuthorizationHandler, AuthHandler>();
 
         var keyVaultUri = builder.Configuration["AzureKeyVault:VaultUri"]
             ?? throw new InvalidOperationException("Azure Key Vault URI is not configured.");
@@ -36,13 +39,11 @@ public class Program
         builder.Services.AddAuthorizationBuilder()
             .AddPolicy("CollectionReadPolicy", policy =>
                 {
-                    policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("scope", "WatchCollection.Api.Read");
+                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Read", "user"));
                 })
             .AddPolicy("CollectionWritePolicy", policy =>
                 {
-                    policy.RequireAuthenticatedUser();
-                    policy.RequireClaim("scope", "WatchCollection.Api.Write");
+                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Write", "user"));
                 });
         
         builder.Services.Configure<BlobStorageOptions>( options =>{
