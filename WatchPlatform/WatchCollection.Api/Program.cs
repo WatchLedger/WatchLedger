@@ -44,6 +44,14 @@ public class Program
             .AddPolicy("CollectionWritePolicy", policy =>
                 {
                     policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Write", "User"));
+                })
+            .AddPolicy("AdminReadPolicy", policy =>
+                {
+                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Read", "Admin"));
+                })
+            .AddPolicy("AdminWritePolicy", policy =>
+                {
+                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Write", "Admin"));
                 });
         
         builder.Services.Configure<BlobStorageOptions>( options =>{

@@ -33,7 +33,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpDelete("{bidId:Guid}")]
-        [Authorize(Policy = "CollectionWritePolicy")]
+        [Authorize(Policy = "AdminWritePolicy")]
         public async Task<IActionResult> DeleteBid([FromRoute] Guid bidId)
         {
             await _service.DeleteBidAsync(bidId);
