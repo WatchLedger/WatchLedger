@@ -31,7 +31,7 @@ public class Program
         builder.Services.AddAuthentication()
             .AddJwtBearer(options =>
             {
-                options.Authority = "https://localhost:5001";
+                options.Authority = "https://identityserver-watchcollection.azurewebsites.net";
                 options.TokenValidationParameters.ValidateAudience = false;
                 options.MapInboundClaims = false;
             });

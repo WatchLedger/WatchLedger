@@ -16,24 +16,19 @@ public class AuthHandler : AuthorizationHandler<ClaimOrRoleRequirement>
     {
         var claims = context.User.Claims.ToList();
 
-        // Als de app client de juiste _apiscope_ niet heeft...
         if (!claims.Exists(c => c.Value == requirement.Claim))
         {
-            // ...is het NOT OK.
             context.Fail();
         }
-        // Als de app client de juiste scope wel heeft...
         else
         {
             var userId = claims.FirstOrDefault(c => c.Type == "sub")?.Value;
 
-            // ...en de call gebeurt door een _persoon_...
             if (userId is not null)
             {
-                // ... dan vragen we meer info aan identity server...
                 var client = new HttpClient();
                 var disco = client
-                    .GetDiscoveryDocumentAsync("https://localhost:5001").Result;
+                    .GetDiscoveryDocumentAsync("https://identityserver-watchcollection.azurewebsites.net").Result;
 
                 var token = _httpContextAccessor?
                     .HttpContext?.GetTokenAsync("access_token").Result ;
@@ -47,24 +42,18 @@ public class AuthHandler : AuthorizationHandler<ClaimOrRoleRequirement>
 
                 var userInfo = client.GetUserInfoAsync(request).Result;
 
-                // ... en de persoon heeft de juiste _rol_...
                 if (userInfo.Claims.ToList()
                     .Exists(c => c.Type == "role" && c.Value == requirement.Role))
                 {
-                    // ...dan is het OK.
                     context.Succeed(requirement);
                 }
-                // ... en de persoon heeft de juiste _rol_ niet
                 else
                 {
-                    // ...dan is het NOT OK.
                     context.Fail();
                 }
             }
-            // ...en de call gebeurt door een _systeem_...
             else
             {
-                // ...dan is het OK.
                 context.Succeed(requirement);
             }
         }

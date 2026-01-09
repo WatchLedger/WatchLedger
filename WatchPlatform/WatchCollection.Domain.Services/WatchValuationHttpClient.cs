@@ -17,8 +17,7 @@ public sealed class WatchValuationHttpClient(HttpClient _httpClient) : IWatchVal
     public async Task<IReadOnlyList<string>> GetWatchBrandsAsync(CancellationToken cancellationToken = default)
     {
         await SetAccessTokenAsync();
-        //var dto = await _httpClient.GetFromJsonAsync<ValuationResponse>("https://watchvaluationservice.azurewebsites.net/api/brands", cancellationToken);
-        var response = await _httpClient.GetAsync("http://localhost:5005/api/brands", cancellationToken);
+        var response = await _httpClient.GetAsync("https://watchvaluationservice.azurewebsites.net/api/brands", cancellationToken);
         try
         {
             response.EnsureSuccessStatusCode();
@@ -48,8 +47,7 @@ public sealed class WatchValuationHttpClient(HttpClient _httpClient) : IWatchVal
             throw new DomainInvalidOperationException("Reference number is required.");
         }
 
-        //var response = await _httpClient.GetAsync($"https://watchvaluationservice.azurewebsites.net/api/valuation?referenceNumber={Uri.EscapeDataString(referenceNumber)}", cancellationToken);
-        var response = await _httpClient.GetAsync($"http://localhost:5005/api/valuation?referenceNumber={Uri.EscapeDataString(referenceNumber)}", cancellationToken);
+        var response = await _httpClient.GetAsync($"https://watchvaluationservice.azurewebsites.net/api/valuation?referenceNumber={Uri.EscapeDataString(referenceNumber)}", cancellationToken);
         try
         {
             response.EnsureSuccessStatusCode();
