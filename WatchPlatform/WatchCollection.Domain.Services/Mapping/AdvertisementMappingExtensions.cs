@@ -64,7 +64,8 @@ internal static class AdvertisementMappingExtensions
             SoldAt = model.SoldAt,
             CreatedAt = model.CreatedAt ?? throw new MappingException("CreatedAt is required"),
             UpdatedAt = model.UpdatedAt ?? throw new MappingException("UpdatedAt is required"),
-            AllowBids = model.AllowBids
+            AllowBids = model.AllowBids,
+            Watch = model.Watch?.AsContract()
         };
     }  
 
@@ -113,7 +114,8 @@ internal static class AdvertisementMappingExtensions
             UpdatedAt = entity.UpdatedAt != default // ensure UpdatedAt is not default
                 ? entity.UpdatedAt
                 : throw new MappingException("UpdatedAt is required"),
-            AllowBids = entity.AllowBids
+            AllowBids = entity.AllowBids,
+            Watch = entity.Watch?.AsModel()
         };
     }
 }
