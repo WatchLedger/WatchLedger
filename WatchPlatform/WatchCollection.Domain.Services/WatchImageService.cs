@@ -35,8 +35,9 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
         // If this should be primary, flip the old primary to false first
         if (shouldBePrimary && existingImages.Any())
         {
-            var oldPrimary = existingImages.First(img => img.IsPrimary);
-            await _watchImageRepository.UpdatePrimaryImageAsync(watchId, oldPrimary.ImageId, false);
+            var oldPrimary = existingImages.FirstOrDefault(img => img.IsPrimary);
+            if (oldPrimary is not null)
+                await _watchImageRepository.UpdatePrimaryImageAsync(watchId, oldPrimary.ImageId, false);
         }
         
         var updatedFileName = Guid.NewGuid().ToString() + "_" + fileName;
@@ -78,8 +79,32 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
         if (watch.OwnerUserId.ToString() != ownerIdString)
             throw new UnauthorizedAccessException("You do not have permission to delete images for this watch.");
 
+        // First check if the deleted image is primary
+        var images = await _watchImageRepository.GetAllImagesByWatchIdAsync(watchId);
+        var target = images.FirstOrDefault(i => i.ImageId == imageId);
+        if (target is null)
+        {
+            _ = await _watchImageRepository.DeleteWatchImageDataAsync(watchId, imageId);
+            return;
+        }
+
+        var wasPrimary = target.IsPrimary;
+
         var blobUrl = await _watchImageRepository.DeleteWatchImageDataAsync(watchId, imageId);
         await _blobStorageService.DeleteImageAsync(blobUrl);
+
+        // Auto set a new primary if the deleted one was primary
+        if (wasPrimary)
+        {
+            var remaining = images.Where(i => i.ImageId != imageId).ToList();
+            if (remaining.Count > 0)
+            {
+                var candidate = remaining
+                    .OrderByDescending(i => i.UploadedAt)
+                    .First();
+                await _watchImageRepository.UpdatePrimaryImageAsync(watchId, candidate.ImageId, true);
+            }
+        }
     }
 
     public async Task<WatchImageResponseContract> SetMainImageAsync(string ownerIdString, Guid watchId, Guid imageId)
