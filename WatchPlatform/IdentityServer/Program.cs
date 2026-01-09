@@ -12,6 +12,12 @@ try
 {
     var builder = WebApplication.CreateBuilder(args);
 
+    var keyVaultUri = builder.Configuration["AzureKeyVault:VaultUri"]
+        ?? throw new InvalidOperationException("Azure Key Vault URI is not configured.");
+    builder.Configuration.AddAzureKeyVault(
+        new Uri(keyVaultUri),
+        new DefaultAzureCredential());
+
     builder.Host.UseSerilog((ctx, lc) => lc
         .WriteTo.Console(
             outputTemplate:

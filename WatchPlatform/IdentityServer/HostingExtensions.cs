@@ -13,28 +13,23 @@ internal static class HostingExtensions
 {
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
-
-        var keyVaultUri = builder.Configuration["AzureKeyVault:VaultUri"]
-        ?? throw new InvalidOperationException("Azure Key Vault URI is not configured.");
-        builder.Configuration.AddAzureKeyVault(
-            new Uri(keyVaultUri),
-            new DefaultAzureCredential());
-
         builder.Services.AddRazorPages();
 
+        var connectionString = builder.Configuration["IdentityServerProductionSqlString"]
+            ?? throw new InvalidOperationException("SQL Database connection string is not configured in Key Vault.");
+        
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityServerProductionSqlString")));
+            options.UseSqlServer(connectionString));
 
         builder.Services.AddDbContext<ConfigurationDbContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityServerProductionSqlString"),
-            options => options.MigrationsAssembly(
-                typeof(Program).Assembly.GetName().Name
-            )));
+            options.UseSqlServer(connectionString));
 
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
+        var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
+        
         builder.Services
             .AddIdentityServer(options =>
             {
@@ -42,28 +37,16 @@ internal static class HostingExtensions
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseFailureEvents = true;
                 options.Events.RaiseSuccessEvents = true;
-
-                // see https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/
                 options.EmitStaticAudienceClaim = true;
             })
-            // .AddInMemoryIdentityResources(Config.IdentityResources)
-            // .AddInMemoryApiScopes(Config.ApiScopes)
-            // .AddInMemoryClients(Config.Clients)
-            .AddConfigurationStore()
+            .AddConfigurationStore(options =>
+            {
+                options.ConfigureDbContext = b => b.UseSqlServer(
+                    connectionString,
+                    sql => sql.MigrationsAssembly(migrationsAssembly));
+            })
             .AddAspNetIdentity<ApplicationUser>()
             .AddProfileService<ProfileService>();
-
-        builder.Services.AddAuthentication()
-            .AddGoogle(options =>
-            {
-                options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-
-                // register your IdentityServer with Google at https://console.developers.google.com
-                // enable the Google+ API
-                // set the redirect URI to https://localhost:5001/signin-google
-                options.ClientId = "copy client ID from Google here";
-                options.ClientSecret = "copy client secret from Google here";
-            });
 
         return builder.Build();
     }
@@ -72,6 +55,8 @@ internal static class HostingExtensions
     {
         app.UseSerilogRequestLogging();
 
+
+        //app.InitializeDatabase();
         if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
