@@ -10,4 +10,5 @@ public interface IAdvertisementRepository
     Task<Advertisement> UpdateAdvertisementAsync(Advertisement advertisement);
     Task DeleteAdvertisementAsync(Guid advertisementId);
     Task<IEnumerable<Advertisement>> GetAllAdvertisementsAsync();
+    Task UpdateViewCountAsync(Guid advertisementId, int newViewCount);
 }

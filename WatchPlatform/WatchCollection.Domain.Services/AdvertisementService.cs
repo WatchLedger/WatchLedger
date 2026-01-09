@@ -49,8 +49,7 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         
         if (userId is not null && entity.SellerUserId.ToString() != userId){
             entity.ViewCount += 1;
-            // TODO: Ensure a update view count exists only updating that field
-            await _repository.UpdateAdvertisementAsync(entity);
+            await _repository.UpdateViewCountAsync(entity.AdvertisementId, entity.ViewCount);
         }
 
         return entity.AsModel().AsContract();
