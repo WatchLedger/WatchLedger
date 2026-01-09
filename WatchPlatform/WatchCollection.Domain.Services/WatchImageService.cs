@@ -12,14 +12,18 @@ namespace WatchCollection.Domain.Services;
 public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlobStorageService _blobStorageService, IWatchRepository _watchRepository) : IWatchImageService
 {
 
-    public async Task<WatchImageResponseContract> UploadImageAsync(Guid watchId, string fileName, string contentType, long fileSize, bool isPrimary, Stream imageStream)
+    public async Task<WatchImageResponseContract> UploadImageAsync(string ownerIdString, Guid watchId, string fileName, string contentType, long fileSize, bool isPrimary, Stream imageStream)
     {
         FileValidator.ValidateImageFile(fileName, contentType, fileSize);
 
         var watch = await _watchRepository.GetWatchById(watchId);
         if (watch is null)
             throw new WatchNotFoundException(watchId, "Watch not found");
+        
+        if (watch.OwnerUserId.ToString() != ownerIdString)
+            throw new UnauthorizedAccessException("You do not have permission to upload images for this watch.");
 
+        // TODO: add logic to handle isPrimary flag
         var updatedFileName = Guid.NewGuid().ToString() + "_" + fileName; // Ensures unique filenames
         var imageUrl = await _blobStorageService.UploadImageAsync(updatedFileName, imageStream);
 
@@ -49,21 +53,27 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
         return entities.Select(e => e.AsModel().AsContract()).ToList();
     }
 
-    public async Task DeleteImageAsync(Guid watchId, Guid imageId)
+    public async Task DeleteImageAsync(string ownerIdString, Guid watchId, Guid imageId)
     {
         var watch = await _watchRepository.GetWatchById(watchId);
         if (watch is null)
             throw new WatchNotFoundException(watchId, "Watch not found");
+        
+        if (watch.OwnerUserId.ToString() != ownerIdString)
+            throw new UnauthorizedAccessException("You do not have permission to delete images for this watch.");
 
         var blobUrl = await _watchImageRepository.DeleteWatchImageDataAsync(watchId, imageId);
         await _blobStorageService.DeleteImageAsync(blobUrl);
     }
 
-    public async Task<WatchImageResponseContract> SetMainImageAsync(Guid watchId, Guid imageId)
+    public async Task<WatchImageResponseContract> SetMainImageAsync(string ownerIdString, Guid watchId, Guid imageId)
     {
         var watch = await _watchRepository.GetWatchById(watchId);
         if (watch is null)
             throw new WatchNotFoundException(watchId, "Watch not found");
+
+        if (watch.OwnerUserId.ToString() != ownerIdString)
+            throw new UnauthorizedAccessException("You do not have permission to set the main image for this watch.");
 
         var updatedEntity = await _watchImageRepository.SetMainImageAsync(watchId, imageId);
         return updatedEntity.AsModel().AsContract();
@@ -81,6 +91,7 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
 
     public async Task DeleteBlobsAsync(string filename)
     {
+
         await _blobStorageService.DeleteImageAsync(filename);
     }
 }

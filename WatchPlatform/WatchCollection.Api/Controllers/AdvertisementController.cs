@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WatchCollection.Api.Contracts;
@@ -8,40 +9,45 @@ using WatchCollection.Storage.Exceptions;
 namespace WatchCollection.Api.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
-    //[Authorize]
     public class AdvertisementController(IAdvertisementService _advertisementService) : ControllerBase
     {
         [HttpPost]
-        //only possible for logged in users and admins
-        //[RoleAuthorize("User", "Admin")]
+        [Authorize(Policy = "CollectionWritePolicy")]
         public async Task<ActionResult<AdvertisementResponseContract>> CreateAdvertisement([FromBody] AdvertisementRequestContract request)
         {
-            var created = await _advertisementService.CreateAdvertisement(request);
+            var sellerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
+            var created = await _advertisementService.CreateAdvertisement(sellerIdString, request);
             return CreatedAtAction(nameof(GetById), new { advertisementId = created.AdvertisementId}, created);  
         }
 
         [HttpGet("{advertisementId:Guid}")]
-        //possible for all users
+        [Authorize(Policy = "PublicReadPolicy")]
         public async Task<ActionResult<AdvertisementResponseContract>> GetById([FromRoute] Guid advertisementId)
         {
-            var advertisement = await _advertisementService.GetAdvertisementById(advertisementId);
+            var userId = User.FindFirst("sub")?.Value;
+            var advertisement = await _advertisementService.GetAdvertisementById(userId, advertisementId);
             if (advertisement is null)
                 return NotFound(new { Message = $"Advertisement with id {advertisementId} not found." });
             return Ok(advertisement);
         }
 
+        // TODO: maybe add a getbysellerid endpoint?
+
         [HttpPut("{advertisementId:Guid}")]
-        // only possible for logged in users and admins
-        //[RoleAuthorize("User", "Admin")]
+        [Authorize(Policy = "AdminOrUserWritePolicy")]
         public async Task<ActionResult<AdvertisementResponseContract>> UpdateAdvertisement([FromRoute] Guid advertisementId, [FromBody] AdvertisementUpdateRequestContract request)
         {
-            var updated = await _advertisementService.UpdateAdvertisement(advertisementId, request);
+            var sellerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
+            var isAdmin = User.IsInRole("Admin");
+            var updated = await _advertisementService.UpdateAdvertisement(advertisementId, sellerIdString, isAdmin, request);
             return Ok(updated);
         }
 
+        // TODO: maybe getall for specific users? dont know yet
         [HttpGet]
-        //possible for all users
+        [Authorize(Policy = "PublicReadPolicy")]
         public async Task<ActionResult<IEnumerable<AdvertisementResponseContract>>> GetAllAdvertisements()
         {
             var advertisements = await _advertisementService.GetAllAdvertisements();
@@ -49,15 +55,17 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpDelete("{advertisementId:Guid}")]
-        // only possible for logged in users and admins
-        //[RoleAuthorize("User", "Admin")]
+        [Authorize(Policy = "AdminOrUserWritePolicy")]
         public async Task<ActionResult> DeleteAdvertisement([FromRoute] Guid advertisementId)
         {
-            await _advertisementService.DeleteAdvertisement(advertisementId);
+            var sellerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
+            var isAdmin = User.IsInRole("Admin");
+            await _advertisementService.DeleteAdvertisement(sellerIdString, isAdmin, advertisementId);
             return NoContent();
         }
 
         [HttpGet("valuation")]
+        [Authorize(Policy = "CollectionReadPolicy")]
         public async Task<ActionResult<decimal>> GetWatchValuation([FromQuery] string referenceNumber)
         {
             var valuation = await _advertisementService.GetWatchValuation(referenceNumber);

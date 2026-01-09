@@ -5,11 +5,11 @@ namespace WatchCollection.Domain.Services.Interfaces;
 
 public interface IWatchService
 {
-    Task<WatchResponseContract> CreateWatch(WatchRequestContract contract);
-    Task<WatchResponseContract?> GetWatchById(Guid guid);
-    Task<IEnumerable<WatchResponseContract>> GetAll();
-    Task<IEnumerable<WatchResponseContract>> GetWatchesByBrand(string brand);
-    Task<WatchResponseContract> UpdateWatch(Guid watchId, WatchRequestContract contract);
-    Task DeleteWatch(Guid watchId);
+    Task<WatchResponseContract> CreateWatch(string ownerIdString, WatchRequestContract contract);
+    Task<WatchResponseContract?> GetWatchById(string ownerIdString, Guid guid);
+    Task<IEnumerable<WatchResponseContract>> GetAll(string ownerIdString);
+    Task<IEnumerable<WatchResponseContract>> GetWatchesByBrand(string ownerIdString, string brand);
+    Task<WatchResponseContract> UpdateWatch(string ownerIdString, Guid watchId, WatchRequestContract contract);
+    Task DeleteWatch(string ownerIdString, Guid watchId);
     Task<IEnumerable<string>> GetWatchBrands();
 }

@@ -56,4 +56,15 @@ public class AdvertisementRepository(WatchServiceDbContext _context) : IAdvertis
         await _context.SaveChangesAsync();
         return existingAdvertisement;
     }
+
+    public async Task UpdateViewCountAsync(Guid advertisementId, int newViewCount)
+    {
+        var advertisement =  _context.Advertisements
+            .FirstOrDefault(a => a.AdvertisementId == advertisementId) ??
+            throw new AdvertisementNotFoundExceptions(advertisementId, "Advertisement not found.");
+
+        advertisement.ViewCount = newViewCount;
+        _context.Advertisements.Update(advertisement);
+        await _context.SaveChangesAsync();
+    }
 }

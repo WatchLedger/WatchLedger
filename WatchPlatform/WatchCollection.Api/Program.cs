@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Azure.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using WatchCollection.Api.Middleware;
 using WatchCollection.Domain.Services;
@@ -18,6 +19,8 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddSingleton<IAuthorizationHandler, AuthHandler>();
 
         var keyVaultUri = builder.Configuration["AzureKeyVault:VaultUri"]
             ?? throw new InvalidOperationException("Azure Key Vault URI is not configured.");
@@ -25,6 +28,42 @@ public class Program
             new Uri(keyVaultUri),
             new DefaultAzureCredential());
 
+        builder.Services.AddAuthentication()
+            .AddJwtBearer(options =>
+            {
+                options.Authority = "https://identityserver-watchcollection.azurewebsites.net";
+                options.TokenValidationParameters.ValidateAudience = false;
+                options.MapInboundClaims = false;
+            });
+
+        builder.Services.AddAuthorizationBuilder()
+            .AddPolicy("PublicReadPolicy", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                })
+            .AddPolicy("CollectionReadPolicy", policy =>
+                {
+                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Read", "User"));
+                })
+            .AddPolicy("CollectionWritePolicy", policy =>
+                {
+                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Write", "User"));
+                })
+            .AddPolicy("AdminWritePolicy", policy =>
+                {
+                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Write", "Admin"));
+                })
+            .AddPolicy("AdminOrUserWritePolicy", policy =>
+                {
+                    policy.RequireAssertion(context =>
+                    {
+                        var hasClaim = AuthorizationHelper.HasWriteClaim(context.User);
+                        var hasRole = AuthorizationHelper.HasRole(context.User, "User") || 
+                                      AuthorizationHelper.HasRole(context.User, "Admin");
+                        return hasClaim && hasRole;
+                    });
+                });
+        
         builder.Services.Configure<BlobStorageOptions>( options =>{
             options.BlobStorageConnectionString = builder.Configuration["BlobConnectionString"]
                 ?? throw new InvalidOperationException("Blob storage connection string is not configured in Key Vault.");
@@ -57,8 +96,19 @@ public class Program
                 options.JsonSerializerOptions.Converters.Add(new AdvertisementStatusJsonConverter());
             });
 
+
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.WithOrigins("http://localhost:5174", "https://watchpledger.nathangeleyn.com")
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
+            });
+        });
 
         var app = builder.Build();
 
@@ -69,6 +119,9 @@ public class Program
             app.MapOpenApi();
         }
 
+        app.UseRouting();
+        app.UseCors();
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();

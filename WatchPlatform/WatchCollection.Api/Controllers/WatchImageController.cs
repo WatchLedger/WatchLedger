@@ -1,4 +1,5 @@
 using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WatchCollection.Api.Contracts;
@@ -9,30 +10,32 @@ using WatchCollection.Storage.Exceptions;
 namespace WatchCollection.Api.Controllers
 {
     [Route("api/Watch/{watchId:Guid}/Images")]
+    [Authorize]
     [ApiController]
-    //[Authorize]
     //[RoleAuthorize("User", "Admin")] 
     // //only possible for logged in users and admins
     public class WatchImageController(IWatchImageService _service) : ControllerBase
     {
         [HttpPost]
-        //only possible for logged in users and admins
+        [Authorize(Policy = "CollectionWritePolicy")]
         public async Task<ActionResult> UploadImage(
             [FromRoute] Guid watchId,
             [FromForm] bool isPrimary,
             [FromForm] IFormFile file)
         {
+            var ownerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
+
             var fileName = file.FileName;
             var contentType = file.ContentType;
             var fileSize = file.Length;
 
             using var stream = file.OpenReadStream();
-            var result =  await _service.UploadImageAsync(watchId, fileName, contentType, fileSize, isPrimary, stream);
+            var result =  await _service.UploadImageAsync(ownerIdString, watchId, fileName, contentType, fileSize, isPrimary, stream);
             return CreatedAtAction(nameof(GetImages), new { watchId = watchId, imageId = result.ImageId }, result);
         }
 
         [HttpGet]
-        // only possible for logged in users and admins
+        [Authorize(Policy = "PublicReadPolicy")]
         public async Task<ActionResult> GetImages([FromRoute] Guid watchId)
         {
             var result = await _service.GetAllImagesByWatchIdAsync(watchId);
@@ -41,22 +44,24 @@ namespace WatchCollection.Api.Controllers
 
         [HttpDelete]
         [Route("{imageId:Guid}")]
-        // only possible for logged in users and admins
+        [Authorize(Policy = "CollectionWritePolicy")]
         public async Task<ActionResult> DeleteImage([FromRoute] Guid watchId, [FromRoute] Guid imageId)
         {
-            await _service.DeleteImageAsync(watchId, imageId);
+            var ownerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
+            await _service.DeleteImageAsync(ownerIdString, watchId, imageId);
             return NoContent();
         }
 
         [HttpPut]
         [Route("{imageId:Guid}/set-primary")]
-        // only possible for logged in users and admins
+        [Authorize(Policy = "CollectionWritePolicy")]
         public async Task<ActionResult> SetMainImage([FromRoute] Guid watchId, [FromRoute] Guid imageId)
         {
+            var ownerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
             if (imageId == Guid.Empty || watchId == Guid.Empty)
                 return BadRequest(new { message = "ImageId and WatchId are required." });
                 
-            var updated = await _service.SetMainImageAsync(watchId, imageId);
+            var updated = await _service.SetMainImageAsync(ownerIdString, watchId, imageId);
             return Ok(updated);
         }
     }
