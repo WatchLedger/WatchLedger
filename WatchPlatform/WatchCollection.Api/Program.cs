@@ -94,7 +94,7 @@ public class Program
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("http://localhost:5174", "https://watchplatform.nathangeleyn.com")
+                policy.WithOrigins("http://localhost:5174", "https://watchpledger.nathangeleyn.com")
                       .AllowAnyHeader()
                       .AllowAnyMethod();
             });
