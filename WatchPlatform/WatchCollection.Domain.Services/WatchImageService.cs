@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using WatchCollection.Api.Contracts;
 using WatchCollection.Domain.Services.Interfaces;
 using WatchCollection.Storage.Interfaces;
@@ -6,6 +7,7 @@ using WatchCollection.Domain.Model;
 using WatchCollection.Domain.Services.Mapping;
 using WatchCollection.Storage.Exceptions;
 using WatchCollection.Domain.Services.Validators;
+using WatchCollection.Domain.Services.Exceptions;
 
 namespace WatchCollection.Domain.Services;
 
@@ -23,8 +25,21 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
         if (watch.OwnerUserId.ToString() != ownerIdString)
             throw new UnauthorizedAccessException("You do not have permission to upload images for this watch.");
 
-        // TODO: add logic to handle isPrimary flag
-        var updatedFileName = Guid.NewGuid().ToString() + "_" + fileName; // Ensures unique filenames
+        var existingImages = await _watchImageRepository.GetAllImagesByWatchIdAsync(watchId);
+        
+        if (existingImages.Count >= 25)
+            throw new DomainInvalidOperationException("Maximum of 25 images allowed per watch.");
+        
+        var shouldBePrimary = isPrimary || existingImages.Count == 0; // The very first image will always be primary
+        
+        // If this should be primary, flip the old primary to false first
+        if (shouldBePrimary && existingImages.Any())
+        {
+            var oldPrimary = existingImages.First(img => img.IsPrimary);
+            await _watchImageRepository.UpdatePrimaryImageAsync(watchId, oldPrimary.ImageId, false);
+        }
+        
+        var updatedFileName = Guid.NewGuid().ToString() + "_" + fileName;
         var imageUrl = await _blobStorageService.UploadImageAsync(updatedFileName, imageStream);
 
         var model = new WatchImageModel{
@@ -34,11 +49,12 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
             FileName = updatedFileName,
             FileSize = fileSize,
             ContentType = contentType,
-            IsPrimary = isPrimary,
+            IsPrimary = shouldBePrimary,
         };
 
         var entity = model.AsEntity();
         var addedEntity = await _watchImageRepository.AddWatchImageAsync(entity);
+
 
         return addedEntity.AsModel().AsContract();
     }
@@ -75,7 +91,15 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
         if (watch.OwnerUserId.ToString() != ownerIdString)
             throw new UnauthorizedAccessException("You do not have permission to set the main image for this watch.");
 
-        var updatedEntity = await _watchImageRepository.SetMainImageAsync(watchId, imageId);
+        // ensure the current primary is set to false and then set the new one to true
+        var images = await _watchImageRepository.GetAllImagesByWatchIdAsync(watchId);
+        var currentPrimary = images.FirstOrDefault(i => i.IsPrimary);
+        if (currentPrimary is not null && currentPrimary.ImageId != imageId)
+        {
+            await _watchImageRepository.UpdatePrimaryImageAsync(watchId, currentPrimary.ImageId, false);
+        }
+
+        var updatedEntity = await _watchImageRepository.UpdatePrimaryImageAsync(watchId, imageId, true);
         return updatedEntity.AsModel().AsContract();
     }
 
@@ -91,7 +115,6 @@ public class WatchImageService(IWatchImageRepository _watchImageRepository, IBlo
 
     public async Task DeleteBlobsAsync(string filename)
     {
-
         await _blobStorageService.DeleteImageAsync(filename);
     }
 }
