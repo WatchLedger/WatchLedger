@@ -43,6 +43,7 @@ namespace WatchCollection.Api.Controllers
             return Ok(updated);
         }
 
+        // TODO: maybe getall for specific users? dont know yet
         [HttpGet]
         [Authorize(Policy = "CollectionReadPolicy")]
         public async Task<ActionResult<IEnumerable<AdvertisementResponseContract>>> GetAllAdvertisements()
