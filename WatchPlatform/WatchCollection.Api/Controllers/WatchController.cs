@@ -17,22 +17,20 @@ namespace WatchCollection.Api.Controllers
         
         [HttpPost]
         [Authorize(Policy = "CollectionWritePolicy")]
-        //only possible for logged in users and admins
-        //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult<WatchResponseContract>> CreateWatch([FromBody] WatchRequestContract contract)
         {
-            var created = await _service.CreateWatch(contract);
+            var ownerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
+            var created = await _service.CreateWatch(ownerIdString, contract);
             return CreatedAtAction(nameof(GetWatchById), new { watchId = created.WatchId }, created);
         }
 
         [HttpGet]
         [Route("{watchId:Guid}")]
         [Authorize(Policy = "CollectionReadPolicy")]
-        // only possible for logged in users and admins
-        //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult<WatchResponseContract>> GetWatchById([FromRoute] Guid watchId)
         {
-            var watch = await _service.GetWatchById(watchId);
+            var ownerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
+            var watch = await _service.GetWatchById(ownerIdString, watchId);
             if (watch is null)
                 return NotFound(new { Message = $"Watch with id {watchId} not found." }); // No entitynotfoundexception here since it's a get operation where null is acceptable. This improves performance by avoiding exceptions for control flow.
             return Ok(watch);
@@ -40,34 +38,31 @@ namespace WatchCollection.Api.Controllers
 
         [HttpGet]
         [Authorize(Policy = "CollectionReadPolicy")]
-        // only possible for logged in users and admins
-        //[RoleAuthorize("User", "Admin")]
         public async Task<IActionResult> GetAllWatches([FromQuery] string? brand = null)
         {
+            var ownerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
             if (!string.IsNullOrWhiteSpace(brand))
-                return Ok(await _service.GetWatchesByBrand(brand));
-            return Ok(await _service.GetAll());
+                return Ok(await _service.GetWatchesByBrand(ownerIdString, brand));
+            return Ok(await _service.GetAll(ownerIdString));
         }
 
         [HttpPut]
         [Route("{watchId:Guid}")]
         [Authorize(Policy = "CollectionWritePolicy")]
-        // only possible for logged in users and admins
-        //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult<WatchResponseContract>> Update([FromRoute] Guid watchId, [FromBody] WatchRequestContract contract)
         {
-            var updatedWatch = await _service.UpdateWatch(watchId, contract);
+            var ownerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
+            var updatedWatch = await _service.UpdateWatch(ownerIdString, watchId, contract);
             return Ok(updatedWatch);
         }
 
         [HttpDelete]
         [Route("{watchId:Guid}")]
         [Authorize(Policy = "CollectionWritePolicy")]
-        // only possible for logged in users and admins
-        //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult> DeleteWatch([FromRoute] Guid watchId)
         {
-            await _service.DeleteWatch(watchId);
+            var ownerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
+            await _service.DeleteWatch(ownerIdString, watchId);
             return NoContent();
         }
 
