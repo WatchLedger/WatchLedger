@@ -24,12 +24,14 @@ namespace WatchCollection.Api.Controllers
             [FromForm] bool isPrimary,
             [FromForm] IFormFile file)
         {
+            var ownerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
+
             var fileName = file.FileName;
             var contentType = file.ContentType;
             var fileSize = file.Length;
 
             using var stream = file.OpenReadStream();
-            var result =  await _service.UploadImageAsync(watchId, fileName, contentType, fileSize, isPrimary, stream);
+            var result =  await _service.UploadImageAsync(ownerIdString, watchId, fileName, contentType, fileSize, isPrimary, stream);
             return CreatedAtAction(nameof(GetImages), new { watchId = watchId, imageId = result.ImageId }, result);
         }
 
@@ -38,6 +40,8 @@ namespace WatchCollection.Api.Controllers
         // only possible for logged in users and admins
         public async Task<ActionResult> GetImages([FromRoute] Guid watchId)
         {
+            // this endpoint can remain open for evryone since advertisements will have the ability to show all images
+            // even if the viewer is not logged in
             var result = await _service.GetAllImagesByWatchIdAsync(watchId);
             return Ok(result);
         }
@@ -48,7 +52,8 @@ namespace WatchCollection.Api.Controllers
         // only possible for logged in users and admins
         public async Task<ActionResult> DeleteImage([FromRoute] Guid watchId, [FromRoute] Guid imageId)
         {
-            await _service.DeleteImageAsync(watchId, imageId);
+            var ownerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
+            await _service.DeleteImageAsync(ownerIdString, watchId, imageId);
             return NoContent();
         }
 
@@ -58,10 +63,11 @@ namespace WatchCollection.Api.Controllers
         // only possible for logged in users and admins
         public async Task<ActionResult> SetMainImage([FromRoute] Guid watchId, [FromRoute] Guid imageId)
         {
+            var ownerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
             if (imageId == Guid.Empty || watchId == Guid.Empty)
                 return BadRequest(new { message = "ImageId and WatchId are required." });
                 
-            var updated = await _service.SetMainImageAsync(watchId, imageId);
+            var updated = await _service.SetMainImageAsync(ownerIdString, watchId, imageId);
             return Ok(updated);
         }
     }
