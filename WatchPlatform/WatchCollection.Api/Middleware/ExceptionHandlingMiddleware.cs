@@ -52,7 +52,7 @@ public class ExceptionHandlingMiddleware
                     (StatusCodes.Status400BadRequest, "Invalid operation", ioe.Message),
 
                 EntityUnavailableException eue =>
-                    (StatusCodes.Status409Conflict, "Entity unavailable", eue.Message),
+                    (StatusCodes.Status404NotFound, "Entity unavailable", eue.Message),
 
                 InvalidAdvertisementStatusException ias =>
                     (StatusCodes.Status400BadRequest, "Invalid advertisement status", ias.Message),

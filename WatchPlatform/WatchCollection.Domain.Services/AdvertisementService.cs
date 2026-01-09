@@ -12,14 +12,14 @@ namespace WatchCollection.Domain.Services;
 
 public class AdvertisementService(IAdvertisementRepository _repository, IWatchValuationHttpClient _watchValuationClient) : IAdvertisementService
 {
-    public async Task<AdvertisementResponseContract> CreateAdvertisement(AdvertisementRequestContract contract)
+    public async Task<AdvertisementResponseContract> CreateAdvertisement(string bidderIdString, AdvertisementRequestContract contract)
     {
         if(contract.Status is AdvertisementStatus.Sold || contract.Status is AdvertisementStatus.Expired)
             throw new InvalidAdvertisementStatusException("Cannot create an advertisement with status Sold or Expired.");
 
         var model = contract.AsModel();
         var advertisementId = Guid.NewGuid();
-        var sellerUserId = Guid.NewGuid(); // This should be retrieved from the authenticated user's context in a real application.
+        var sellerUserId = Guid.TryParse(bidderIdString, out var userIdGuid) ? userIdGuid : throw new Exception("Invalid User ID format.");
         model.AdvertisementId = advertisementId;
         model.SellerUserId = sellerUserId;
         model.ViewCount = 0;
@@ -29,16 +29,29 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         return createdEntity.AsModel().AsContract();
     }
 
-    public async Task DeleteAdvertisement(Guid advertisementId)
+    public async Task DeleteAdvertisement(string sellerIdString, bool isAdmin, Guid advertisementId)
     {
+        var advertisement = await _repository.GetAdvertisementByIdAsync(advertisementId);
+        if (advertisement is null)
+            throw new AdvertisementNotFoundExceptions(advertisementId, "Advertisement not found");
+        if (advertisement.SellerUserId.ToString() != sellerIdString && !isAdmin){
+            // TODO: write custom exception for unauthorized access
+            throw new UnauthorizedAccessException("User is not authorized to delete this advertisement.");
+        }
         await _repository.DeleteAdvertisementAsync(advertisementId);
     }
 
-    public async Task<AdvertisementResponseContract?> GetAdvertisementById(Guid advertisementId)
+    public async Task<AdvertisementResponseContract?> GetAdvertisementById(string? userId, Guid advertisementId)
     {
         var entity =  await _repository.GetAdvertisementByIdAsync(advertisementId);
         if (entity is null)
             return null;
+        
+        if (userId is not null && entity.SellerUserId.ToString() != userId){
+            entity.ViewCount += 1;
+            await _repository.UpdateViewCountAsync(entity.AdvertisementId, entity.ViewCount);
+        }
+
         return entity.AsModel().AsContract();
     }
 
@@ -48,13 +61,19 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         return entities.Select(e => e.AsModel().AsContract());
     }
 
-    public async Task<AdvertisementResponseContract> UpdateAdvertisement(Guid advertisementId, AdvertisementUpdateRequestContract contract)
+    public async Task<AdvertisementResponseContract> UpdateAdvertisement(Guid advertisementId, string sellerIdString, bool isAdmin, AdvertisementUpdateRequestContract contract)
     {
         if (contract.Status is AdvertisementStatus.Expired || contract.Status is AdvertisementStatus.Draft)
             throw new InvalidAdvertisementStatusException("Cannot update an advertisement to status Expired or Draft");
+
         var advertisement = await _repository.GetAdvertisementByIdAsync(advertisementId);
         if (advertisement is null)
             throw new AdvertisementNotFoundExceptions(advertisementId, "Advertisement not found");
+
+        if(advertisement.SellerUserId.ToString() != sellerIdString && !isAdmin)
+        {
+            throw new UnauthorizedAccessException("User is not authorized to update this advertisement.");
+        }
         
         var contractWithWatchId = new AdvertisementRequestContract
         {
@@ -66,8 +85,6 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
             AllowBids = contract.AllowBids
         };
         var model = contractWithWatchId.AsModel();
-        model.AdvertisementId = advertisementId;
-        model.SellerUserId = advertisement.SellerUserId; // This should be retrieved from the authenticated user's context in a real application.
 
         var entity = model.AsEntity();
         

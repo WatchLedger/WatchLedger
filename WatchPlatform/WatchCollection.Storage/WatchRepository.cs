@@ -28,16 +28,16 @@ public class WatchRepository(WatchServiceDbContext _context) : IWatchRepository
         return watch;
     }
 
-    public async Task<IEnumerable<Watch>> GetAll()
+    public async Task<IEnumerable<Watch>> GetAll(Guid ownerId)
     {
-        var watches = await _context.Watches.ToListAsync();
+        var watches = await _context.Watches.Where(w => w.OwnerUserId == ownerId).ToListAsync();
         return watches;
     }
 
-    public async Task<IEnumerable<Watch>> GetWatchesByBrand(string brand)
+    public async Task<IEnumerable<Watch>> GetWatchesByBrand(Guid ownerId, string brand)
     {
         var watches = await _context.Watches
-            .Where(w => w.Brand.ToLower().Contains(brand.ToLower()))
+            .Where(w => w.OwnerUserId == ownerId && w.Brand.ToLower().Contains(brand.ToLower()))
             .ToListAsync();
         return watches;
     }
