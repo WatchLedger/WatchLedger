@@ -29,12 +29,12 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         return createdEntity.AsModel().AsContract();
     }
 
-    public async Task DeleteAdvertisement(string sellerIdString, string roleClaim, Guid advertisementId)
+    public async Task DeleteAdvertisement(string sellerIdString, bool isAdmin, Guid advertisementId)
     {
         var advertisement = await _repository.GetAdvertisementByIdAsync(advertisementId);
         if (advertisement is null)
             throw new AdvertisementNotFoundExceptions(advertisementId, "Advertisement not found");
-        if (advertisement.SellerUserId.ToString() != sellerIdString && roleClaim.ToLower() != "admin"){
+        if (advertisement.SellerUserId.ToString() != sellerIdString && !isAdmin){
             // TODO: write custom exception for unauthorized access
             throw new UnauthorizedAccessException("User is not authorized to delete this advertisement.");
         }
@@ -61,7 +61,7 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         return entities.Select(e => e.AsModel().AsContract());
     }
 
-    public async Task<AdvertisementResponseContract> UpdateAdvertisement(Guid advertisementId, string sellerIdString, string roleClaim, AdvertisementUpdateRequestContract contract)
+    public async Task<AdvertisementResponseContract> UpdateAdvertisement(Guid advertisementId, string sellerIdString, bool isAdmin, AdvertisementUpdateRequestContract contract)
     {
         if (contract.Status is AdvertisementStatus.Expired || contract.Status is AdvertisementStatus.Draft)
             throw new InvalidAdvertisementStatusException("Cannot update an advertisement to status Expired or Draft");
@@ -70,7 +70,7 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         if (advertisement is null)
             throw new AdvertisementNotFoundExceptions(advertisementId, "Advertisement not found");
 
-        if(advertisement.SellerUserId.ToString() != sellerIdString && roleClaim.ToLower() != "admin")
+        if(advertisement.SellerUserId.ToString() != sellerIdString && !isAdmin)
         {
             throw new UnauthorizedAccessException("User is not authorized to update this advertisement.");
         }

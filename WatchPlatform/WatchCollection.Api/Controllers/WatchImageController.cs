@@ -18,7 +18,6 @@ namespace WatchCollection.Api.Controllers
     {
         [HttpPost]
         [Authorize(Policy = "CollectionWritePolicy")]
-        //only possible for logged in users and admins
         public async Task<ActionResult> UploadImage(
             [FromRoute] Guid watchId,
             [FromForm] bool isPrimary,
@@ -36,12 +35,9 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "CollectionReadPolicy")]
-        // only possible for logged in users and admins
+        [Authorize(Policy = "PublicReadPolicy")]
         public async Task<ActionResult> GetImages([FromRoute] Guid watchId)
         {
-            // this endpoint can remain open for evryone since advertisements will have the ability to show all images
-            // even if the viewer is not logged in
             var result = await _service.GetAllImagesByWatchIdAsync(watchId);
             return Ok(result);
         }
@@ -49,7 +45,6 @@ namespace WatchCollection.Api.Controllers
         [HttpDelete]
         [Route("{imageId:Guid}")]
         [Authorize(Policy = "CollectionWritePolicy")]
-        // only possible for logged in users and admins
         public async Task<ActionResult> DeleteImage([FromRoute] Guid watchId, [FromRoute] Guid imageId)
         {
             var ownerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
@@ -60,7 +55,6 @@ namespace WatchCollection.Api.Controllers
         [HttpPut]
         [Route("{imageId:Guid}/set-primary")]
         [Authorize(Policy = "CollectionWritePolicy")]
-        // only possible for logged in users and admins
         public async Task<ActionResult> SetMainImage([FromRoute] Guid watchId, [FromRoute] Guid imageId)
         {
             var ownerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");

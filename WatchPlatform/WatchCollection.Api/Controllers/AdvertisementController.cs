@@ -40,8 +40,8 @@ namespace WatchCollection.Api.Controllers
         public async Task<ActionResult<AdvertisementResponseContract>> UpdateAdvertisement([FromRoute] Guid advertisementId, [FromBody] AdvertisementUpdateRequestContract request)
         {
             var sellerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
-            var roleClaim = User.FindFirst("role")?.Value ?? throw new Exception("User role claim is missing in the token.");
-            var updated = await _advertisementService.UpdateAdvertisement(advertisementId, roleClaim, sellerIdString, request);
+            var isAdmin = User.IsInRole("Admin");
+            var updated = await _advertisementService.UpdateAdvertisement(advertisementId, sellerIdString, isAdmin, request);
             return Ok(updated);
         }
 
@@ -59,8 +59,8 @@ namespace WatchCollection.Api.Controllers
         public async Task<ActionResult> DeleteAdvertisement([FromRoute] Guid advertisementId)
         {
             var sellerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
-            var roleClaim = User.FindFirst("role")?.Value ?? throw new Exception("User role claim is missing in the token.");
-            await _advertisementService.DeleteAdvertisement(roleClaim, sellerIdString, advertisementId);
+            var isAdmin = User.IsInRole("Admin");
+            await _advertisementService.DeleteAdvertisement(sellerIdString, isAdmin, advertisementId);
             return NoContent();
         }
 
