@@ -15,20 +15,19 @@ namespace WatchCollection.Api.Controllers
     {
         [HttpPost]
         [Authorize(Policy = "CollectionWritePolicy")]
-        //only possible for logged in users and admins
-        //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult<AdvertisementResponseContract>> CreateAdvertisement([FromBody] AdvertisementRequestContract request)
         {
-            var created = await _advertisementService.CreateAdvertisement(request);
+            var sellerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
+            var created = await _advertisementService.CreateAdvertisement(sellerIdString, request);
             return CreatedAtAction(nameof(GetById), new { advertisementId = created.AdvertisementId}, created);  
         }
 
         [HttpGet("{advertisementId:Guid}")]
         [Authorize(Policy = "CollectionReadPolicy")]
-        //possible for all users
         public async Task<ActionResult<AdvertisementResponseContract>> GetById([FromRoute] Guid advertisementId)
         {
-            var advertisement = await _advertisementService.GetAdvertisementById(advertisementId);
+            var userIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
+            var advertisement = await _advertisementService.GetAdvertisementById(userIdString, advertisementId);
             if (advertisement is null)
                 return NotFound(new { Message = $"Advertisement with id {advertisementId} not found." });
             return Ok(advertisement);
@@ -36,17 +35,16 @@ namespace WatchCollection.Api.Controllers
 
         [HttpPut("{advertisementId:Guid}")]
         [Authorize(Policy = "CollectionWritePolicy")]
-        // only possible for logged in users and admins
-        //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult<AdvertisementResponseContract>> UpdateAdvertisement([FromRoute] Guid advertisementId, [FromBody] AdvertisementUpdateRequestContract request)
         {
-            var updated = await _advertisementService.UpdateAdvertisement(advertisementId, request);
+            // TODO: pass along the role claims to service layer to handle admin overrides
+            var sellerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
+            var updated = await _advertisementService.UpdateAdvertisement(advertisementId, sellerIdString, request);
             return Ok(updated);
         }
 
         [HttpGet]
         [Authorize(Policy = "CollectionReadPolicy")]
-        //possible for all users
         public async Task<ActionResult<IEnumerable<AdvertisementResponseContract>>> GetAllAdvertisements()
         {
             var advertisements = await _advertisementService.GetAllAdvertisements();
@@ -55,11 +53,11 @@ namespace WatchCollection.Api.Controllers
 
         [HttpDelete("{advertisementId:Guid}")]
         [Authorize(Policy = "CollectionWritePolicy")]
-        // only possible for logged in users and admins
-        //[RoleAuthorize("User", "Admin")]
         public async Task<ActionResult> DeleteAdvertisement([FromRoute] Guid advertisementId)
         {
-            await _advertisementService.DeleteAdvertisement(advertisementId);
+            // TODO: pass along the role claims to service layer to handle admin overrides
+            var sellerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
+            await _advertisementService.DeleteAdvertisement(sellerIdString, advertisementId);
             return NoContent();
         }
 
