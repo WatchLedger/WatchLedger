@@ -37,6 +37,10 @@ public class Program
             });
 
         builder.Services.AddAuthorizationBuilder()
+            .AddPolicy("PublicReadPolicy", policy =>
+                {
+                    policy.RequireAuthenticatedUser();
+                })
             .AddPolicy("CollectionReadPolicy", policy =>
                 {
                     policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Read", "User"));
@@ -45,13 +49,19 @@ public class Program
                 {
                     policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Write", "User"));
                 })
-            .AddPolicy("AdminReadPolicy", policy =>
-                {
-                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Read", "Admin"));
-                })
             .AddPolicy("AdminWritePolicy", policy =>
                 {
                     policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Write", "Admin"));
+                })
+            .AddPolicy("AdminOrUserWritePolicy", policy =>
+                {
+                    policy.RequireAssertion(context =>
+                    {
+                        var hasClaim = AuthorizationHelper.HasWriteClaim(context.User);
+                        var hasRole = AuthorizationHelper.HasRole(context.User, "User") || 
+                                      AuthorizationHelper.HasRole(context.User, "Admin");
+                        return hasClaim && hasRole;
+                    });
                 });
         
         builder.Services.Configure<BlobStorageOptions>( options =>{

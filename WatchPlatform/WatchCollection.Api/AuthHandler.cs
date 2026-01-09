@@ -1,4 +1,5 @@
 using System;
+using System.Security.Claims;
 using Duende.IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +9,7 @@ namespace WatchCollection.Api;
 public class AuthHandler : AuthorizationHandler<ClaimOrRoleRequirement>
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
+    
     public AuthHandler(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;

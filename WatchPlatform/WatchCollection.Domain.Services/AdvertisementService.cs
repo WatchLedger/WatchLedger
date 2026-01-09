@@ -29,26 +29,25 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         return createdEntity.AsModel().AsContract();
     }
 
-    public async Task DeleteAdvertisement(string sellerIdString, Guid advertisementId)
+    public async Task DeleteAdvertisement(string sellerIdString, string roleClaim, Guid advertisementId)
     {
         var advertisement = await _repository.GetAdvertisementByIdAsync(advertisementId);
         if (advertisement is null)
             throw new AdvertisementNotFoundExceptions(advertisementId, "Advertisement not found");
-        if (advertisement.SellerUserId.ToString() != sellerIdString){
-            // TODO: write override logic for admin users
+        if (advertisement.SellerUserId.ToString() != sellerIdString && roleClaim.ToLower() != "admin"){
             // TODO: write custom exception for unauthorized access
             throw new UnauthorizedAccessException("User is not authorized to delete this advertisement.");
         }
         await _repository.DeleteAdvertisementAsync(advertisementId);
     }
 
-    public async Task<AdvertisementResponseContract?> GetAdvertisementById(string sellerIdString,Guid advertisementId)
+    public async Task<AdvertisementResponseContract?> GetAdvertisementById(string? userId, Guid advertisementId)
     {
         var entity =  await _repository.GetAdvertisementByIdAsync(advertisementId);
         if (entity is null)
             return null;
         
-        if (entity.SellerUserId.ToString() != sellerIdString){
+        if (userId is not null && entity.SellerUserId.ToString() != userId){
             entity.ViewCount += 1;
             // TODO: Ensure a update view count exists only updating that field
             await _repository.UpdateAdvertisementAsync(entity);
@@ -63,7 +62,7 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         return entities.Select(e => e.AsModel().AsContract());
     }
 
-    public async Task<AdvertisementResponseContract> UpdateAdvertisement(Guid advertisementId, string sellerIdString, AdvertisementUpdateRequestContract contract)
+    public async Task<AdvertisementResponseContract> UpdateAdvertisement(Guid advertisementId, string sellerIdString, string roleClaim, AdvertisementUpdateRequestContract contract)
     {
         if (contract.Status is AdvertisementStatus.Expired || contract.Status is AdvertisementStatus.Draft)
             throw new InvalidAdvertisementStatusException("Cannot update an advertisement to status Expired or Draft");
@@ -72,9 +71,8 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         if (advertisement is null)
             throw new AdvertisementNotFoundExceptions(advertisementId, "Advertisement not found");
 
-        if(advertisement.SellerUserId.ToString() != sellerIdString)
+        if(advertisement.SellerUserId.ToString() != sellerIdString && roleClaim.ToLower() != "admin")
         {
-            // TODO: write override logic for admin users
             throw new UnauthorizedAccessException("User is not authorized to update this advertisement.");
         }
         

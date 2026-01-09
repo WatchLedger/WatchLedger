@@ -23,29 +23,31 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet("{advertisementId:Guid}")]
-        [Authorize(Policy = "CollectionReadPolicy")]
+        [Authorize(Policy = "PublicReadPolicy")]
         public async Task<ActionResult<AdvertisementResponseContract>> GetById([FromRoute] Guid advertisementId)
         {
-            var userIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
-            var advertisement = await _advertisementService.GetAdvertisementById(userIdString, advertisementId);
+            var userId = User.FindFirst("sub")?.Value;
+            var advertisement = await _advertisementService.GetAdvertisementById(userId, advertisementId);
             if (advertisement is null)
                 return NotFound(new { Message = $"Advertisement with id {advertisementId} not found." });
             return Ok(advertisement);
         }
 
+        // TODO: maybe add a getbysellerid endpoint?
+
         [HttpPut("{advertisementId:Guid}")]
-        [Authorize(Policy = "CollectionWritePolicy")]
+        [Authorize(Policy = "AdminOrUserWritePolicy")]
         public async Task<ActionResult<AdvertisementResponseContract>> UpdateAdvertisement([FromRoute] Guid advertisementId, [FromBody] AdvertisementUpdateRequestContract request)
         {
-            // TODO: pass along the role claims to service layer to handle admin overrides
             var sellerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
-            var updated = await _advertisementService.UpdateAdvertisement(advertisementId, sellerIdString, request);
+            var roleClaim = User.FindFirst("role")?.Value ?? throw new Exception("User role claim is missing in the token.");
+            var updated = await _advertisementService.UpdateAdvertisement(advertisementId, roleClaim, sellerIdString, request);
             return Ok(updated);
         }
 
         // TODO: maybe getall for specific users? dont know yet
         [HttpGet]
-        [Authorize(Policy = "CollectionReadPolicy")]
+        [Authorize(Policy = "PublicReadPolicy")]
         public async Task<ActionResult<IEnumerable<AdvertisementResponseContract>>> GetAllAdvertisements()
         {
             var advertisements = await _advertisementService.GetAllAdvertisements();
@@ -53,12 +55,12 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpDelete("{advertisementId:Guid}")]
-        [Authorize(Policy = "CollectionWritePolicy")]
+        [Authorize(Policy = "AdminOrUserWritePolicy")]
         public async Task<ActionResult> DeleteAdvertisement([FromRoute] Guid advertisementId)
         {
-            // TODO: pass along the role claims to service layer to handle admin overrides
             var sellerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
-            await _advertisementService.DeleteAdvertisement(sellerIdString, advertisementId);
+            var roleClaim = User.FindFirst("role")?.Value ?? throw new Exception("User role claim is missing in the token.");
+            await _advertisementService.DeleteAdvertisement(roleClaim, sellerIdString, advertisementId);
             return NoContent();
         }
 
