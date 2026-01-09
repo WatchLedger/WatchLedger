@@ -75,7 +75,7 @@ public sealed class WatchValuationHttpClient(HttpClient _httpClient) : IWatchVal
 
     public async Task SetAccessTokenAsync()
     {
-        var disco = await _httpClient.GetDiscoveryDocumentAsync("https://localhost:5001");
+        var disco = await _httpClient.GetDiscoveryDocumentAsync("https://identityserver-watchcollection.azurewebsites.net");
         var tokenResponse = await _httpClient
         .RequestClientCredentialsTokenAsync(
             new ClientCredentialsTokenRequest
