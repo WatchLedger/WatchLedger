@@ -35,7 +35,6 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         if (advertisement is null)
             throw new AdvertisementNotFoundExceptions(advertisementId, "Advertisement not found");
         if (advertisement.SellerUserId.ToString() != sellerIdString && !isAdmin){
-            // TODO: write custom exception for unauthorized access
             throw new UnauthorizedAccessException("User is not authorized to delete this advertisement.");
         }
         await _repository.DeleteAdvertisementAsync(advertisementId);
