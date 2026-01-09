@@ -1,4 +1,5 @@
-﻿using IdentityServer;
+﻿using Azure.Identity;
+using IdentityServer;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()

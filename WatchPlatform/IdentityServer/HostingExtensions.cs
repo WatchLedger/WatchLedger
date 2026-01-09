@@ -1,3 +1,4 @@
+using Azure.Identity;
 using Duende.IdentityServer;
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using IdentityServer.Data;
@@ -12,13 +13,20 @@ internal static class HostingExtensions
 {
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
+
+        var keyVaultUri = builder.Configuration["AzureKeyVault:VaultUri"]
+        ?? throw new InvalidOperationException("Azure Key Vault URI is not configured.");
+        builder.Configuration.AddAzureKeyVault(
+            new Uri(keyVaultUri),
+            new DefaultAzureCredential());
+
         builder.Services.AddRazorPages();
 
         builder.Services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+            options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityServerProductionSqlString")));
 
         builder.Services.AddDbContext<ConfigurationDbContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+            options.UseSqlServer(builder.Configuration.GetConnectionString("IdentityServerProductionSqlString"),
             options => options.MigrationsAssembly(
                 typeof(Program).Assembly.GetName().Name
             )));
