@@ -104,9 +104,10 @@ public class Program
         {
             options.AddDefaultPolicy(policy =>
             {
-                policy.WithOrigins("http://localhost:5174", "https://watchpledger.nathangeleyn.com")
+                policy.WithOrigins("http://localhost:5174", "https://watchledger.nathangeleyn.com")
                       .AllowAnyHeader()
-                      .AllowAnyMethod();
+                      .AllowAnyMethod()
+                      .AllowCredentials();
             });
         });
 
@@ -119,8 +120,8 @@ public class Program
             app.MapOpenApi();
         }
 
-        app.UseRouting();
         app.UseCors();
+        app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
 
