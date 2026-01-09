@@ -34,6 +34,7 @@ namespace WatchCollection.Api.Controllers
 
         [HttpDelete("{bidId:Guid}")]
         [Authorize(Policy = "AdminWritePolicy")]
+        // for fairness, only admins can delete bids when necessary
         public async Task<IActionResult> DeleteBid([FromRoute] Guid bidId)
         {
             await _service.DeleteBidAsync(bidId);
