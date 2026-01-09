@@ -18,4 +18,5 @@ public class WatchModel
     public DateOnly? PurchaseDate { get; set; }
     public DateTimeOffset? CreatedAt { get; set; } // same reasoning as WatchId
     public DateTimeOffset? UpdatedAt { get; set; } // same reasoning as WatchId
+    public IEnumerable<WatchImageModel>? WatchImages { get; set; }
 }
