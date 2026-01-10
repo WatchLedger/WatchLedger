@@ -68,6 +68,9 @@ public class ExceptionHandlingMiddleware
                      "Data conflict", 
                      due.InnerException?.Message ?? "Unable to save changes due to data integrity constraints."),
 
+                UnauthorizedAccessException uae =>
+                    (StatusCodes.Status403Forbidden, "Unauthorized", uae.Message),
+
                 // Unhandled exceptions (all other types)
                 _ =>
                     (StatusCodes.Status500InternalServerError,

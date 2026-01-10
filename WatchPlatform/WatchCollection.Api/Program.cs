@@ -1,8 +1,11 @@
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 using Azure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 using WatchCollection.Api.Middleware;
+using WatchCollection.Api.Services;
 using WatchCollection.Domain.Services;
 using WatchCollection.Domain.Services.Interfaces;
 using WatchCollection.Infrastructure;
@@ -19,113 +22,33 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        builder.Services.AddHttpContextAccessor();
-        builder.Services.AddSingleton<IAuthorizationHandler, AuthHandler>();
 
+        // Configure Azure Key Vault
         var keyVaultUri = builder.Configuration["AzureKeyVault:VaultUri"]
             ?? throw new InvalidOperationException("Azure Key Vault URI is not configured.");
         builder.Configuration.AddAzureKeyVault(
             new Uri(keyVaultUri),
             new DefaultAzureCredential());
 
-        builder.Services.AddAuthentication()
-            .AddJwtBearer(options =>
-            {
-                options.Authority = "https://identityserver-watchcollection.azurewebsites.net";
-                options.TokenValidationParameters.ValidateAudience = false;
-                options.MapInboundClaims = false;
-            });
-
-        builder.Services.AddAuthorizationBuilder()
-            .AddPolicy("PublicReadPolicy", policy =>
-                {
-                    policy.RequireAuthenticatedUser();
-                })
-            .AddPolicy("CollectionReadPolicy", policy =>
-                {
-                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Read", "User"));
-                })
-            .AddPolicy("CollectionWritePolicy", policy =>
-                {
-                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Write", "User"));
-                })
-            .AddPolicy("AdminWritePolicy", policy =>
-                {
-                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Write", "Admin"));
-                })
-            .AddPolicy("AdminOrUserWritePolicy", policy =>
-                {
-                    policy.RequireAssertion(context =>
-                    {
-                        var hasClaim = AuthorizationHelper.HasWriteClaim(context.User);
-                        var hasRole = AuthorizationHelper.HasRole(context.User, "User") || 
-                                      AuthorizationHelper.HasRole(context.User, "Admin");
-                        return hasClaim && hasRole;
-                    });
-                });
-        
-        builder.Services.Configure<BlobStorageOptions>( options =>{
-            options.BlobStorageConnectionString = builder.Configuration["BlobConnectionString"]
-                ?? throw new InvalidOperationException("Blob storage connection string is not configured in Key Vault.");
-            options.ContainerName = builder.Configuration["BlobStorage:ContainerName"]
-                ?? throw new InvalidOperationException("Blob storage container name is not configured.");
-        });
-
-        var connectionString = builder.Configuration["ProductionSqlString"]
-            ?? throw new InvalidOperationException("SQL Database connection string is not configured in Key Vault.");
-        builder.Services.AddDbContext<WatchServiceDbContext>(options => 
-            options.UseSqlServer(connectionString));
-
-        // Add services to the container.
-        builder.Services.AddScoped<IWatchService, WatchService>();
-        builder.Services.AddScoped<IWatchImageService, WatchImageService>();
-        builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
-        builder.Services.AddScoped<IBidService, BidService>();
-        builder.Services.AddHttpClient<IWatchValuationHttpClient, WatchValuationHttpClient>();
-        // Add repositories to the container.
-        builder.Services.AddScoped<IWatchRepository, WatchRepository>();
-        builder.Services.AddScoped<IWatchImageRepository, WatchImageRepository>();
-        builder.Services.AddScoped<IAdvertisementRepository, AdvertisementRepository>();
-        builder.Services.AddScoped<IBidRepository, BidRepository>();
-        builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
-
-        builder.Services.AddControllers()
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new WatchConditionJsonConverter());
-                options.JsonSerializerOptions.Converters.Add(new AdvertisementStatusJsonConverter());
-            });
-
-
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApi();
-
-        builder.Services.AddCors(options =>
-        {
-            options.AddDefaultPolicy(policy =>
-            {
-                policy.WithOrigins("http://localhost:5174", "https://watchpledger.nathangeleyn.com")
-                      .AllowAnyHeader()
-                      .AllowAnyMethod();
-            });
-        });
+        // Configure services using extension methods
+        builder.Services.AddInfrastructure(builder.Configuration);
+        builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
+        builder.Services.AddApplicationServices();
+        builder.Services.AddApiConfiguration();
+        builder.Services.AddCorsPolicy();
+        builder.Services.AddRateLimiting();
 
         var app = builder.Build();
 
         app.UseMiddleware<ExceptionHandlingMiddleware>();
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.MapOpenApi();
-        }
-
-        app.UseRouting();
+        app.MapOpenApi();
+        app.MapScalarApiReference();
         app.UseCors();
+        app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
-
+        app.UseRateLimiter();
         app.MapControllers();
-
         app.Run();
     }
 }

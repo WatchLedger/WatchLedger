@@ -78,7 +78,8 @@ internal static class WatchMappingExtensions
             PurchasePrice = model.PurchasePrice,
             PurchaseDate = model.PurchaseDate,
             CreatedAt = model.CreatedAt ?? throw new MappingException("CreatedAt is required."),
-            UpdatedAt = model.UpdatedAt ?? throw new MappingException("UpdatedAt is required.")
+            UpdatedAt = model.UpdatedAt ?? throw new MappingException("UpdatedAt is required."),
+            Images = model.WatchImages?.Select(img => img.AsContract())
         };
     }
 
@@ -102,7 +103,8 @@ internal static class WatchMappingExtensions
                 : throw new MappingException("CreatedAt is required."), 
             UpdatedAt = entity.UpdatedAt != default
                 ? entity.UpdatedAt
-                : throw new MappingException("UpdatedAt is required.")
+                : throw new MappingException("UpdatedAt is required."),
+            WatchImages = entity.WatchImages?.Select(img => img.AsModel())
         };
     }
 }

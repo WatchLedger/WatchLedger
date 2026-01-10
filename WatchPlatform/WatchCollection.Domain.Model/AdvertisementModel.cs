@@ -19,4 +19,5 @@ public class AdvertisementModel
     public DateTimeOffset? SoldAt { get; set; }
     public DateTimeOffset? CreatedAt { get; set; } // same reasoning as AdvertisementId
     public DateTimeOffset? UpdatedAt { get; set; } // same reasoning as AdvertisementId
+    public WatchModel? Watch { get; set; }
 }

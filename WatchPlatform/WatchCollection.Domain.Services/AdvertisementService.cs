@@ -35,7 +35,6 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         if (advertisement is null)
             throw new AdvertisementNotFoundExceptions(advertisementId, "Advertisement not found");
         if (advertisement.SellerUserId.ToString() != sellerIdString && !isAdmin){
-            // TODO: write custom exception for unauthorized access
             throw new UnauthorizedAccessException("User is not authorized to delete this advertisement.");
         }
         await _repository.DeleteAdvertisementAsync(advertisementId);
@@ -55,9 +54,33 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         return entity.AsModel().AsContract();
     }
 
-    public async Task<IEnumerable<AdvertisementResponseContract>> GetAllAdvertisements()
+    public async Task<IEnumerable<AdvertisementResponseContract>> GetAllAdvertisements(int pageNumber = 1, int pageSize = 10, string? watchBrand = null)
     {
-        var entities = await _repository.GetAllAdvertisementsAsync();
+        // ensure pagination parameters are valid
+        pageNumber = Math.Max(1, pageNumber);
+        pageSize = Math.Clamp(pageSize, 1, 100);
+
+        var entities = await _repository.GetAllAdvertisementsAsync(pageNumber, pageSize, watchBrand);
+        return entities.Select(e => e.AsModel().AsContract());
+    }
+
+    public async Task<IEnumerable<AdvertisementResponseContract>> GetAdvertisementsBySellerId(Guid sellerId, int pageNumber = 1, int pageSize = 10, string? watchBrand = null)
+    {
+        // ensure pagination parameters are valid
+        pageNumber = Math.Max(1, pageNumber);
+        pageSize = Math.Clamp(pageSize, 1, 100);
+
+        var entities = await _repository.GetAdvertisementsBySellerIdAsync(sellerId, pageNumber, pageSize, watchBrand);
+        return entities.Select(e => e.AsModel().AsContract());
+    }
+
+    public async Task<IEnumerable<AdvertisementResponseContract>> GetAdvertisementsByOwnerId(string ownerIdString, int pageNumber = 1, int pageSize = 10, string? watchBrand = null)
+    {
+        // ensure pagination parameters are valid
+        pageNumber = Math.Max(1, pageNumber);
+        pageSize = Math.Clamp(pageSize, 1, 100);
+
+        var entities = await _repository.GetAdvertisementsBySellerIdAsync(Guid.Parse(ownerIdString), pageNumber, pageSize, watchBrand);
         return entities.Select(e => e.AsModel().AsContract());
     }
 
@@ -85,6 +108,11 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
             AllowBids = contract.AllowBids
         };
         var model = contractWithWatchId.AsModel();
+        model.AdvertisementId = advertisement.AdvertisementId;
+        model.SellerUserId    = advertisement.SellerUserId;
+        model.PublishedAt     = advertisement.PublishedAt;
+        model.ExpiresAt       = advertisement.ExpiresAt;
+        model.SoldAt          = advertisement.SoldAt;
 
         var entity = model.AsEntity();
         
