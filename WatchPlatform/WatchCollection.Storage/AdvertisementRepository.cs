@@ -58,13 +58,83 @@ public class AdvertisementRepository(WatchServiceDbContext _context) : IAdvertis
         return advertisement;
     }
 
-    public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsAsync()
+    public async Task<IEnumerable<Advertisement>> GetAllAdvertisementsAsync(int pageNumber, int pageSize, string? watchBrand)
     {
-        var advertisements = await _context.Advertisements.ToListAsync();
+        var query = _context.Advertisements.AsQueryable();
+
+        // when brand filter is provided
+        if (!string.IsNullOrWhiteSpace(watchBrand))
+        {
+            query = query.Where(a => a.Watch != null && a.Watch.Brand == watchBrand);
+        }
+
+        // pagination
+        var pageIndex = (pageNumber - 1) * pageSize;
+        var advertisements = await query
+            .Skip(pageIndex)
+            .Take(pageSize)
+            .ToListAsync();
 
         if (advertisements.Count == 0)
             return advertisements;
 
+        // watches and primary images loading for results
+        var watchIds = advertisements.Select(a => a.WatchId).ToList();
+
+        var watches = await _context.Watches
+            .Where(w => watchIds.Contains(w.WatchId))
+            .ToListAsync();
+
+        var primaryImages = await _context.WatchImages
+            .Where(img => watchIds.Contains(img.WatchId) && img.IsPrimary)
+            .OrderByDescending(img => img.UploadedAt)
+            .GroupBy(img => img.WatchId)
+            .Select(g => g.First())
+            .ToListAsync();
+
+        var primaryByWatch = primaryImages.ToDictionary(img => img.WatchId);
+
+        foreach (var watch in watches)
+        {
+            watch.WatchImages = primaryByWatch.TryGetValue(watch.WatchId, out var image)
+                ? new List<WatchImage> { image }
+                : new List<WatchImage>();
+        }
+
+        var watchById = watches.ToDictionary(w => w.WatchId);
+        foreach (var advertisement in advertisements)
+        {
+            if (watchById.TryGetValue(advertisement.WatchId, out var watch))
+            {
+                advertisement.Watch = watch;
+            }
+        }
+
+        return advertisements;
+    }
+
+    public async Task<IEnumerable<Advertisement>> GetAdvertisementsBySellerIdAsync(Guid sellerId, int pageNumber, int pageSize, string? watchBrand)
+    {
+        var query = _context.Advertisements
+            .Where(a => a.SellerUserId == sellerId);
+
+        // when brand filter is provided
+        if (!string.IsNullOrWhiteSpace(watchBrand))
+        {
+            query = query.Where(a => a.Watch != null && a.Watch.Brand == watchBrand);
+        }
+
+        // pagination
+        var pageIndex = (pageNumber - 1) * pageSize;
+        var advertisements = await query
+            .Skip(pageIndex)
+            .Take(pageSize)
+            .ToListAsync();
+
+        if (advertisements.Count == 0)
+            return advertisements;
+
+        // watches and primary images loading for results
         var watchIds = advertisements.Select(a => a.WatchId).ToList();
 
         var watches = await _context.Watches

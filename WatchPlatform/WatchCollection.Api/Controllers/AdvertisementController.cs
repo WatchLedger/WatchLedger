@@ -35,7 +35,7 @@ namespace WatchCollection.Api.Controllers
             return Ok(advertisement);
         }
 
-        // TODO: maybe add a getbysellerid endpoint?
+
 
         [HttpPut("{advertisementId:Guid}")]
         [Authorize(Policy = "AdminOrUserWritePolicy")]
@@ -47,12 +47,36 @@ namespace WatchCollection.Api.Controllers
             return Ok(updated);
         }
 
-        // TODO: maybe getall for specific users? dont know yet
+        // this endpoint allows the public to see all published advertisements by a specific seller
+        // TODO : ensure only published advertisements are returned and also implement pagination and filtering
+        [HttpGet("seller/{sellerId:Guid}")]
+        [Authorize(Policy = "PublicReadPolicy")]
+        public async Task<ActionResult<IEnumerable<AdvertisementResponseContract>>> GetAdvertisementsBySellerId([FromRoute] Guid sellerId, [FromQuery] int pageNumber, [FromQuery] int pageSize, [FromQuery] string? watchBrand)
+        {
+            var advertisements = await _advertisementService.GetAdvertisementsBySellerId(sellerId, pageNumber, pageSize, watchBrand);
+            return Ok(advertisements);
+        }
+
+
+        // this endpoint allows the public to see all published advertisements
+        // TODO : ensure only published advertisements are returned
+        // TODO: implement pagination and filtering
         [HttpGet]
         [Authorize(Policy = "PublicReadPolicy")]
-        public async Task<ActionResult<IEnumerable<AdvertisementResponseContract>>> GetAllAdvertisements()
+        public async Task<ActionResult<IEnumerable<AdvertisementResponseContract>>> GetAllAdvertisements([FromQuery] int pageNumber, [FromQuery] int pageSize, [FromQuery] string? watchBrand)
         {
-            var advertisements = await _advertisementService.GetAllAdvertisements();
+            var advertisements = await _advertisementService.GetAllAdvertisements(pageNumber, pageSize, watchBrand);
+            return Ok(advertisements);
+        }
+
+        // this enpoint allows the user te see all of their own advertisements including unpublished ones
+        // TODO: implement pagination and filtering
+        [HttpGet]
+        [Authorize(Policy = "CollectionReadPolicy")]
+        public async Task<ActionResult<IEnumerable<AdvertisementResponseContract>>> GetAdvertisementsByOwnerId([FromQuery] int pageNumber, [FromQuery] int pageSize, [FromQuery] string? watchBrand)
+        {
+            var sellerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
+            var advertisements = await _advertisementService.GetAdvertisementsByOwnerId(sellerIdString, pageNumber, pageSize, watchBrand);
             return Ok(advertisements);
         }
 

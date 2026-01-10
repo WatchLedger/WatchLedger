@@ -54,9 +54,33 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         return entity.AsModel().AsContract();
     }
 
-    public async Task<IEnumerable<AdvertisementResponseContract>> GetAllAdvertisements()
+    public async Task<IEnumerable<AdvertisementResponseContract>> GetAllAdvertisements(int pageNumber = 1, int pageSize = 10, string? watchBrand = null)
     {
-        var entities = await _repository.GetAllAdvertisementsAsync();
+        // ensure pagination parameters are valid
+        pageNumber = Math.Max(1, pageNumber);
+        pageSize = Math.Clamp(pageSize, 1, 100);
+
+        var entities = await _repository.GetAllAdvertisementsAsync(pageNumber, pageSize, watchBrand);
+        return entities.Select(e => e.AsModel().AsContract());
+    }
+
+    public async Task<IEnumerable<AdvertisementResponseContract>> GetAdvertisementsBySellerId(Guid sellerId, int pageNumber = 1, int pageSize = 10, string? watchBrand = null)
+    {
+        // ensure pagination parameters are valid
+        pageNumber = Math.Max(1, pageNumber);
+        pageSize = Math.Clamp(pageSize, 1, 100);
+
+        var entities = await _repository.GetAdvertisementsBySellerIdAsync(sellerId, pageNumber, pageSize, watchBrand);
+        return entities.Select(e => e.AsModel().AsContract());
+    }
+
+    public async Task<IEnumerable<AdvertisementResponseContract>> GetAdvertisementsByOwnerId(string ownerIdString, int pageNumber = 1, int pageSize = 10, string? watchBrand = null)
+    {
+        // ensure pagination parameters are valid
+        pageNumber = Math.Max(1, pageNumber);
+        pageSize = Math.Clamp(pageSize, 1, 100);
+
+        var entities = await _repository.GetAdvertisementsBySellerIdAsync(Guid.Parse(ownerIdString), pageNumber, pageSize, watchBrand);
         return entities.Select(e => e.AsModel().AsContract());
     }
 
