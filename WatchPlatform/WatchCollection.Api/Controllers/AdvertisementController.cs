@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using WatchCollection.Api.Contracts;
 using WatchCollection.Api.Services;
 using WatchCollection.Domain.Services.Exceptions;
@@ -66,6 +67,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet("valuation")]
+        [EnableRateLimiting("watchValuation")]
         [Authorize(Policy = "PublicReadPolicy")]
         public async Task<ActionResult<decimal>> GetWatchValuation([FromQuery] string referenceNumber)
         {

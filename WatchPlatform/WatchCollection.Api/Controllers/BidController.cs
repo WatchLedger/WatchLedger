@@ -3,6 +3,7 @@ using System.Reflection.Metadata.Ecma335;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using WatchCollection.Api.Contracts;
 using WatchCollection.Domain.Services.Interfaces;
 using WatchCollection.Storage.Exceptions;
@@ -15,6 +16,7 @@ namespace WatchCollection.Api.Controllers
     public class BidController(IBidService _service) : ControllerBase
     {
         [HttpPost]
+        [EnableRateLimiting("bidSubmission")]
         [Authorize(Policy = "CollectionWritePolicy")]
         public async Task<IActionResult> AddBid([FromBody] BidRequestContract contract, [FromRoute] Guid advertisementId)
         {

@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using System.Threading.RateLimiting;
 using Azure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,7 @@ public class Program
             });
 
         builder.Services.AddAuthorizationBuilder()
+        #region Authorization Policies
             .AddPolicy("PublicReadPolicy", policy =>
                 {
                     policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Read", null));
@@ -60,6 +62,7 @@ public class Program
                 {
                     policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Write", "AdminOrUser"));
                 });
+        #endregion
         
         builder.Services.Configure<BlobStorageOptions>( options =>{
             options.BlobStorageConnectionString = builder.Configuration["BlobConnectionString"]
@@ -73,6 +76,7 @@ public class Program
         builder.Services.AddDbContext<WatchServiceDbContext>(options => 
             options.UseSqlServer(connectionString));
 
+        #region Dependency Injection
         // Add services to the container.
         builder.Services.AddScoped<IWatchService, WatchService>();
         builder.Services.AddScoped<IWatchImageService, WatchImageService>();
@@ -85,6 +89,7 @@ public class Program
         builder.Services.AddScoped<IAdvertisementRepository, AdvertisementRepository>();
         builder.Services.AddScoped<IBidRepository, BidRepository>();
         builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
+        #endregion
 
         builder.Services.AddControllers()
             .AddJsonOptions(options =>
@@ -108,6 +113,68 @@ public class Program
             });
         });
 
+        builder.Services.AddRateLimiter(options =>
+        {
+            #region Rate Limiting Policies
+            // The baseline all requests are limited to 100/min per user/IP
+            options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+            {
+                var userId = context.User.FindFirst("sub")?.Value 
+                        ?? context.Connection.RemoteIpAddress?.ToString() 
+                        ?? "anonymous";
+                return RateLimitPartition.GetFixedWindowLimiter(userId, _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = 100,
+                    Window = TimeSpan.FromMinutes(1)
+                });
+            });
+
+            // Image uploads heavily restricted due to Blob Limitations (5 requests allowed per minute)
+            options.AddPolicy("imageUpload", context =>
+            {
+                var userId = context.User.FindFirst("sub")?.Value ?? "anonymous";
+                return RateLimitPartition.GetFixedWindowLimiter(userId, _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = 5,
+                    Window = TimeSpan.FromMinutes(1)
+                });
+            });
+
+            // Adding bids is restricted to avoid spam (5 requests allowed per minute)
+            options.AddPolicy("bidSubmission", context =>
+            {
+                var userId = context.User.FindFirst("sub")?.Value ?? "anonymous";
+                return RateLimitPartition.GetFixedWindowLimiter(userId, _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = 5,
+                    Window = TimeSpan.FromMinutes(1)
+                });
+            });
+
+            // Passthrough to get brandlist from valuationservice is limited (200 requests allowed per minute)
+            options.AddPolicy("brandList", context =>
+            {
+                var userId = context.User.FindFirst("sub")?.Value ?? "anonymous";
+                return RateLimitPartition.GetFixedWindowLimiter(userId, _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = 50,
+                    Window = TimeSpan.FromMinutes(1)
+                });
+            });
+
+            // Valuation requests are limited due to link with external service (5 requests allowed per minute)
+            options.AddPolicy("watchValuation", context =>
+            {
+                var userId = context.User.FindFirst("sub")?.Value ?? "anonymous";
+                return RateLimitPartition.GetFixedWindowLimiter(userId, _ => new FixedWindowRateLimiterOptions
+                {
+                    PermitLimit = 5,
+                    Window = TimeSpan.FromMinutes(1)
+                });
+            });
+            #endregion
+        });
+
         var app = builder.Build();
 
         app.UseMiddleware<ExceptionHandlingMiddleware>();
@@ -121,9 +188,8 @@ public class Program
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
-
+        app.UseRateLimiter();
         app.MapControllers();
-
         app.Run();
     }
 }

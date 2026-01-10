@@ -92,7 +92,7 @@ public class Program
 
             options.AddFixedWindowLimiter("brands", limiterOptions =>
             {
-                limiterOptions.PermitLimit = 1000;
+                limiterOptions.PermitLimit = 200;
                 limiterOptions.Window = TimeSpan.FromMinutes(1);
             });
         });
@@ -105,8 +105,8 @@ public class Program
             app.MapOpenApi("/openapi/testen");
         }
 
-        app.UseRateLimiter();
         app.UseAuthorization();
+        app.UseRateLimiter();
 
         var valuationGroup = app.MapGroup("/api")
             .WithName("Valuation")

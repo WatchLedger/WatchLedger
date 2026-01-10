@@ -2,6 +2,7 @@ using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using WatchCollection.Api.Contracts;
 using WatchCollection.Domain.Services.Interfaces;
 using WatchCollection.Storage.Entities.Models;
@@ -15,6 +16,7 @@ namespace WatchCollection.Api.Controllers
     public class WatchImageController(IWatchImageService _service) : ControllerBase
     {
         [HttpPost]
+        [EnableRateLimiting("imageUpload")]
         [Authorize(Policy = "CollectionWritePolicy")]
         public async Task<ActionResult> UploadImage(
             [FromRoute] Guid watchId,

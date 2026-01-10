@@ -3,6 +3,7 @@ using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using WatchCollection.Api.Contracts;
 using WatchCollection.Domain.Services.Interfaces;
 using WatchCollection.Storage.Exceptions;
@@ -67,6 +68,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet("brands")]
+        [EnableRateLimiting("brandList")]
         [Authorize(Policy = "PublicReadPolicy")]
         public async Task<ActionResult<IEnumerable<string>>> GetWatchBrands()
         {
