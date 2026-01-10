@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using WatchCollection.Api.Contracts;
+using WatchCollection.Api.Services;
 using WatchCollection.Domain.Services.Exceptions;
 using WatchCollection.Domain.Services.Interfaces;
 using WatchCollection.Storage.Exceptions;
@@ -11,7 +13,7 @@ namespace WatchCollection.Api.Controllers
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
-    public class AdvertisementController(IAdvertisementService _advertisementService) : ControllerBase
+    public class AdvertisementController(IAdvertisementService _advertisementService, IUserRoleService _userRoleService) : ControllerBase
     {
         [HttpPost]
         [Authorize(Policy = "CollectionWritePolicy")]
@@ -33,24 +35,48 @@ namespace WatchCollection.Api.Controllers
             return Ok(advertisement);
         }
 
-        // TODO: maybe add a getbysellerid endpoint?
+
 
         [HttpPut("{advertisementId:Guid}")]
         [Authorize(Policy = "AdminOrUserWritePolicy")]
         public async Task<ActionResult<AdvertisementResponseContract>> UpdateAdvertisement([FromRoute] Guid advertisementId, [FromBody] AdvertisementUpdateRequestContract request)
         {
             var sellerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
-            var isAdmin = User.IsInRole("Admin");
+            var isAdmin = await _userRoleService.UserHasRoleAsync(User, "Admin");
             var updated = await _advertisementService.UpdateAdvertisement(advertisementId, sellerIdString, isAdmin, request);
             return Ok(updated);
         }
 
-        // TODO: maybe getall for specific users? dont know yet
+        // this endpoint allows the public to see all published advertisements by a specific seller
+        // TODO : ensure only published advertisements are returned and also implement pagination and filtering
+        [HttpGet("seller/{sellerId:Guid}")]
+        [Authorize(Policy = "PublicReadPolicy")]
+        public async Task<ActionResult<IEnumerable<AdvertisementResponseContract>>> GetAdvertisementsBySellerId([FromRoute] Guid sellerId, [FromQuery] int pageNumber, [FromQuery] int pageSize, [FromQuery] string? watchBrand)
+        {
+            var advertisements = await _advertisementService.GetAdvertisementsBySellerId(sellerId, pageNumber, pageSize, watchBrand);
+            return Ok(advertisements);
+        }
+
+
+        // this endpoint allows the public to see all published advertisements
+        // TODO : ensure only published advertisements are returned
+        // TODO: implement pagination and filtering
         [HttpGet]
         [Authorize(Policy = "PublicReadPolicy")]
-        public async Task<ActionResult<IEnumerable<AdvertisementResponseContract>>> GetAllAdvertisements()
+        public async Task<ActionResult<IEnumerable<AdvertisementResponseContract>>> GetAllAdvertisements([FromQuery] int pageNumber, [FromQuery] int pageSize, [FromQuery] string? watchBrand)
         {
-            var advertisements = await _advertisementService.GetAllAdvertisements();
+            var advertisements = await _advertisementService.GetAllAdvertisements(pageNumber, pageSize, watchBrand);
+            return Ok(advertisements);
+        }
+
+        // this enpoint allows the user te see all of their own advertisements including unpublished ones
+        // TODO: implement pagination and filtering
+        [HttpGet]
+        [Authorize(Policy = "CollectionReadPolicy")]
+        public async Task<ActionResult<IEnumerable<AdvertisementResponseContract>>> GetAdvertisementsByOwnerId([FromQuery] int pageNumber, [FromQuery] int pageSize, [FromQuery] string? watchBrand)
+        {
+            var sellerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
+            var advertisements = await _advertisementService.GetAdvertisementsByOwnerId(sellerIdString, pageNumber, pageSize, watchBrand);
             return Ok(advertisements);
         }
 
@@ -59,13 +85,14 @@ namespace WatchCollection.Api.Controllers
         public async Task<ActionResult> DeleteAdvertisement([FromRoute] Guid advertisementId)
         {
             var sellerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
-            var isAdmin = User.IsInRole("Admin");
+            var isAdmin = await _userRoleService.UserHasRoleAsync(User, "Admin");
             await _advertisementService.DeleteAdvertisement(sellerIdString, isAdmin, advertisementId);
             return NoContent();
         }
 
         [HttpGet("valuation")]
-        [Authorize(Policy = "CollectionReadPolicy")]
+        [EnableRateLimiting("watchValuation")]
+        [Authorize(Policy = "PublicReadPolicy")]
         public async Task<ActionResult<decimal>> GetWatchValuation([FromQuery] string referenceNumber)
         {
             var valuation = await _advertisementService.GetWatchValuation(referenceNumber);

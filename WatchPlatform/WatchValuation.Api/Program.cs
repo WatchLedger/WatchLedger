@@ -10,6 +10,7 @@ using Polly;
 using Polly.Extensions.Http;
 using System.Net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Scalar.AspNetCore;
 
 namespace WatchValuation.Api;
 public class Program
@@ -78,7 +79,6 @@ public class Program
                 .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
         }
 
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
         // Add rate limiting to the endpoints
@@ -92,21 +92,18 @@ public class Program
 
             options.AddFixedWindowLimiter("brands", limiterOptions =>
             {
-                limiterOptions.PermitLimit = 1000;
+                limiterOptions.PermitLimit = 200;
                 limiterOptions.Window = TimeSpan.FromMinutes(1);
             });
         });
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.MapOpenApi("/openapi/testen");
-        }
+        app.MapOpenApi();
+        app.MapScalarApiReference();
 
-        app.UseRateLimiter();
         app.UseAuthorization();
+        app.UseRateLimiter();
 
         var valuationGroup = app.MapGroup("/api")
             .WithName("Valuation")

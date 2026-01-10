@@ -30,4 +30,6 @@ public class AdvertisementResponseContract
     public required DateTimeOffset CreatedAt { get; set; }
 
     public required DateTimeOffset UpdatedAt { get; set; }
+
+    public WatchResponseContract? Watch { get; set; }
 }

@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <ProjectReference Include="../WatchCollection.Infrastructure/WatchCollection.Infrastructure.csproj" />
+      <ProjectReference Include="../WatchCollection.Shared/WatchCollection.Shared.csproj" />
       <ProjectReference Include="../WatchCollection.Storage.Entities/WatchCollection.Storage.Entities.csproj" />
     </ItemGroup>
 
