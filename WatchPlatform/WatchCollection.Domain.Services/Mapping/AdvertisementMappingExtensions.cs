@@ -45,7 +45,7 @@ internal static class AdvertisementMappingExtensions
     {
         return new AdvertisementResponseContract
         {
-            AdvertisementId = model.AdvertisementId ?? throw new MappingException(),
+            AdvertisementId = model.AdvertisementId ?? throw new MappingException("AdvertisementId is Required"),
             WatchId = model.WatchId is Guid watchId && watchId != Guid.Empty // ensure WatchId is not empty
                 ? watchId
                 : throw new MappingException("WatchId is required"),
@@ -73,7 +73,7 @@ internal static class AdvertisementMappingExtensions
     {
         return new Advertisement
         {
-            AdvertisementId = model.AdvertisementId ?? throw new MappingException(),
+            AdvertisementId = model.AdvertisementId ?? throw new MappingException("AdvertisementId is required"),
             WatchId = model.WatchId is Guid watchId && watchId != Guid.Empty // ensure WatchId is not empty
                 ? watchId
                 : throw new MappingException("WatchId is required"),

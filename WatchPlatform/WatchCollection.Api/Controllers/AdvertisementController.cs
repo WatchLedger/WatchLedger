@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WatchCollection.Api.Contracts;
+using WatchCollection.Api.Services;
 using WatchCollection.Domain.Services.Exceptions;
 using WatchCollection.Domain.Services.Interfaces;
 using WatchCollection.Storage.Exceptions;
@@ -11,7 +12,7 @@ namespace WatchCollection.Api.Controllers
     [Route("api/[controller]")]
     [Authorize]
     [ApiController]
-    public class AdvertisementController(IAdvertisementService _advertisementService) : ControllerBase
+    public class AdvertisementController(IAdvertisementService _advertisementService, IUserRoleService _userRoleService) : ControllerBase
     {
         [HttpPost]
         [Authorize(Policy = "CollectionWritePolicy")]
@@ -23,7 +24,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet("{advertisementId:Guid}")]
-        [Authorize(Policy = "PublicReadPolicy")]
+        [Authorize(Policy = "CollectionReadPolicy")]
         public async Task<ActionResult<AdvertisementResponseContract>> GetById([FromRoute] Guid advertisementId)
         {
             var userId = User.FindFirst("sub")?.Value;
@@ -40,14 +41,14 @@ namespace WatchCollection.Api.Controllers
         public async Task<ActionResult<AdvertisementResponseContract>> UpdateAdvertisement([FromRoute] Guid advertisementId, [FromBody] AdvertisementUpdateRequestContract request)
         {
             var sellerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
-            var isAdmin = User.IsInRole("Admin");
+            var isAdmin = await _userRoleService.UserHasRoleAsync(User, "Admin");
             var updated = await _advertisementService.UpdateAdvertisement(advertisementId, sellerIdString, isAdmin, request);
             return Ok(updated);
         }
 
         // TODO: maybe getall for specific users? dont know yet
         [HttpGet]
-        [Authorize(Policy = "PublicReadPolicy")]
+        [Authorize(Policy = "CollectionReadPolicy")]
         public async Task<ActionResult<IEnumerable<AdvertisementResponseContract>>> GetAllAdvertisements()
         {
             var advertisements = await _advertisementService.GetAllAdvertisements();
@@ -59,7 +60,7 @@ namespace WatchCollection.Api.Controllers
         public async Task<ActionResult> DeleteAdvertisement([FromRoute] Guid advertisementId)
         {
             var sellerIdString = User.FindFirst("sub")?.Value ?? throw new Exception("User ID (sub claim) is missing in the token.");
-            var isAdmin = User.IsInRole("Admin");
+            var isAdmin = await _userRoleService.UserHasRoleAsync(User, "Admin");
             await _advertisementService.DeleteAdvertisement(sellerIdString, isAdmin, advertisementId);
             return NoContent();
         }

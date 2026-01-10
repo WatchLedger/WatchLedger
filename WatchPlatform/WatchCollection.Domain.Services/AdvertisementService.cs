@@ -84,6 +84,11 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
             AllowBids = contract.AllowBids
         };
         var model = contractWithWatchId.AsModel();
+        model.AdvertisementId = advertisement.AdvertisementId;
+        model.SellerUserId    = advertisement.SellerUserId;
+        model.PublishedAt     = advertisement.PublishedAt;
+        model.ExpiresAt       = advertisement.ExpiresAt;
+        model.SoldAt          = advertisement.SoldAt;
 
         var entity = model.AsEntity();
         

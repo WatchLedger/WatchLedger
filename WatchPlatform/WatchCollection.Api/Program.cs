@@ -3,6 +3,7 @@ using Azure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using WatchCollection.Api.Middleware;
+using WatchCollection.Api.Services;
 using WatchCollection.Domain.Services;
 using WatchCollection.Domain.Services.Interfaces;
 using WatchCollection.Infrastructure;
@@ -21,6 +22,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddSingleton<IAuthorizationHandler, AuthHandler>();
+        builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 
         var keyVaultUri = builder.Configuration["AzureKeyVault:VaultUri"]
             ?? throw new InvalidOperationException("Azure Key Vault URI is not configured.");
@@ -34,13 +36,10 @@ public class Program
                 options.Authority = "https://identityserver-watchcollection.azurewebsites.net";
                 options.TokenValidationParameters.ValidateAudience = false;
                 options.MapInboundClaims = false;
+                options.TokenValidationParameters.RoleClaimType = "role";
             });
 
         builder.Services.AddAuthorizationBuilder()
-            .AddPolicy("PublicReadPolicy", policy =>
-                {
-                    policy.RequireAuthenticatedUser();
-                })
             .AddPolicy("CollectionReadPolicy", policy =>
                 {
                     policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Read", "User"));
@@ -55,13 +54,7 @@ public class Program
                 })
             .AddPolicy("AdminOrUserWritePolicy", policy =>
                 {
-                    policy.RequireAssertion(context =>
-                    {
-                        var hasClaim = AuthorizationHelper.HasWriteClaim(context.User);
-                        var hasRole = AuthorizationHelper.HasRole(context.User, "User") || 
-                                      AuthorizationHelper.HasRole(context.User, "Admin");
-                        return hasClaim && hasRole;
-                    });
+                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Write", "AdminOrUser"));
                 });
         
         builder.Services.Configure<BlobStorageOptions>( options =>{

@@ -25,7 +25,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "PublicReadPolicy")]
+        [Authorize(Policy = "CollectionReadPolicy")]
         public async Task<IActionResult> GetBids([FromRoute] Guid advertisementId)
         {
             var bids = await _service.GetBidsByAdvertisementIdAsync(advertisementId);

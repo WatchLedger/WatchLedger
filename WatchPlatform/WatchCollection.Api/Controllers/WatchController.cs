@@ -67,7 +67,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet("brands")]
-        [Authorize(Policy = "PublicReadPolicy")]
+        [Authorize(Policy = "CollectionReadPolicy")]
         public async Task<ActionResult<IEnumerable<string>>> GetWatchBrands()
         {
             var brands = await _service.GetWatchBrands();
