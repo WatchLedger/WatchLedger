@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using WatchCollection.Shared.Enums;
 using WatchCollection.Storage.Entities.Data;
 using WatchCollection.Storage.Entities.Models;
 using WatchCollection.Storage.Exceptions;
@@ -62,6 +63,7 @@ public class AdvertisementRepository(WatchServiceDbContext _context) : IAdvertis
     {
         var query = _context.Advertisements.AsQueryable();
 
+        query = query.Where(a => a.Status == AdvertisementStatus.Active.ToString());
         // when brand filter is provided
         if (!string.IsNullOrWhiteSpace(watchBrand))
         {
@@ -113,11 +115,16 @@ public class AdvertisementRepository(WatchServiceDbContext _context) : IAdvertis
         return advertisements;
     }
 
-    public async Task<IEnumerable<Advertisement>> GetAdvertisementsBySellerIdAsync(Guid sellerId, int pageNumber, int pageSize, string? watchBrand)
+    public async Task<IEnumerable<Advertisement>> GetAdvertisementsBySellerIdAsync(Guid sellerId, int pageNumber, int pageSize, string? watchBrand, bool? includeInactive = false)
     {
         var query = _context.Advertisements
             .Where(a => a.SellerUserId == sellerId);
 
+
+        if (includeInactive.HasValue && !includeInactive.Value)
+        {
+            query = query.Where(a => a.Status == AdvertisementStatus.Active.ToString());
+        }
         // when brand filter is provided
         if (!string.IsNullOrWhiteSpace(watchBrand))
         {

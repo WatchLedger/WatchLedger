@@ -80,7 +80,7 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         pageNumber = Math.Max(1, pageNumber);
         pageSize = Math.Clamp(pageSize, 1, 100);
 
-        var entities = await _repository.GetAdvertisementsBySellerIdAsync(Guid.Parse(ownerIdString), pageNumber, pageSize, watchBrand);
+        var entities = await _repository.GetAdvertisementsBySellerIdAsync(Guid.Parse(ownerIdString), pageNumber, pageSize, watchBrand, true);
         return entities.Select(e => e.AsModel().AsContract());
     }
 
