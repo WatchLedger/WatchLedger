@@ -8,9 +8,8 @@ public static class AuthorizationHelper
     
     public static bool HasWriteClaim(ClaimsPrincipal user)
     {
-        return user.Claims.Any(c => 
-            c.Type == "WatchCollection.Api.Write" && 
-            c.Issuer == IdentityServerIssuer);
+        var scopeClaim = user.Claims.FirstOrDefault(c => c.Type == "scope")?.Value;
+        return scopeClaim?.Split(' ').Contains("WatchCollection.Api.Write") ?? false;
     }
 
     public static bool HasRole(ClaimsPrincipal user, string role)
