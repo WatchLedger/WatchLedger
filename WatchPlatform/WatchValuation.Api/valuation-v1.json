@@ -1,0 +1,58 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "WatchValuation.Api | v1",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5005"
+    }
+  ],
+  "paths": {
+    "/api/valuation": {
+      "get": {
+        "tags": [
+          "Program"
+        ],
+        "description": "Get valuation for a watch",
+        "operationId": "GetValuation",
+        "parameters": [
+          {
+            "name": "referenceNumber",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/brands": {
+      "get": {
+        "tags": [
+          "Program"
+        ],
+        "description": "Get list of available watch brands",
+        "operationId": "GetBrands",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {},
+  "tags": [
+    {
+      "name": "Program"
+    }
+  ]
+}
