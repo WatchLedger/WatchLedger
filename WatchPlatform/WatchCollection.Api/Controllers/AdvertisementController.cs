@@ -24,7 +24,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet("{advertisementId:Guid}")]
-        [Authorize(Policy = "CollectionReadPolicy")]
+        [Authorize(Policy = "PublicReadPolicy")]
         public async Task<ActionResult<AdvertisementResponseContract>> GetById([FromRoute] Guid advertisementId)
         {
             var userId = User.FindFirst("sub")?.Value;
@@ -48,7 +48,7 @@ namespace WatchCollection.Api.Controllers
 
         // TODO: maybe getall for specific users? dont know yet
         [HttpGet]
-        [Authorize(Policy = "CollectionReadPolicy")]
+        [Authorize(Policy = "PublicReadPolicy")]
         public async Task<ActionResult<IEnumerable<AdvertisementResponseContract>>> GetAllAdvertisements()
         {
             var advertisements = await _advertisementService.GetAllAdvertisements();
@@ -66,7 +66,7 @@ namespace WatchCollection.Api.Controllers
         }
 
         [HttpGet("valuation")]
-        [Authorize(Policy = "CollectionReadPolicy")]
+        [Authorize(Policy = "PublicReadPolicy")]
         public async Task<ActionResult<decimal>> GetWatchValuation([FromQuery] string referenceNumber)
         {
             var valuation = await _advertisementService.GetWatchValuation(referenceNumber);

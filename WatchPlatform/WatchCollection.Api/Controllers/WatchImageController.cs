@@ -12,8 +12,6 @@ namespace WatchCollection.Api.Controllers
     [Route("api/Watch/{watchId:Guid}/Images")]
     [Authorize]
     [ApiController]
-    //[RoleAuthorize("User", "Admin")] 
-    // //only possible for logged in users and admins
     public class WatchImageController(IWatchImageService _service) : ControllerBase
     {
         [HttpPost]

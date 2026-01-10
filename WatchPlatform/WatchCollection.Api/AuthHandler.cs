@@ -24,6 +24,13 @@ public class AuthHandler : AuthorizationHandler<ClaimOrRoleRequirement>
         if (!claims.Exists(c => c.Value == requirement.Claim))
             return Task.CompletedTask; // claim not found, do not succeed
 
+        // If no role is required (null), succeed with scope only
+        if (requirement.Role is null)
+        {
+            context.Succeed(requirement);
+            return Task.CompletedTask;
+        }
+
         var userId = claims.FirstOrDefault(c => c.Type == "sub")?.Value;
 
         if (userId is null)

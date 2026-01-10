@@ -40,6 +40,10 @@ public class Program
             });
 
         builder.Services.AddAuthorizationBuilder()
+            .AddPolicy("PublicReadPolicy", policy =>
+                {
+                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Read", null));
+                })
             .AddPolicy("CollectionReadPolicy", policy =>
                 {
                     policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Read", "User"));
