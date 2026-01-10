@@ -396,6 +396,61 @@
 								{
 									"name": "UpdateWatch",
 									"request": {
+										"auth": {
+											"type": "oauth2",
+											"oauth2": [
+												{
+													"key": "accessTokenUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/token",
+													"type": "string"
+												},
+												{
+													"key": "authUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/authorize",
+													"type": "string"
+												},
+												{
+													"key": "clientSecret",
+													"value": "FrontendSecretWoohoo",
+													"type": "string"
+												},
+												{
+													"key": "clientId",
+													"value": "m2m.webappp-watchcollection",
+													"type": "string"
+												},
+												{
+													"key": "grant_type",
+													"value": "authorization_code_with_pkce",
+													"type": "string"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "https://oauth.pstmn.io/v1/callback",
+													"type": "string"
+												},
+												{
+													"key": "useBrowser",
+													"value": false,
+													"type": "boolean"
+												},
+												{
+													"key": "scope",
+													"value": "openid profile roles WatchCollection.Api.Read WatchCollection.Api.Write",
+													"type": "string"
+												},
+												{
+													"key": "tokenName",
+													"value": "token",
+													"type": "string"
+												},
+												{
+													"key": "addTokenTo",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
 										"method": "PUT",
 										"header": [],
 										"body": {
@@ -427,11 +482,56 @@
 									"name": "DeleteWatch",
 									"request": {
 										"auth": {
-											"type": "bearer",
-											"bearer": [
+											"type": "oauth2",
+											"oauth2": [
 												{
-													"key": "token",
-													"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM4MjcwRDQxRDZCRjMxNDI2ODIxMkYwRTczMjg3MUJGIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxIiwibmJmIjoxNzY3ODE5NDk0LCJpYXQiOjE3Njc4MTk0OTQsImV4cCI6MTc2NzgyMzA5NCwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTAwMS9yZXNvdXJjZXMiLCJzY29wZSI6WyJXYXRjaENvbGxlY3Rpb24uQXBpLlJlYWQiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IkRCNjUzMEYzMDcwQUVGQzY5Mzg2QTVFNTAxQUZEQjJFIn0.gSHAlPtWjB8ak2GNYn9-E8ldYp-i4_a3hikOxEEsZJ4RtdspqbVv-wxRaRlhu20vjYeu-D_n0UviyJWzBkTkgRTZkPJah6nAG33a7sk5aosmC3IAEnUik84mrHEr1FfAokQQmCPZMgQ5mDPvatd1oKfzz83O1ALPOPoHCS7fK7Crg4CarQgHQ98uzVepmTxCk51Vd4y8YorM3lY8i-GT4qt1ukzT5hkUoI7YDdRliOJVK90qZUrcofFHCmvPumoBMUoRov5_jNrgh2f9oKmYKUVSdoGM_QRqwvLWhkDIJSmZYjs23aFtsjfXbsydQ7jkg6D190ZPLGXwwKEEbRoV3g",
+													"key": "accessTokenUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/token",
+													"type": "string"
+												},
+												{
+													"key": "authUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/authorize",
+													"type": "string"
+												},
+												{
+													"key": "clientSecret",
+													"value": "FrontendSecretWoohoo",
+													"type": "string"
+												},
+												{
+													"key": "clientId",
+													"value": "m2m.webappp-watchcollection",
+													"type": "string"
+												},
+												{
+													"key": "grant_type",
+													"value": "authorization_code_with_pkce",
+													"type": "string"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "https://oauth.pstmn.io/v1/callback",
+													"type": "string"
+												},
+												{
+													"key": "useBrowser",
+													"value": false,
+													"type": "boolean"
+												},
+												{
+													"key": "scope",
+													"value": "openid profile roles WatchCollection.Api.Read WatchCollection.Api.Write",
+													"type": "string"
+												},
+												{
+													"key": "tokenName",
+													"value": "token",
+													"type": "string"
+												},
+												{
+													"key": "addTokenTo",
+													"value": "header",
 													"type": "string"
 												}
 											]
@@ -462,6 +562,61 @@
 								{
 									"name": "CreateWatchImage",
 									"request": {
+										"auth": {
+											"type": "oauth2",
+											"oauth2": [
+												{
+													"key": "accessTokenUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/token",
+													"type": "string"
+												},
+												{
+													"key": "authUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/authorize",
+													"type": "string"
+												},
+												{
+													"key": "clientSecret",
+													"value": "FrontendSecretWoohoo",
+													"type": "string"
+												},
+												{
+													"key": "clientId",
+													"value": "m2m.webappp-watchcollection",
+													"type": "string"
+												},
+												{
+													"key": "grant_type",
+													"value": "authorization_code_with_pkce",
+													"type": "string"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "https://oauth.pstmn.io/v1/callback",
+													"type": "string"
+												},
+												{
+													"key": "useBrowser",
+													"value": false,
+													"type": "boolean"
+												},
+												{
+													"key": "scope",
+													"value": "openid profile roles WatchCollection.Api.Read WatchCollection.Api.Write",
+													"type": "string"
+												},
+												{
+													"key": "tokenName",
+													"value": "token",
+													"type": "string"
+												},
+												{
+													"key": "addTokenTo",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
 										"method": "POST",
 										"header": [],
 										"body": {
@@ -499,6 +654,61 @@
 								{
 									"name": "GetWatchImages",
 									"request": {
+										"auth": {
+											"type": "oauth2",
+											"oauth2": [
+												{
+													"key": "accessTokenUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/token",
+													"type": "string"
+												},
+												{
+													"key": "authUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/authorize",
+													"type": "string"
+												},
+												{
+													"key": "clientSecret",
+													"value": "FrontendSecretWoohoo",
+													"type": "string"
+												},
+												{
+													"key": "clientId",
+													"value": "m2m.webappp-watchcollection",
+													"type": "string"
+												},
+												{
+													"key": "grant_type",
+													"value": "authorization_code_with_pkce",
+													"type": "string"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "https://oauth.pstmn.io/v1/callback",
+													"type": "string"
+												},
+												{
+													"key": "useBrowser",
+													"value": false,
+													"type": "boolean"
+												},
+												{
+													"key": "scope",
+													"value": "openid profile roles WatchCollection.Api.Read WatchCollection.Api.Write",
+													"type": "string"
+												},
+												{
+													"key": "tokenName",
+													"value": "token",
+													"type": "string"
+												},
+												{
+													"key": "addTokenTo",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
 										"method": "GET",
 										"header": [],
 										"url": {
@@ -527,11 +737,56 @@
 									"name": "CreateAdvertisement",
 									"request": {
 										"auth": {
-											"type": "bearer",
-											"bearer": [
+											"type": "oauth2",
+											"oauth2": [
 												{
-													"key": "token",
-													"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM4MjcwRDQxRDZCRjMxNDI2ODIxMkYwRTczMjg3MUJGIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxIiwibmJmIjoxNzY3ODE5NDk0LCJpYXQiOjE3Njc4MTk0OTQsImV4cCI6MTc2NzgyMzA5NCwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTAwMS9yZXNvdXJjZXMiLCJzY29wZSI6WyJXYXRjaENvbGxlY3Rpb24uQXBpLlJlYWQiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IkRCNjUzMEYzMDcwQUVGQzY5Mzg2QTVFNTAxQUZEQjJFIn0.gSHAlPtWjB8ak2GNYn9-E8ldYp-i4_a3hikOxEEsZJ4RtdspqbVv-wxRaRlhu20vjYeu-D_n0UviyJWzBkTkgRTZkPJah6nAG33a7sk5aosmC3IAEnUik84mrHEr1FfAokQQmCPZMgQ5mDPvatd1oKfzz83O1ALPOPoHCS7fK7Crg4CarQgHQ98uzVepmTxCk51Vd4y8YorM3lY8i-GT4qt1ukzT5hkUoI7YDdRliOJVK90qZUrcofFHCmvPumoBMUoRov5_jNrgh2f9oKmYKUVSdoGM_QRqwvLWhkDIJSmZYjs23aFtsjfXbsydQ7jkg6D190ZPLGXwwKEEbRoV3g",
+													"key": "accessTokenUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/token",
+													"type": "string"
+												},
+												{
+													"key": "authUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/authorize",
+													"type": "string"
+												},
+												{
+													"key": "clientSecret",
+													"value": "FrontendSecretWoohoo",
+													"type": "string"
+												},
+												{
+													"key": "clientId",
+													"value": "m2m.webappp-watchcollection",
+													"type": "string"
+												},
+												{
+													"key": "grant_type",
+													"value": "authorization_code_with_pkce",
+													"type": "string"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "https://oauth.pstmn.io/v1/callback",
+													"type": "string"
+												},
+												{
+													"key": "useBrowser",
+													"value": false,
+													"type": "boolean"
+												},
+												{
+													"key": "scope",
+													"value": "openid profile roles WatchCollection.Api.Read WatchCollection.Api.Write",
+													"type": "string"
+												},
+												{
+													"key": "tokenName",
+													"value": "token",
+													"type": "string"
+												},
+												{
+													"key": "addTokenTo",
+													"value": "header",
 													"type": "string"
 												}
 											]
@@ -573,7 +828,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM4MjcwRDQxRDZCRjMxNDI2ODIxMkYwRTczMjg3MUJGIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxIiwibmJmIjoxNzY3ODE5NDk0LCJpYXQiOjE3Njc4MTk0OTQsImV4cCI6MTc2NzgyMzA5NCwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTAwMS9yZXNvdXJjZXMiLCJzY29wZSI6WyJXYXRjaENvbGxlY3Rpb24uQXBpLlJlYWQiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IkRCNjUzMEYzMDcwQUVGQzY5Mzg2QTVFNTAxQUZEQjJFIn0.gSHAlPtWjB8ak2GNYn9-E8ldYp-i4_a3hikOxEEsZJ4RtdspqbVv-wxRaRlhu20vjYeu-D_n0UviyJWzBkTkgRTZkPJah6nAG33a7sk5aosmC3IAEnUik84mrHEr1FfAokQQmCPZMgQ5mDPvatd1oKfzz83O1ALPOPoHCS7fK7Crg4CarQgHQ98uzVepmTxCk51Vd4y8YorM3lY8i-GT4qt1ukzT5hkUoI7YDdRliOJVK90qZUrcofFHCmvPumoBMUoRov5_jNrgh2f9oKmYKUVSdoGM_QRqwvLWhkDIJSmZYjs23aFtsjfXbsydQ7jkg6D190ZPLGXwwKEEbRoV3g",
+													"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM3NjJFMkY5MTc2OTMyRjk2NzExMjQ0OTYxMUIyQUExIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2lkZW50aXR5c2VydmVyLXdhdGNoY29sbGVjdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsIm5iZiI6MTc2ODA3NjcxNiwiaWF0IjoxNzY4MDc2NzE2LCJleHAiOjE3NjgwODAzMTYsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHlzZXJ2ZXItd2F0Y2hjb2xsZWN0aW9uLmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsInNjb3BlIjpbIldhdGNoQ29sbGVjdGlvbi5BcGkuUmVhZCIsIldhdGNoQ29sbGVjdGlvbi5BcGkuV3JpdGUiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IkQxMzAyRUYyNEVFNkQzN0RFNUU1M0FCNkJFNUVBOUZDIn0.PL127ZklE2Q8zKxbqKieLOIhsIjqZHF6WUDvFFfix9B1GqmihfQdXSI_G3THE3KtlJLaNEgyVyl_fJfMSPdasS97roipJmlwWNnGoyQZ571bewBNIvj56DxcJebU7lusrTm1rUZcRMW6DS3RTsc1cUrMX2kdJvCBqu8sdyglXdl5nemVjD6oCulDkiHjbEoL3LcGnJh6llQcm-4XZn2Pf9A8Ms1XBCiCQz3StaZBXf1t2ttTRl4I6CO_CcPUgOG_hUFK2HJmNis-X4Gk6bfI2m-mNtYkwMPViwCI1hu2Vf8BT9FmtJlMFNv9axH_Ig8VgjufQxdrKPNCRd9EFpBLkA",
 													"type": "string"
 												}
 											]
@@ -614,7 +869,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "",
+													"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM3NjJFMkY5MTc2OTMyRjk2NzExMjQ0OTYxMUIyQUExIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2lkZW50aXR5c2VydmVyLXdhdGNoY29sbGVjdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsIm5iZiI6MTc2ODA3NjcxNiwiaWF0IjoxNzY4MDc2NzE2LCJleHAiOjE3NjgwODAzMTYsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHlzZXJ2ZXItd2F0Y2hjb2xsZWN0aW9uLmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsInNjb3BlIjpbIldhdGNoQ29sbGVjdGlvbi5BcGkuUmVhZCIsIldhdGNoQ29sbGVjdGlvbi5BcGkuV3JpdGUiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IkQxMzAyRUYyNEVFNkQzN0RFNUU1M0FCNkJFNUVBOUZDIn0.PL127ZklE2Q8zKxbqKieLOIhsIjqZHF6WUDvFFfix9B1GqmihfQdXSI_G3THE3KtlJLaNEgyVyl_fJfMSPdasS97roipJmlwWNnGoyQZ571bewBNIvj56DxcJebU7lusrTm1rUZcRMW6DS3RTsc1cUrMX2kdJvCBqu8sdyglXdl5nemVjD6oCulDkiHjbEoL3LcGnJh6llQcm-4XZn2Pf9A8Ms1XBCiCQz3StaZBXf1t2ttTRl4I6CO_CcPUgOG_hUFK2HJmNis-X4Gk6bfI2m-mNtYkwMPViwCI1hu2Vf8BT9FmtJlMFNv9axH_Ig8VgjufQxdrKPNCRd9EFpBLkA",
 													"type": "string"
 												}
 											]
@@ -622,7 +877,7 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "http://localhost:5097/api/Advertisement",
+											"raw": "http://localhost:5097/api/Advertisement?pageNumber=1&pageSize=10",
 											"protocol": "http",
 											"host": [
 												"localhost"
@@ -631,6 +886,188 @@
 											"path": [
 												"api",
 												"Advertisement"
+											],
+											"query": [
+												{
+													"key": "pageNumber",
+													"value": "1"
+												},
+												{
+													"key": "pageSize",
+													"value": "10"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAllAdvertisements watchbrand query",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM3NjJFMkY5MTc2OTMyRjk2NzExMjQ0OTYxMUIyQUExIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2lkZW50aXR5c2VydmVyLXdhdGNoY29sbGVjdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsIm5iZiI6MTc2ODA3NjcxNiwiaWF0IjoxNzY4MDc2NzE2LCJleHAiOjE3NjgwODAzMTYsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHlzZXJ2ZXItd2F0Y2hjb2xsZWN0aW9uLmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsInNjb3BlIjpbIldhdGNoQ29sbGVjdGlvbi5BcGkuUmVhZCIsIldhdGNoQ29sbGVjdGlvbi5BcGkuV3JpdGUiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IkQxMzAyRUYyNEVFNkQzN0RFNUU1M0FCNkJFNUVBOUZDIn0.PL127ZklE2Q8zKxbqKieLOIhsIjqZHF6WUDvFFfix9B1GqmihfQdXSI_G3THE3KtlJLaNEgyVyl_fJfMSPdasS97roipJmlwWNnGoyQZ571bewBNIvj56DxcJebU7lusrTm1rUZcRMW6DS3RTsc1cUrMX2kdJvCBqu8sdyglXdl5nemVjD6oCulDkiHjbEoL3LcGnJh6llQcm-4XZn2Pf9A8Ms1XBCiCQz3StaZBXf1t2ttTRl4I6CO_CcPUgOG_hUFK2HJmNis-X4Gk6bfI2m-mNtYkwMPViwCI1hu2Vf8BT9FmtJlMFNv9axH_Ig8VgjufQxdrKPNCRd9EFpBLkA",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:5097/api/Advertisement?pageNumber=1&pageSize=10&watchBrand=rolex",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5097",
+											"path": [
+												"api",
+												"Advertisement"
+											],
+											"query": [
+												{
+													"key": "pageNumber",
+													"value": "1"
+												},
+												{
+													"key": "pageSize",
+													"value": "10"
+												},
+												{
+													"key": "watchBrand",
+													"value": "rolex"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAllAdvertisementsBySellerId",
+									"request": {
+										"auth": {
+											"type": "jwt",
+											"jwt": [
+												{
+													"key": "secret",
+													"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM4MjcwRDQxRDZCRjMxNDI2ODIxMkYwRTczMjg3MUJGIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxIiwibmJmIjoxNzY3ODE2MTczLCJpYXQiOjE3Njc4MTYxNzMsImV4cCI6MTc2NzgxOTc3MywiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTAwMS9yZXNvdXJjZXMiLCJzY29wZSI6WyJXYXRjaENvbGxlY3Rpb24uQXBpLlJlYWQiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6Ijg1OEJDQzk3ODMzQTlEOENCRTk3OUUwN0ZBMTlDQjVCIn0.q2ZuDc6AdTS-Gx12yu1tQZOzQcQlZL41VzSf0KBHnk9x7xoPxwCMrRbysB9k_D_PhixAfYl5oI3xHQthXmlYzUmiVZEGdILqFEkPgwRxeryb6HpT51pGQVr7eVK51lMzvzcicuM-mS1Y0mWs2WHHHHAsmv_-3pi2CVQZXoLAKHNjHzGv43f6b8y1iH9E5kZ516OhJo3MLKo7JbJkc14yYsMRQIM9clShmUt9mS8-yG-Sce029Gu59sxR2CXUQ5uGAuFvoNRzgChpTMQwBJxUIZVXIjm13xfJTdq2PSWZfEF9eMOm38UfieF8_yPtEUvrzEXUmiD4bkdUp-KnaD4gNg",
+													"type": "string"
+												},
+												{
+													"key": "algorithm",
+													"value": "HS256",
+													"type": "string"
+												},
+												{
+													"key": "isSecretBase64Encoded",
+													"value": false,
+													"type": "boolean"
+												},
+												{
+													"key": "payload",
+													"value": "{}",
+													"type": "string"
+												},
+												{
+													"key": "addTokenTo",
+													"value": "header",
+													"type": "string"
+												},
+												{
+													"key": "headerPrefix",
+													"value": "Bearer",
+													"type": "string"
+												},
+												{
+													"key": "queryParamKey",
+													"value": "token",
+													"type": "string"
+												},
+												{
+													"key": "header",
+													"value": "{}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:5097/api/Advertisement/seller/b9c36467-b8a1-426f-8b35-a1d0a37e358e/?pageNumber=1&pageSize=10&watchBrand=rolex",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5097",
+											"path": [
+												"api",
+												"Advertisement",
+												"seller",
+												"b9c36467-b8a1-426f-8b35-a1d0a37e358e",
+												""
+											],
+											"query": [
+												{
+													"key": "pageNumber",
+													"value": "1"
+												},
+												{
+													"key": "pageSize",
+													"value": "10"
+												},
+												{
+													"key": "watchBrand",
+													"value": "rolex"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAllAdvertisementsByOwner",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM3NjJFMkY5MTc2OTMyRjk2NzExMjQ0OTYxMUIyQUExIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2lkZW50aXR5c2VydmVyLXdhdGNoY29sbGVjdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsIm5iZiI6MTc2ODA3NjcxNiwiaWF0IjoxNzY4MDc2NzE2LCJleHAiOjE3NjgwODAzMTYsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHlzZXJ2ZXItd2F0Y2hjb2xsZWN0aW9uLmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsInNjb3BlIjpbIldhdGNoQ29sbGVjdGlvbi5BcGkuUmVhZCIsIldhdGNoQ29sbGVjdGlvbi5BcGkuV3JpdGUiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IkQxMzAyRUYyNEVFNkQzN0RFNUU1M0FCNkJFNUVBOUZDIn0.PL127ZklE2Q8zKxbqKieLOIhsIjqZHF6WUDvFFfix9B1GqmihfQdXSI_G3THE3KtlJLaNEgyVyl_fJfMSPdasS97roipJmlwWNnGoyQZ571bewBNIvj56DxcJebU7lusrTm1rUZcRMW6DS3RTsc1cUrMX2kdJvCBqu8sdyglXdl5nemVjD6oCulDkiHjbEoL3LcGnJh6llQcm-4XZn2Pf9A8Ms1XBCiCQz3StaZBXf1t2ttTRl4I6CO_CcPUgOG_hUFK2HJmNis-X4Gk6bfI2m-mNtYkwMPViwCI1hu2Vf8BT9FmtJlMFNv9axH_Ig8VgjufQxdrKPNCRd9EFpBLkA",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:5097/api/Advertisement/me/?pageNumber=1&pageSize=10&watchBrand=rolex",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "5097",
+											"path": [
+												"api",
+												"Advertisement",
+												"me",
+												""
+											],
+											"query": [
+												{
+													"key": "pageNumber",
+													"value": "1"
+												},
+												{
+													"key": "pageSize",
+													"value": "10"
+												},
+												{
+													"key": "watchBrand",
+													"value": "rolex"
+												}
 											]
 										}
 									},
@@ -640,11 +1077,56 @@
 									"name": "GetValuation",
 									"request": {
 										"auth": {
-											"type": "bearer",
-											"bearer": [
+											"type": "oauth2",
+											"oauth2": [
 												{
-													"key": "token",
-													"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM4MjcwRDQxRDZCRjMxNDI2ODIxMkYwRTczMjg3MUJGIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2xvY2FsaG9zdDo1MDAxIiwibmJmIjoxNzY3ODE5NDk0LCJpYXQiOjE3Njc4MTk0OTQsImV4cCI6MTc2NzgyMzA5NCwiYXVkIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NTAwMS9yZXNvdXJjZXMiLCJzY29wZSI6WyJXYXRjaENvbGxlY3Rpb24uQXBpLlJlYWQiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IkRCNjUzMEYzMDcwQUVGQzY5Mzg2QTVFNTAxQUZEQjJFIn0.gSHAlPtWjB8ak2GNYn9-E8ldYp-i4_a3hikOxEEsZJ4RtdspqbVv-wxRaRlhu20vjYeu-D_n0UviyJWzBkTkgRTZkPJah6nAG33a7sk5aosmC3IAEnUik84mrHEr1FfAokQQmCPZMgQ5mDPvatd1oKfzz83O1ALPOPoHCS7fK7Crg4CarQgHQ98uzVepmTxCk51Vd4y8YorM3lY8i-GT4qt1ukzT5hkUoI7YDdRliOJVK90qZUrcofFHCmvPumoBMUoRov5_jNrgh2f9oKmYKUVSdoGM_QRqwvLWhkDIJSmZYjs23aFtsjfXbsydQ7jkg6D190ZPLGXwwKEEbRoV3g",
+													"key": "accessTokenUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/token",
+													"type": "string"
+												},
+												{
+													"key": "authUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/authorize",
+													"type": "string"
+												},
+												{
+													"key": "clientSecret",
+													"value": "FrontendSecretWoohoo",
+													"type": "string"
+												},
+												{
+													"key": "clientId",
+													"value": "m2m.webappp-watchcollection",
+													"type": "string"
+												},
+												{
+													"key": "grant_type",
+													"value": "authorization_code_with_pkce",
+													"type": "string"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "https://oauth.pstmn.io/v1/callback",
+													"type": "string"
+												},
+												{
+													"key": "useBrowser",
+													"value": false,
+													"type": "boolean"
+												},
+												{
+													"key": "scope",
+													"value": "openid profile roles WatchCollection.Api.Read WatchCollection.Api.Write",
+													"type": "string"
+												},
+												{
+													"key": "tokenName",
+													"value": "token",
+													"type": "string"
+												},
+												{
+													"key": "addTokenTo",
+													"value": "header",
 													"type": "string"
 												}
 											]
@@ -676,6 +1158,61 @@
 								{
 									"name": "UpdateAdvertisement",
 									"request": {
+										"auth": {
+											"type": "oauth2",
+											"oauth2": [
+												{
+													"key": "accessTokenUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/token",
+													"type": "string"
+												},
+												{
+													"key": "authUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/authorize",
+													"type": "string"
+												},
+												{
+													"key": "clientSecret",
+													"value": "FrontendSecretWoohoo",
+													"type": "string"
+												},
+												{
+													"key": "clientId",
+													"value": "m2m.webappp-watchcollection",
+													"type": "string"
+												},
+												{
+													"key": "grant_type",
+													"value": "authorization_code_with_pkce",
+													"type": "string"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "https://oauth.pstmn.io/v1/callback",
+													"type": "string"
+												},
+												{
+													"key": "useBrowser",
+													"value": false,
+													"type": "boolean"
+												},
+												{
+													"key": "scope",
+													"value": "openid profile roles WatchCollection.Api.Read WatchCollection.Api.Write",
+													"type": "string"
+												},
+												{
+													"key": "tokenName",
+													"value": "token",
+													"type": "string"
+												},
+												{
+													"key": "addTokenTo",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
 										"method": "PUT",
 										"header": [],
 										"body": {
@@ -706,6 +1243,61 @@
 								{
 									"name": "DeleteAdvertisement",
 									"request": {
+										"auth": {
+											"type": "oauth2",
+											"oauth2": [
+												{
+													"key": "accessTokenUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/token",
+													"type": "string"
+												},
+												{
+													"key": "authUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/authorize",
+													"type": "string"
+												},
+												{
+													"key": "clientSecret",
+													"value": "FrontendSecretWoohoo",
+													"type": "string"
+												},
+												{
+													"key": "clientId",
+													"value": "m2m.webappp-watchcollection",
+													"type": "string"
+												},
+												{
+													"key": "grant_type",
+													"value": "authorization_code_with_pkce",
+													"type": "string"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "https://oauth.pstmn.io/v1/callback",
+													"type": "string"
+												},
+												{
+													"key": "useBrowser",
+													"value": false,
+													"type": "boolean"
+												},
+												{
+													"key": "scope",
+													"value": "openid profile roles WatchCollection.Api.Read WatchCollection.Api.Write",
+													"type": "string"
+												},
+												{
+													"key": "tokenName",
+													"value": "token",
+													"type": "string"
+												},
+												{
+													"key": "addTokenTo",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
 										"method": "DELETE",
 										"header": [],
 										"url": {
@@ -901,6 +1493,61 @@
 								{
 									"name": "DeleteBid",
 									"request": {
+										"auth": {
+											"type": "oauth2",
+											"oauth2": [
+												{
+													"key": "accessTokenUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/token",
+													"type": "string"
+												},
+												{
+													"key": "authUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/authorize",
+													"type": "string"
+												},
+												{
+													"key": "clientSecret",
+													"value": "FrontendSecretWoohoo",
+													"type": "string"
+												},
+												{
+													"key": "clientId",
+													"value": "m2m.webappp-watchcollection",
+													"type": "string"
+												},
+												{
+													"key": "grant_type",
+													"value": "authorization_code_with_pkce",
+													"type": "string"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "https://oauth.pstmn.io/v1/callback",
+													"type": "string"
+												},
+												{
+													"key": "useBrowser",
+													"value": false,
+													"type": "boolean"
+												},
+												{
+													"key": "scope",
+													"value": "openid profile roles WatchCollection.Api.Read WatchCollection.Api.Write",
+													"type": "string"
+												},
+												{
+													"key": "tokenName",
+													"value": "token",
+													"type": "string"
+												},
+												{
+													"key": "addTokenTo",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
 										"method": "DELETE",
 										"header": [],
 										"url": {
@@ -993,7 +1640,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"Brand\" : \"Rolex\",\n    \"Model\": \"Day-Date\",\n    \"SerialNumber\": \"138982396823\",\n    \"ReferenceNumber\": \"1234\",\n    \"YearOfProduction\": 2012,\n    \"Condition\": \"Unworn\",\n    \"Description\": \"Oysterplex bracelet, flutet bezel, purchased in Geneva\",\n    \"PurchasePrice\": 8421,\n    \"PurchaseDate\": \"2012-09-15\"\n}",
+											"raw": "{\n    \"Brand\" : \"Cartier\",\n    \"Model\": \"Santos\",\n    \"SerialNumber\": \"138982396823\",\n    \"ReferenceNumber\": \"1031\",\n    \"YearOfProduction\": 2002,\n    \"Condition\": \"Poor\",\n    \"Description\": \"Gold watch from granpa\",\n    \"PurchasePrice\": 3200,\n    \"PurchaseDate\": \"2002-02-05\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -1085,7 +1732,7 @@
 											"raw": "{\n    \"Brand\" : \"Audemars Piquet\",\n    \"Model\": \"Royal Oak\",\n    \"SerialNumber\": \"138982396823\",\n    \"ReferenceNumber\": \"1234\",\n    \"YearOfProduction\": 2019,\n    \"Condition\": \"Mint\",\n    \"Description\": \"Oysterplex bracelet, flutet bezel, purchased in Geneva\",\n    \"PurchasePrice\": 12300.23,\n    \"PurchaseDate\": \"2025-12-02\"\n}"
 										},
 										"url": {
-											"raw": "https://watchcollectionservice.azurewebsites.net//api/Watch/1b7d6884-59bb-4643-95bb-e4784f6167e5",
+											"raw": "https://watchcollectionservice.azurewebsites.net//api/Watch/b9c36467-b8a1-426f-8b35-a1d0a37e358e",
 											"protocol": "https",
 											"host": [
 												"watchcollectionservice",
@@ -1096,7 +1743,7 @@
 												"",
 												"api",
 												"Watch",
-												"1b7d6884-59bb-4643-95bb-e4784f6167e5"
+												"b9c36467-b8a1-426f-8b35-a1d0a37e358e"
 											]
 										}
 									},
@@ -1409,7 +2056,7 @@
 											}
 										},
 										"url": {
-											"raw": "https://watchcollectionservice.azurewebsites.net//api/Watch/1b7d6884-59bb-4643-95bb-e4784f6167e5",
+											"raw": "https://watchcollectionservice.azurewebsites.net//api/Watch/71753f93-ac6c-4da3-a97f-6875b5d6fab3",
 											"protocol": "https",
 											"host": [
 												"watchcollectionservice",
@@ -1420,7 +2067,7 @@
 												"",
 												"api",
 												"Watch",
-												"1b7d6884-59bb-4643-95bb-e4784f6167e5"
+												"71753f93-ac6c-4da3-a97f-6875b5d6fab3"
 											]
 										}
 									},
@@ -1487,7 +2134,7 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "https://watchcollectionservice.azurewebsites.net//api/Watch/1b7d6884-59bb-4643-95bb-e4784f6167e5",
+											"raw": "https://watchcollectionservice.azurewebsites.net//api/Watch/71753f93-ac6c-4da3-a97f-6875b5d6fab3",
 											"protocol": "https",
 											"host": [
 												"watchcollectionservice",
@@ -1498,7 +2145,7 @@
 												"",
 												"api",
 												"Watch",
-												"1b7d6884-59bb-4643-95bb-e4784f6167e5"
+												"71753f93-ac6c-4da3-a97f-6875b5d6fab3"
 											]
 										}
 									},
@@ -1580,7 +2227,7 @@
 												{
 													"key": "file",
 													"type": "file",
-													"src": "/Users/nathangeleyn/Downloads/horloge foto.jpg"
+													"src": "/Users/nathangeleyn/Downloads/generated-image-removebg-preview__1_-removebg-preview.png"
 												}
 											]
 										},
@@ -1605,10 +2252,65 @@
 								{
 									"name": "GetWatchImages",
 									"request": {
+										"auth": {
+											"type": "oauth2",
+											"oauth2": [
+												{
+													"key": "accessTokenUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/token",
+													"type": "string"
+												},
+												{
+													"key": "authUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/authorize",
+													"type": "string"
+												},
+												{
+													"key": "clientSecret",
+													"value": "FrontendSecretWoohoo",
+													"type": "string"
+												},
+												{
+													"key": "clientId",
+													"value": "m2m.webappp-watchcollection",
+													"type": "string"
+												},
+												{
+													"key": "grant_type",
+													"value": "authorization_code_with_pkce",
+													"type": "string"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "https://oauth.pstmn.io/v1/callback",
+													"type": "string"
+												},
+												{
+													"key": "useBrowser",
+													"value": false,
+													"type": "boolean"
+												},
+												{
+													"key": "scope",
+													"value": "openid profile roles WatchCollection.Api.Read WatchCollection.Api.Write",
+													"type": "string"
+												},
+												{
+													"key": "tokenName",
+													"value": "token",
+													"type": "string"
+												},
+												{
+													"key": "addTokenTo",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "https://watchcollectionservice.azurewebsites.net/api/Watch/90df546e-50ec-43f2-aaa9-1bd9e0271fb2/Images",
+											"raw": "https://watchcollectionservice.azurewebsites.net/api/Watch/b9c36467-b8a1-426f-8b35-a1d0a37e358e/Images",
 											"protocol": "https",
 											"host": [
 												"watchcollectionservice",
@@ -1618,7 +2320,7 @@
 											"path": [
 												"api",
 												"Watch",
-												"90df546e-50ec-43f2-aaa9-1bd9e0271fb2",
+												"b9c36467-b8a1-426f-8b35-a1d0a37e358e",
 												"Images"
 											]
 										}
@@ -1723,7 +2425,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM3NjJFMkY5MTc2OTMyRjk2NzExMjQ0OTYxMUIyQUExIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2lkZW50aXR5c2VydmVyLXdhdGNoY29sbGVjdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsIm5iZiI6MTc2ODA2OTcxNCwiaWF0IjoxNzY4MDY5NzE0LCJleHAiOjE3NjgwNzMzMTQsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHlzZXJ2ZXItd2F0Y2hjb2xsZWN0aW9uLmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsInNjb3BlIjpbIldhdGNoQ29sbGVjdGlvbi5BcGkuUmVhZCIsIldhdGNoQ29sbGVjdGlvbi5BcGkuV3JpdGUiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IjBGMTQ4NzU1QzE5OTkxOTQ0RkY2REU3QjUwQ0ZGNENDIn0.b_IlXMhlTJAWG9atOB1cfyWvA_IgwTqFFP6EHUyshiHwxigpp_8ZaJLlFDUsTe7xXE50gg2_hh6d_S5JJzpw6XtvpXXMMdIl5BBOt3WYDHMHGWcDoE9kLNqolAPQ9UcBk0STs10KvR0DGaXlRw9ARkQMLpix_D0Ns9dA257k-u4YfU6k2QqsO5CyfwnwYC8xYjgGddNGvgLkBPJLYqBcehNtHtyjubP1WLHa7FnoOcgZaWAVJocItFJlJKCBuvdJ95XqgPrx0cJWjtRC_aIhFd8qSxSFsrJHbVZyfPpK9zGocwBZWDfcEEu0hxVmFrXNcjTwcUxa-rldQ6QVnGRfUA",
+													"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM3NjJFMkY5MTc2OTMyRjk2NzExMjQ0OTYxMUIyQUExIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2lkZW50aXR5c2VydmVyLXdhdGNoY29sbGVjdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsIm5iZiI6MTc2ODA3NzUzMSwiaWF0IjoxNzY4MDc3NTMxLCJleHAiOjE3NjgwODExMzEsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHlzZXJ2ZXItd2F0Y2hjb2xsZWN0aW9uLmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsInNjb3BlIjpbIldhdGNoQ29sbGVjdGlvbi5BcGkuUmVhZCIsIldhdGNoQ29sbGVjdGlvbi5BcGkuV3JpdGUiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IkM5ODM4RThBNDA3RDgyODE1OTk3NkZCNjk5ODI1QzUxIn0.BgkckC3liOKHJp5hwG-6m7VPWYrFwSGC0Phhr8nMD4XSvY7S_OzPuibfNGLhMPGjjuuzsiKQqsBiRFCYI-XO4OcmmlIWZxJfN539N7KnYC1b6cYYFZqw82Yq7AipZqW5bBdegDxSV2BL7O2faY-P6x9gKkEud9Sv2PuOqKUNNqit2_teE1ftvklHJl4NbxPcBB6ViZOzgB0xojd_jJ9chu6YozQZhfi4vZ-a9-IsnM269UEgaBN7qRr3vO1coyQOFai7ODIF11Ag1gdWzAbbKtq6ccsEEAGUv-YrSbWCkaIOmZKO63CMcWUPB4BJ-bnqenCP5cwk8oqVU-pV03cXcg",
 													"type": "string"
 												}
 											]
@@ -1731,7 +2433,7 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "https://watchcollectionservice.azurewebsites.net/api/Advertisement/d771c0d5-8d1c-4526-b41c-5dc0a7fb9bfc",
+											"raw": "https://watchcollectionservice.azurewebsites.net/api/Advertisement/f8d68eaf-fc7c-4255-b17e-b43522aea7a5",
 											"protocol": "https",
 											"host": [
 												"watchcollectionservice",
@@ -1741,7 +2443,7 @@
 											"path": [
 												"api",
 												"Advertisement",
-												"d771c0d5-8d1c-4526-b41c-5dc0a7fb9bfc"
+												"f8d68eaf-fc7c-4255-b17e-b43522aea7a5"
 											]
 										}
 									},
@@ -1755,7 +2457,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM3NjJFMkY5MTc2OTMyRjk2NzExMjQ0OTYxMUIyQUExIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2lkZW50aXR5c2VydmVyLXdhdGNoY29sbGVjdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsIm5iZiI6MTc2ODA2OTcxNCwiaWF0IjoxNzY4MDY5NzE0LCJleHAiOjE3NjgwNzMzMTQsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHlzZXJ2ZXItd2F0Y2hjb2xsZWN0aW9uLmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsInNjb3BlIjpbIldhdGNoQ29sbGVjdGlvbi5BcGkuUmVhZCIsIldhdGNoQ29sbGVjdGlvbi5BcGkuV3JpdGUiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IjBGMTQ4NzU1QzE5OTkxOTQ0RkY2REU3QjUwQ0ZGNENDIn0.b_IlXMhlTJAWG9atOB1cfyWvA_IgwTqFFP6EHUyshiHwxigpp_8ZaJLlFDUsTe7xXE50gg2_hh6d_S5JJzpw6XtvpXXMMdIl5BBOt3WYDHMHGWcDoE9kLNqolAPQ9UcBk0STs10KvR0DGaXlRw9ARkQMLpix_D0Ns9dA257k-u4YfU6k2QqsO5CyfwnwYC8xYjgGddNGvgLkBPJLYqBcehNtHtyjubP1WLHa7FnoOcgZaWAVJocItFJlJKCBuvdJ95XqgPrx0cJWjtRC_aIhFd8qSxSFsrJHbVZyfPpK9zGocwBZWDfcEEu0hxVmFrXNcjTwcUxa-rldQ6QVnGRfUA",
+													"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM3NjJFMkY5MTc2OTMyRjk2NzExMjQ0OTYxMUIyQUExIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2lkZW50aXR5c2VydmVyLXdhdGNoY29sbGVjdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsIm5iZiI6MTc2ODA3NzUzMSwiaWF0IjoxNzY4MDc3NTMxLCJleHAiOjE3NjgwODExMzEsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHlzZXJ2ZXItd2F0Y2hjb2xsZWN0aW9uLmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsInNjb3BlIjpbIldhdGNoQ29sbGVjdGlvbi5BcGkuUmVhZCIsIldhdGNoQ29sbGVjdGlvbi5BcGkuV3JpdGUiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IkM5ODM4RThBNDA3RDgyODE1OTk3NkZCNjk5ODI1QzUxIn0.BgkckC3liOKHJp5hwG-6m7VPWYrFwSGC0Phhr8nMD4XSvY7S_OzPuibfNGLhMPGjjuuzsiKQqsBiRFCYI-XO4OcmmlIWZxJfN539N7KnYC1b6cYYFZqw82Yq7AipZqW5bBdegDxSV2BL7O2faY-P6x9gKkEud9Sv2PuOqKUNNqit2_teE1ftvklHJl4NbxPcBB6ViZOzgB0xojd_jJ9chu6YozQZhfi4vZ-a9-IsnM269UEgaBN7qRr3vO1coyQOFai7ODIF11Ag1gdWzAbbKtq6ccsEEAGUv-YrSbWCkaIOmZKO63CMcWUPB4BJ-bnqenCP5cwk8oqVU-pV03cXcg",
 													"type": "string"
 												}
 											]
@@ -1763,7 +2465,7 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "https://watchcollectionservice.azurewebsites.net/api/Advertisement",
+											"raw": "https://watchcollectionservice.azurewebsites.net/api/Advertisement?pageNumber=1&pageSize=10",
 											"protocol": "https",
 											"host": [
 												"watchcollectionservice",
@@ -1773,6 +2475,192 @@
 											"path": [
 												"api",
 												"Advertisement"
+											],
+											"query": [
+												{
+													"key": "pageNumber",
+													"value": "1"
+												},
+												{
+													"key": "pageSize",
+													"value": "10"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAllAdvertisements watchBrand query",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM3NjJFMkY5MTc2OTMyRjk2NzExMjQ0OTYxMUIyQUExIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2lkZW50aXR5c2VydmVyLXdhdGNoY29sbGVjdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsIm5iZiI6MTc2ODA3NzUzMSwiaWF0IjoxNzY4MDc3NTMxLCJleHAiOjE3NjgwODExMzEsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHlzZXJ2ZXItd2F0Y2hjb2xsZWN0aW9uLmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsInNjb3BlIjpbIldhdGNoQ29sbGVjdGlvbi5BcGkuUmVhZCIsIldhdGNoQ29sbGVjdGlvbi5BcGkuV3JpdGUiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IkM5ODM4RThBNDA3RDgyODE1OTk3NkZCNjk5ODI1QzUxIn0.BgkckC3liOKHJp5hwG-6m7VPWYrFwSGC0Phhr8nMD4XSvY7S_OzPuibfNGLhMPGjjuuzsiKQqsBiRFCYI-XO4OcmmlIWZxJfN539N7KnYC1b6cYYFZqw82Yq7AipZqW5bBdegDxSV2BL7O2faY-P6x9gKkEud9Sv2PuOqKUNNqit2_teE1ftvklHJl4NbxPcBB6ViZOzgB0xojd_jJ9chu6YozQZhfi4vZ-a9-IsnM269UEgaBN7qRr3vO1coyQOFai7ODIF11Ag1gdWzAbbKtq6ccsEEAGUv-YrSbWCkaIOmZKO63CMcWUPB4BJ-bnqenCP5cwk8oqVU-pV03cXcg",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://watchcollectionservice.azurewebsites.net/api/Advertisement?pageNumber=1&pageSize=10&watchBrand=rolex",
+											"protocol": "https",
+											"host": [
+												"watchcollectionservice",
+												"azurewebsites",
+												"net"
+											],
+											"path": [
+												"api",
+												"Advertisement"
+											],
+											"query": [
+												{
+													"key": "pageNumber",
+													"value": "1"
+												},
+												{
+													"key": "pageSize",
+													"value": "10"
+												},
+												{
+													"key": "watchBrand",
+													"value": "rolex"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAllAdvertisementsBySellerId",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM3NjJFMkY5MTc2OTMyRjk2NzExMjQ0OTYxMUIyQUExIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2lkZW50aXR5c2VydmVyLXdhdGNoY29sbGVjdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsIm5iZiI6MTc2ODA3NzUzMSwiaWF0IjoxNzY4MDc3NTMxLCJleHAiOjE3NjgwODExMzEsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHlzZXJ2ZXItd2F0Y2hjb2xsZWN0aW9uLmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsInNjb3BlIjpbIldhdGNoQ29sbGVjdGlvbi5BcGkuUmVhZCIsIldhdGNoQ29sbGVjdGlvbi5BcGkuV3JpdGUiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IkM5ODM4RThBNDA3RDgyODE1OTk3NkZCNjk5ODI1QzUxIn0.BgkckC3liOKHJp5hwG-6m7VPWYrFwSGC0Phhr8nMD4XSvY7S_OzPuibfNGLhMPGjjuuzsiKQqsBiRFCYI-XO4OcmmlIWZxJfN539N7KnYC1b6cYYFZqw82Yq7AipZqW5bBdegDxSV2BL7O2faY-P6x9gKkEud9Sv2PuOqKUNNqit2_teE1ftvklHJl4NbxPcBB6ViZOzgB0xojd_jJ9chu6YozQZhfi4vZ-a9-IsnM269UEgaBN7qRr3vO1coyQOFai7ODIF11Ag1gdWzAbbKtq6ccsEEAGUv-YrSbWCkaIOmZKO63CMcWUPB4BJ-bnqenCP5cwk8oqVU-pV03cXcg",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://watchcollectionservice.azurewebsites.net/api/Advertisement/seller/f282da95-82df-4c6c-9618-73c78b6d4d39/?pageNumber=1&pageSize=10",
+											"protocol": "https",
+											"host": [
+												"watchcollectionservice",
+												"azurewebsites",
+												"net"
+											],
+											"path": [
+												"api",
+												"Advertisement",
+												"seller",
+												"f282da95-82df-4c6c-9618-73c78b6d4d39",
+												""
+											],
+											"query": [
+												{
+													"key": "pageNumber",
+													"value": "1"
+												},
+												{
+													"key": "pageSize",
+													"value": "10"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetAllAdvertisementsByOwnerId",
+									"request": {
+										"auth": {
+											"type": "oauth2",
+											"oauth2": [
+												{
+													"key": "accessTokenUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/token",
+													"type": "string"
+												},
+												{
+													"key": "authUrl",
+													"value": "https://identityserver-watchcollection.azurewebsites.net//connect/authorize",
+													"type": "string"
+												},
+												{
+													"key": "clientSecret",
+													"value": "FrontendSecretWoohoo",
+													"type": "string"
+												},
+												{
+													"key": "clientId",
+													"value": "m2m.webappp-watchcollection",
+													"type": "string"
+												},
+												{
+													"key": "grant_type",
+													"value": "authorization_code_with_pkce",
+													"type": "string"
+												},
+												{
+													"key": "redirect_uri",
+													"value": "https://oauth.pstmn.io/v1/callback",
+													"type": "string"
+												},
+												{
+													"key": "useBrowser",
+													"value": false,
+													"type": "boolean"
+												},
+												{
+													"key": "scope",
+													"value": "openid profile roles WatchCollection.Api.Read WatchCollection.Api.Write",
+													"type": "string"
+												},
+												{
+													"key": "tokenName",
+													"value": "token",
+													"type": "string"
+												},
+												{
+													"key": "addTokenTo",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "https://watchcollectionservice.azurewebsites.net/api/Advertisement/me?pageNumber=1&pageSize=10",
+											"protocol": "https",
+											"host": [
+												"watchcollectionservice",
+												"azurewebsites",
+												"net"
+											],
+											"path": [
+												"api",
+												"Advertisement",
+												"me"
+											],
+											"query": [
+												{
+													"key": "pageNumber",
+													"value": "1"
+												},
+												{
+													"key": "pageSize",
+													"value": "10"
+												}
 											]
 										}
 									},
@@ -1923,7 +2811,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"WatchId\" : \"b9c36467-b8a1-426f-8b35-a1d0a37e358e\",\n    \"Title\" : \"Good condition Seamaster\",\n    \"Description\" : \"Good condition barely worn with box and papers\",\n    \"Status\": \"Active\",\n    \"AskingPrice\" : 175200,\n    \"AllowBids\" : true\n}",
+											"raw": "{\n    \"WatchId\" : \"b9c36467-b8a1-426f-8b35-a1d0a37e358e\",\n    \"Title\" : \"Good condition Seamaster\",\n    \"Description\" : \"Good condition barely worn with box and papers\",\n    \"Status\": \"Active\",\n    \"AskingPrice\" : 21000,\n    \"AllowBids\" : false\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -2008,7 +2896,7 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "https://watchcollectionservice.azurewebsites.net/api/Advertisement/eb266bab-6d76-4294-82c7-e2180f15ab7e",
+											"raw": "https://watchcollectionservice.azurewebsites.net/api/Advertisement/d771c0d5-8d1c-4526-b41c-5dc0a7fb9bfc",
 											"protocol": "https",
 											"host": [
 												"watchcollectionservice",
@@ -2018,7 +2906,7 @@
 											"path": [
 												"api",
 												"Advertisement",
-												"eb266bab-6d76-4294-82c7-e2180f15ab7e"
+												"d771c0d5-8d1c-4526-b41c-5dc0a7fb9bfc"
 											]
 										}
 									},
@@ -2099,7 +2987,7 @@
 											}
 										},
 										"url": {
-											"raw": "https://watchcollectionservice.azurewebsites.net/api/Advertisement/e07696d5-c909-49cf-b158-d84d2ebfb991/Bid",
+											"raw": "https://watchcollectionservice.azurewebsites.net/api/Advertisement/d771c0d5-8d1c-4526-b41c-5dc0a7fb9bfc/Bid",
 											"protocol": "https",
 											"host": [
 												"watchcollectionservice",
@@ -2109,7 +2997,7 @@
 											"path": [
 												"api",
 												"Advertisement",
-												"e07696d5-c909-49cf-b158-d84d2ebfb991",
+												"d771c0d5-8d1c-4526-b41c-5dc0a7fb9bfc",
 												"Bid"
 											]
 										}
@@ -2124,7 +3012,7 @@
 											"bearer": [
 												{
 													"key": "token",
-													"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM3NjJFMkY5MTc2OTMyRjk2NzExMjQ0OTYxMUIyQUExIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2lkZW50aXR5c2VydmVyLXdhdGNoY29sbGVjdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsIm5iZiI6MTc2ODA2OTcxNCwiaWF0IjoxNzY4MDY5NzE0LCJleHAiOjE3NjgwNzMzMTQsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHlzZXJ2ZXItd2F0Y2hjb2xsZWN0aW9uLmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsInNjb3BlIjpbIldhdGNoQ29sbGVjdGlvbi5BcGkuUmVhZCIsIldhdGNoQ29sbGVjdGlvbi5BcGkuV3JpdGUiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IjBGMTQ4NzU1QzE5OTkxOTQ0RkY2REU3QjUwQ0ZGNENDIn0.b_IlXMhlTJAWG9atOB1cfyWvA_IgwTqFFP6EHUyshiHwxigpp_8ZaJLlFDUsTe7xXE50gg2_hh6d_S5JJzpw6XtvpXXMMdIl5BBOt3WYDHMHGWcDoE9kLNqolAPQ9UcBk0STs10KvR0DGaXlRw9ARkQMLpix_D0Ns9dA257k-u4YfU6k2QqsO5CyfwnwYC8xYjgGddNGvgLkBPJLYqBcehNtHtyjubP1WLHa7FnoOcgZaWAVJocItFJlJKCBuvdJ95XqgPrx0cJWjtRC_aIhFd8qSxSFsrJHbVZyfPpK9zGocwBZWDfcEEu0hxVmFrXNcjTwcUxa-rldQ6QVnGRfUA",
+													"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM3NjJFMkY5MTc2OTMyRjk2NzExMjQ0OTYxMUIyQUExIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2lkZW50aXR5c2VydmVyLXdhdGNoY29sbGVjdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsIm5iZiI6MTc2ODA3ODU3NiwiaWF0IjoxNzY4MDc4NTc2LCJleHAiOjE3NjgwODIxNzYsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHlzZXJ2ZXItd2F0Y2hjb2xsZWN0aW9uLmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsInNjb3BlIjpbIldhdGNoQ29sbGVjdGlvbi5BcGkuUmVhZCIsIldhdGNoQ29sbGVjdGlvbi5BcGkuV3JpdGUiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IjIwNTlDNDY3MzVDMkU0Nzk3MjEzNjE4RjU0MTAwOTI1In0.Pw8LpWMsZiVzXjXUP9tEhBUT_K4pVasPFRrwt5uRdSiEFNAWJemYxHDe15ocBp1GHDF7x8bt8YQJfCAFz-48BEX2tYJuoeZsUdFpcPvucmMrQVIxXKhlQtbBp84xgbY7i1zaw7KFAPwHjRN6jyL_D6plVBIVUgCyu98b0kotSXbnmwX8oNJ-bAPtHcXzfURT4oWOUWmq0AFGExys6rkNGVdSKLrYu5l04eIcVI_BpCRsavlhddzO1Iotyt9Ssw7rRxlDHXFOHq4HGppPeLcntf-VaqBqnfmz-_gDTBm4wXZniL9SClHo_0izkD_tAXSs-TjfPUent4_Y2Hpgjet_rg",
 													"type": "string"
 												}
 											]
@@ -2210,7 +3098,7 @@
 										"method": "DELETE",
 										"header": [],
 										"url": {
-											"raw": "https://watchcollectionservice.azurewebsites.net/api/Advertisement/e07696d5-c909-49cf-b158-d84d2ebfb991/Bid/20756d30-eddc-4b64-a5f8-a9570a410906",
+											"raw": "https://watchcollectionservice.azurewebsites.net/api/Advertisement/d771c0d5-8d1c-4526-b41c-5dc0a7fb9bfc/Bid/732505b9-be91-4c3e-942e-7c6122120122",
 											"protocol": "https",
 											"host": [
 												"watchcollectionservice",
@@ -2220,9 +3108,9 @@
 											"path": [
 												"api",
 												"Advertisement",
-												"e07696d5-c909-49cf-b158-d84d2ebfb991",
+												"d771c0d5-8d1c-4526-b41c-5dc0a7fb9bfc",
 												"Bid",
-												"20756d30-eddc-4b64-a5f8-a9570a410906"
+												"732505b9-be91-4c3e-942e-7c6122120122"
 											]
 										}
 									},
@@ -2417,7 +3305,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM3NjJFMkY5MTc2OTMyRjk2NzExMjQ0OTYxMUIyQUExIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2lkZW50aXR5c2VydmVyLXdhdGNoY29sbGVjdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsIm5iZiI6MTc2ODA1NTM3MywiaWF0IjoxNzY4MDU1MzczLCJleHAiOjE3NjgwNTg5NzMsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHlzZXJ2ZXItd2F0Y2hjb2xsZWN0aW9uLmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsInNjb3BlIjpbIldhdGNoQ29sbGVjdGlvbi5BcGkuUmVhZCIsIldhdGNoQ29sbGVjdGlvbi5BcGkuV3JpdGUiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IkM4ODVDOEI4NkM3OTNENUQ2ODRCMkYxQjc5RTM2RDRFIn0.nJOjOh3jg5TDhP6rkoxFeJe3VKD0OpinpnY4UwqBElnbbVKiypDE5Zs35aCu2_sHFY4WwRu1f35HvpFhJnDIxSINu0rl2sOD5g_v6oa8oio8yWY-tIJWNVIrywJ6Lb6XE6jobSTvv0M_WUu6iKP9hUD6HKu4Wf-peO4SonlM6QQsceDfrW0F2buMflTsc_NS5396InXQbIRbVJ6eGJ2rCop5PSkJN_z0SkRCasK75ZQ2Wg_6LZfe0Gz0cbupdiOPNnyJox23tI9QLM0pJ9ILjsDiDdgXvTTU0wAdein3rWLuKVuquLRxky-14NY2mnT-yIv2fnq9bDMQYWImfM3EIA",
+											"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM3NjJFMkY5MTc2OTMyRjk2NzExMjQ0OTYxMUIyQUExIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2lkZW50aXR5c2VydmVyLXdhdGNoY29sbGVjdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsIm5iZiI6MTc2ODA3ODU3NiwiaWF0IjoxNzY4MDc4NTc2LCJleHAiOjE3NjgwODIxNzYsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHlzZXJ2ZXItd2F0Y2hjb2xsZWN0aW9uLmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsInNjb3BlIjpbIldhdGNoQ29sbGVjdGlvbi5BcGkuUmVhZCIsIldhdGNoQ29sbGVjdGlvbi5BcGkuV3JpdGUiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IjIwNTlDNDY3MzVDMkU0Nzk3MjEzNjE4RjU0MTAwOTI1In0.Pw8LpWMsZiVzXjXUP9tEhBUT_K4pVasPFRrwt5uRdSiEFNAWJemYxHDe15ocBp1GHDF7x8bt8YQJfCAFz-48BEX2tYJuoeZsUdFpcPvucmMrQVIxXKhlQtbBp84xgbY7i1zaw7KFAPwHjRN6jyL_D6plVBIVUgCyu98b0kotSXbnmwX8oNJ-bAPtHcXzfURT4oWOUWmq0AFGExys6rkNGVdSKLrYu5l04eIcVI_BpCRsavlhddzO1Iotyt9Ssw7rRxlDHXFOHq4HGppPeLcntf-VaqBqnfmz-_gDTBm4wXZniL9SClHo_0izkD_tAXSs-TjfPUent4_Y2Hpgjet_rg",
 											"type": "string"
 										}
 									]
@@ -2448,7 +3336,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM3NjJFMkY5MTc2OTMyRjk2NzExMjQ0OTYxMUIyQUExIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2lkZW50aXR5c2VydmVyLXdhdGNoY29sbGVjdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsIm5iZiI6MTc2ODA1NTM3MywiaWF0IjoxNzY4MDU1MzczLCJleHAiOjE3NjgwNTg5NzMsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHlzZXJ2ZXItd2F0Y2hjb2xsZWN0aW9uLmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsInNjb3BlIjpbIldhdGNoQ29sbGVjdGlvbi5BcGkuUmVhZCIsIldhdGNoQ29sbGVjdGlvbi5BcGkuV3JpdGUiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IkM4ODVDOEI4NkM3OTNENUQ2ODRCMkYxQjc5RTM2RDRFIn0.nJOjOh3jg5TDhP6rkoxFeJe3VKD0OpinpnY4UwqBElnbbVKiypDE5Zs35aCu2_sHFY4WwRu1f35HvpFhJnDIxSINu0rl2sOD5g_v6oa8oio8yWY-tIJWNVIrywJ6Lb6XE6jobSTvv0M_WUu6iKP9hUD6HKu4Wf-peO4SonlM6QQsceDfrW0F2buMflTsc_NS5396InXQbIRbVJ6eGJ2rCop5PSkJN_z0SkRCasK75ZQ2Wg_6LZfe0Gz0cbupdiOPNnyJox23tI9QLM0pJ9ILjsDiDdgXvTTU0wAdein3rWLuKVuquLRxky-14NY2mnT-yIv2fnq9bDMQYWImfM3EIA",
+											"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IkM3NjJFMkY5MTc2OTMyRjk2NzExMjQ0OTYxMUIyQUExIiwidHlwIjoiYXQrand0In0.eyJpc3MiOiJodHRwczovL2lkZW50aXR5c2VydmVyLXdhdGNoY29sbGVjdGlvbi5henVyZXdlYnNpdGVzLm5ldCIsIm5iZiI6MTc2ODA3ODU3NiwiaWF0IjoxNzY4MDc4NTc2LCJleHAiOjE3NjgwODIxNzYsImF1ZCI6Imh0dHBzOi8vaWRlbnRpdHlzZXJ2ZXItd2F0Y2hjb2xsZWN0aW9uLmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsInNjb3BlIjpbIldhdGNoQ29sbGVjdGlvbi5BcGkuUmVhZCIsIldhdGNoQ29sbGVjdGlvbi5BcGkuV3JpdGUiLCJXYXRjaFZhbHVhdGlvbi5BcGkuUmVhZCJdLCJjbGllbnRfaWQiOiJtMm0ucG9zdG1hbiIsImp0aSI6IjIwNTlDNDY3MzVDMkU0Nzk3MjEzNjE4RjU0MTAwOTI1In0.Pw8LpWMsZiVzXjXUP9tEhBUT_K4pVasPFRrwt5uRdSiEFNAWJemYxHDe15ocBp1GHDF7x8bt8YQJfCAFz-48BEX2tYJuoeZsUdFpcPvucmMrQVIxXKhlQtbBp84xgbY7i1zaw7KFAPwHjRN6jyL_D6plVBIVUgCyu98b0kotSXbnmwX8oNJ-bAPtHcXzfURT4oWOUWmq0AFGExys6rkNGVdSKLrYu5l04eIcVI_BpCRsavlhddzO1Iotyt9Ssw7rRxlDHXFOHq4HGppPeLcntf-VaqBqnfmz-_gDTBm4wXZniL9SClHo_0izkD_tAXSs-TjfPUent4_Y2Hpgjet_rg",
 											"type": "string"
 										}
 									]
@@ -2456,7 +3344,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://watchvaluationservice.azurewebsites.net/api/valuation?referenceNumber=12600",
+									"raw": "https://watchvaluationservice.azurewebsites.net/api/valuation?referenceNumber=14000M",
 									"protocol": "https",
 									"host": [
 										"watchvaluationservice",
@@ -2470,7 +3358,7 @@
 									"query": [
 										{
 											"key": "referenceNumber",
-											"value": "12600"
+											"value": "14000M"
 										}
 									]
 								}
