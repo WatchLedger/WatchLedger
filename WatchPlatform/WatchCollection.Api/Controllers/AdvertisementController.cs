@@ -71,7 +71,7 @@ namespace WatchCollection.Api.Controllers
 
         // this enpoint allows the user te see all of their own advertisements including unpublished ones
         // TODO: implement pagination and filtering
-        [HttpGet]
+        [HttpGet("me")]
         [Authorize(Policy = "CollectionReadPolicy")]
         public async Task<ActionResult<IEnumerable<AdvertisementResponseContract>>> GetAdvertisementsByOwnerId([FromQuery] int pageNumber, [FromQuery] int pageSize, [FromQuery] string? watchBrand)
         {
