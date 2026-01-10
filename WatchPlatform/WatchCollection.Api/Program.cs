@@ -3,6 +3,7 @@ using System.Threading.RateLimiting;
 using Azure.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Scalar.AspNetCore;
 using WatchCollection.Api.Middleware;
 using WatchCollection.Api.Services;
 using WatchCollection.Domain.Services;
@@ -98,8 +99,6 @@ public class Program
                 options.JsonSerializerOptions.Converters.Add(new AdvertisementStatusJsonConverter());
             });
 
-
-        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
 
         builder.Services.AddCors(options =>
@@ -178,12 +177,8 @@ public class Program
         var app = builder.Build();
 
         app.UseMiddleware<ExceptionHandlingMiddleware>();
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.MapOpenApi();
-        }
-
+        app.MapOpenApi();
+        app.MapScalarApiReference();
         app.UseCors();
         app.UseRouting();
         app.UseAuthentication();
