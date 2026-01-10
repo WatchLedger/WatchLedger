@@ -22,157 +22,21 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        builder.Services.AddHttpContextAccessor();
-        builder.Services.AddSingleton<IAuthorizationHandler, AuthHandler>();
-        builder.Services.AddScoped<IUserRoleService, UserRoleService>();
 
+        // Configure Azure Key Vault
         var keyVaultUri = builder.Configuration["AzureKeyVault:VaultUri"]
             ?? throw new InvalidOperationException("Azure Key Vault URI is not configured.");
         builder.Configuration.AddAzureKeyVault(
             new Uri(keyVaultUri),
             new DefaultAzureCredential());
 
-        builder.Services.AddAuthentication()
-            .AddJwtBearer(options =>
-            {
-                options.Authority = "https://identityserver-watchcollection.azurewebsites.net";
-                options.TokenValidationParameters.ValidateAudience = false;
-                options.MapInboundClaims = false;
-                options.TokenValidationParameters.RoleClaimType = "role";
-            });
-
-        builder.Services.AddAuthorizationBuilder()
-        #region Authorization Policies
-            .AddPolicy("PublicReadPolicy", policy =>
-                {
-                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Read", null));
-                })
-            .AddPolicy("CollectionReadPolicy", policy =>
-                {
-                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Read", "User"));
-                })
-            .AddPolicy("CollectionWritePolicy", policy =>
-                {
-                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Write", "User"));
-                })
-            .AddPolicy("AdminWritePolicy", policy =>
-                {
-                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Write", "Admin"));
-                })
-            .AddPolicy("AdminOrUserWritePolicy", policy =>
-                {
-                    policy.Requirements.Add(new ClaimOrRoleRequirement("WatchCollection.Api.Write", "AdminOrUser"));
-                });
-        #endregion
-        
-        builder.Services.Configure<BlobStorageOptions>( options =>{
-            options.BlobStorageConnectionString = builder.Configuration["BlobConnectionString"]
-                ?? throw new InvalidOperationException("Blob storage connection string is not configured in Key Vault.");
-            options.ContainerName = builder.Configuration["BlobStorage:ContainerName"]
-                ?? throw new InvalidOperationException("Blob storage container name is not configured.");
-        });
-
-        var connectionString = builder.Configuration["ProductionSqlString"]
-            ?? throw new InvalidOperationException("SQL Database connection string is not configured in Key Vault.");
-        builder.Services.AddDbContext<WatchServiceDbContext>(options => 
-            options.UseSqlServer(connectionString));
-
-        #region Dependency Injection
-        // Add services to the container.
-        builder.Services.AddScoped<IWatchService, WatchService>();
-        builder.Services.AddScoped<IWatchImageService, WatchImageService>();
-        builder.Services.AddScoped<IAdvertisementService, AdvertisementService>();
-        builder.Services.AddScoped<IBidService, BidService>();
-        builder.Services.AddHttpClient<IWatchValuationHttpClient, WatchValuationHttpClient>();
-        // Add repositories to the container.
-        builder.Services.AddScoped<IWatchRepository, WatchRepository>();
-        builder.Services.AddScoped<IWatchImageRepository, WatchImageRepository>();
-        builder.Services.AddScoped<IAdvertisementRepository, AdvertisementRepository>();
-        builder.Services.AddScoped<IBidRepository, BidRepository>();
-        builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
-        #endregion
-
-        builder.Services.AddControllers()
-            .AddJsonOptions(options =>
-            {
-                options.JsonSerializerOptions.Converters.Add(new WatchConditionJsonConverter());
-                options.JsonSerializerOptions.Converters.Add(new AdvertisementStatusJsonConverter());
-            });
-
-        builder.Services.AddOpenApi();
-
-        builder.Services.AddCors(options =>
-        {
-            options.AddDefaultPolicy(policy =>
-            {
-                policy.WithOrigins("http://localhost:5174", "https://watchledger.nathangeleyn.com")
-                      .AllowAnyHeader()
-                      .AllowAnyMethod()
-                      .AllowCredentials();
-            });
-        });
-
-        builder.Services.AddRateLimiter(options =>
-        {
-            #region Rate Limiting Policies
-            // The baseline all requests are limited to 100/min per user/IP
-            options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
-            {
-                var userId = context.User.FindFirst("sub")?.Value 
-                        ?? context.Connection.RemoteIpAddress?.ToString() 
-                        ?? "anonymous";
-                return RateLimitPartition.GetFixedWindowLimiter(userId, _ => new FixedWindowRateLimiterOptions
-                {
-                    PermitLimit = 100,
-                    Window = TimeSpan.FromMinutes(1)
-                });
-            });
-
-            // Image uploads heavily restricted due to Blob Limitations (5 requests allowed per minute)
-            options.AddPolicy("imageUpload", context =>
-            {
-                var userId = context.User.FindFirst("sub")?.Value ?? "anonymous";
-                return RateLimitPartition.GetFixedWindowLimiter(userId, _ => new FixedWindowRateLimiterOptions
-                {
-                    PermitLimit = 5,
-                    Window = TimeSpan.FromMinutes(1)
-                });
-            });
-
-            // Adding bids is restricted to avoid spam (5 requests allowed per minute)
-            options.AddPolicy("bidSubmission", context =>
-            {
-                var userId = context.User.FindFirst("sub")?.Value ?? "anonymous";
-                return RateLimitPartition.GetFixedWindowLimiter(userId, _ => new FixedWindowRateLimiterOptions
-                {
-                    PermitLimit = 5,
-                    Window = TimeSpan.FromMinutes(1)
-                });
-            });
-
-            // Passthrough to get brandlist from valuationservice is limited (200 requests allowed per minute)
-            options.AddPolicy("brandList", context =>
-            {
-                var userId = context.User.FindFirst("sub")?.Value ?? "anonymous";
-                return RateLimitPartition.GetFixedWindowLimiter(userId, _ => new FixedWindowRateLimiterOptions
-                {
-                    PermitLimit = 50,
-                    Window = TimeSpan.FromMinutes(1)
-                });
-            });
-
-            // Valuation requests are limited due to link with external service (5 requests allowed per minute)
-            options.AddPolicy("watchValuation", context =>
-            {
-                var userId = context.User.FindFirst("sub")?.Value ?? "anonymous";
-                return RateLimitPartition.GetFixedWindowLimiter(userId, _ => new FixedWindowRateLimiterOptions
-                {
-                    PermitLimit = 5,
-                    Window = TimeSpan.FromMinutes(1)
-                });
-            });
-            #endregion
-        });
+        // Configure services using extension methods
+        builder.Services.AddInfrastructure(builder.Configuration);
+        builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
+        builder.Services.AddApplicationServices();
+        builder.Services.AddApiConfiguration();
+        builder.Services.AddCorsPolicy();
+        builder.Services.AddRateLimiting();
 
         var app = builder.Build();
 
