@@ -52,7 +52,7 @@ namespace WatchCollection.Api.Controllers
             return NoContent();
         }
 
-        [HttpPut]
+        [HttpPatch]
         [Route("{imageId:Guid}/set-primary")]
         [Authorize(Policy = "CollectionWritePolicy")]
         public async Task<ActionResult> SetMainImage([FromRoute] Guid watchId, [FromRoute] Guid imageId)

@@ -10,19 +10,31 @@ using WatchCollection.Storage.Exceptions;
 
 namespace WatchCollection.Domain.Services;
 
-public class AdvertisementService(IAdvertisementRepository _repository, IWatchValuationHttpClient _watchValuationClient) : IAdvertisementService
+public class AdvertisementService(IAdvertisementRepository _repository, IWatchValuationHttpClient _watchValuationClient, IWatchService _watchService) : IAdvertisementService
 {
-    public async Task<AdvertisementResponseContract> CreateAdvertisement(string bidderIdString, AdvertisementRequestContract contract)
+    public async Task<AdvertisementResponseContract> CreateAdvertisement(string sellerIdString, AdvertisementRequestContract contract)
     {
+        var watch = await _watchService.GetWatchById( sellerIdString,contract.WatchId);
+        if (watch is null)
+            throw new WatchNotFoundException(contract.WatchId, "Watch not found for the provided WatchId.");
+        if(watch.OwnerUserId.ToString() != sellerIdString)
+            throw new UnauthorizedAccessException("User is not authorized to create an advertisement for this watch.");
         if(contract.Status is AdvertisementStatus.Sold || contract.Status is AdvertisementStatus.Expired)
             throw new InvalidAdvertisementStatusException("Cannot create an advertisement with status Sold or Expired.");
 
         var model = contract.AsModel();
         var advertisementId = Guid.NewGuid();
-        var sellerUserId = Guid.TryParse(bidderIdString, out var userIdGuid) ? userIdGuid : throw new Exception("Invalid User ID format.");
+        var sellerUserId = Guid.TryParse(sellerIdString, out var userIdGuid) ? userIdGuid : throw new Exception("Invalid User ID format.");
         model.AdvertisementId = advertisementId;
         model.SellerUserId = sellerUserId;
         model.ViewCount = 0;
+
+        if(model.Status is AdvertisementStatus.Active)
+        {
+            model.PublishedAt = DateTime.UtcNow;
+            model.ExpiresAt = model.PublishedAt.Value.AddDays(30); 
+        }
+
         var entity = model.AsEntity();
         var createdEntity =  await _repository.CreateAdvertisementAsync(entity);
 
@@ -97,6 +109,10 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
         {
             throw new UnauthorizedAccessException("User is not authorized to update this advertisement.");
         }
+
+        if (advertisement.AsModel().Status is AdvertisementStatus.Sold)
+            throw new InvalidAdvertisementStatusException("Cannot update an advertisement that is marked as Sold.");
+            
         
         var contractWithWatchId = new AdvertisementRequestContract
         {
@@ -107,12 +123,29 @@ public class AdvertisementService(IAdvertisementRepository _repository, IWatchVa
             Status = contract.Status,
             AllowBids = contract.AllowBids
         };
+
         var model = contractWithWatchId.AsModel();
         model.AdvertisementId = advertisement.AdvertisementId;
         model.SellerUserId    = advertisement.SellerUserId;
-        model.PublishedAt     = advertisement.PublishedAt;
-        model.ExpiresAt       = advertisement.ExpiresAt;
-        model.SoldAt          = advertisement.SoldAt;
+        if(contract.Status is AdvertisementStatus.Active && advertisement.AsModel().Status is not AdvertisementStatus.Active)
+        {
+            model.PublishedAt = DateTime.UtcNow;
+            model.ExpiresAt = model.PublishedAt.Value.AddDays(30);
+        }
+        else
+        {
+            model.PublishedAt = advertisement.PublishedAt;
+            model.ExpiresAt   = advertisement.ExpiresAt;
+        }
+
+        if(contract.Status is AdvertisementStatus.Sold)
+        {
+            model.SoldAt = DateTime.UtcNow;
+        }
+        else
+        {
+            model.SoldAt = advertisement.SoldAt;
+        }
 
         var entity = model.AsEntity();
         
