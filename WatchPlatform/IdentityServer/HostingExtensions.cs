@@ -1,8 +1,8 @@
-using Azure.Identity;
 using Duende.IdentityServer;
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using IdentityServer.Data;
 using IdentityServer.Models;
+using IdentityServer.Services.Email;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -24,9 +24,38 @@ internal static class HostingExtensions
         builder.Services.AddDbContext<ConfigurationDbContext>(options =>
             options.UseSqlServer(connectionString));
 
-        builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+        builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                // Password settings
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequiredLength = 8;
+
+                // Lockout settings
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+
+                // User settings
+                options.User.RequireUniqueEmail = true;
+
+                // Sign-in settings
+                options.SignIn.RequireConfirmedEmail = true;
+            })
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
+
+        // Register email sender (development vs production)
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.Services.AddSingleton<IEmailSender, DevelopmentEmailSender>();
+        }
+        else
+        {
+            builder.Services.AddSingleton<IEmailSender, SendGridEmailSender>();
+        }
 
         var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
         

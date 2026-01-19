@@ -1,0 +1,18 @@
+@page
+@model IdentityServer.Pages.ResetPasswordConfirmation.Index
+
+<div class="reset-password-confirmation-page">
+    <div class="lead">
+        <h1>Password updated</h1>
+        <p>Your password has been successfully reset</p>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="alert alert-success" style="margin-bottom: 1rem;">
+                You can now sign in with your new password.
+            </div>
+            <a asp-page="/Account/Login/Index" class="btn btn-primary">Sign in</a>
+        </div>
+    </div>
+</div>
