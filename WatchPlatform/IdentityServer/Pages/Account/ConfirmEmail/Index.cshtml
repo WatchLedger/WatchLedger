@@ -3,42 +3,40 @@
 
 <div class="confirm-email-page">
     <div class="lead">
-        <h1>Email Confirmation</h1>
+        @if (Model.EmailConfirmed)
+        {
+            <h1>Email verified</h1>
+            <p>Your account is now active</p>
+        }
+        else
+        {
+            <h1>Verification failed</h1>
+            <p>We couldn't verify your email</p>
+        }
     </div>
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    @if (Model.EmailConfirmed)
-                    {
-                        <h2>Email Confirmed</h2>
-                    }
-                    else
-                    {
-                        <h2>Confirmation Failed</h2>
-                    }
+    <div class="card">
+        <div class="card-body">
+            @if (Model.EmailConfirmed)
+            {
+                <div class="alert alert-success" style="margin-bottom: 1rem;">
+                    @Model.StatusMessage
                 </div>
-
-                <div class="card-body">
-                    @if (Model.EmailConfirmed)
-                    {
-                        <div class="alert alert-success">
-                            @Model.StatusMessage
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="alert alert-danger">
-                            @Model.StatusMessage
-                        </div>
-                    }
+                <a asp-page="/Account/Login/Index" asp-route-returnUrl="@Model.ReturnUrl" class="btn btn-primary">Sign in</a>
+            }
+            else
+            {
+                <div class="alert alert-danger" style="margin-bottom: 0;">
+                    @Model.StatusMessage
                 </div>
-            </div>
-
-            <div class="mt-3">
-                <p><a asp-page="/Account/Login/Index" asp-route-returnUrl="@Model.ReturnUrl">Go to Login</a></p>
-            </div>
+            }
         </div>
     </div>
+
+    @if (!Model.EmailConfirmed)
+    {
+        <div class="mt-3">
+            <p><a asp-page="/Account/Login/Index" asp-route-returnUrl="@Model.ReturnUrl">Back to sign in</a></p>
+        </div>
+    }
 </div>

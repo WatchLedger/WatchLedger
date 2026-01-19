@@ -3,26 +3,19 @@
 
 <div class="forgot-password-confirmation-page">
     <div class="lead">
-        <h1>Check Your Email</h1>
+        <h1>Check your email</h1>
+        <p>We've sent you a password reset link</p>
     </div>
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h2>Password Reset Email Sent</h2>
-                </div>
-
-                <div class="card-body">
-                    <p>If an account exists with the email you provided, we've sent a password reset link.</p>
-                    <p>Please check your email and click the link to reset your password.</p>
-                    <p>If you don't see the email, check your spam folder.</p>
-                </div>
-            </div>
-
-            <div class="mt-3">
-                <p><a asp-page="/Account/Login/Index">Back to Login</a></p>
+    <div class="card">
+        <div class="card-body">
+            <div class="alert alert-info" style="margin-bottom: 0;">
+                If an account exists with the email you provided, you'll receive a password reset link shortly. Check your spam folder if you don't see it.
             </div>
         </div>
+    </div>
+
+    <div class="mt-3">
+        <p><a asp-page="/Account/Login/Index">Back to sign in</a></p>
     </div>
 </div>
