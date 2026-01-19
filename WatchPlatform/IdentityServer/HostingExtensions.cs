@@ -54,7 +54,7 @@ internal static class HostingExtensions
         }
         else
         {
-            builder.Services.AddSingleton<IEmailSender, SmtpEmailSender>();
+            builder.Services.AddSingleton<IEmailSender, SendGridEmailSender>();
         }
 
         var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
