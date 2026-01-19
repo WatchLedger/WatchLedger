@@ -54,8 +54,6 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
     letter-spacing: -0.025em;
     line-height: 1.3;
-}
-
     right: 0;
     z-index: 1000;
     background: rgba(9, 9, 11, 0.8);
@@ -66,8 +64,6 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--accent);
     text-decoration: none;
     transition: color 0.15s ease;
-}
-
     border-bottom: 1px solid var(--border);
     color: var(--accent-hover);
 }
@@ -102,7 +98,7 @@ body.dark .alert, .dark .alert {
     background: rgba(34, 197, 94, 0.1) !important;
     color: var(--success) !important;
 }
-}
+
 
 .navbar {
     max-width: 1200px;
