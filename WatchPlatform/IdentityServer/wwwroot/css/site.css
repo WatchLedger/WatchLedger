@@ -1,4 +1,5 @@
 /* WatchLedger Identity - Modern Dark Theme */
+/* WatchLedger Identity - Modern Dark Theme */
 
 :root {
     --bg-base: #09090b;
@@ -55,33 +56,52 @@ h1, h2, h3, h4, h5, h6 {
     line-height: 1.3;
 }
 
-h1 { font-size: 1.875rem; }
-h2 { font-size: 1.25rem; }
-h3 { font-size: 1.125rem; }
+    right: 0;
+    z-index: 1000;
+    background: rgba(9, 9, 11, 0.8);
 
-p { color: var(--text-secondary); }
+    backdrop-filter: blur(12px);
 
-a {
+    -webkit-backdrop-filter: blur(12px);
     color: var(--accent);
     text-decoration: none;
     transition: color 0.15s ease;
 }
 
-a:hover {
+    border-bottom: 1px solid var(--border);
     color: var(--accent-hover);
 }
 
 /* Navigation */
-.nav-page {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    background: rgba(9, 9, 11, 0.8);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
+/* Force dark mode overrides at the end */
+body.dark, .dark {
+    background: var(--bg-base) !important;
+    color: var(--text) !important;
+}
+body.dark .form-control, .dark .form-control {
+    background: var(--bg-input) !important;
+    color: var(--text) !important;
+    border-color: var(--border) !important;
+}
+body.dark .btn, .dark .btn {
+    background: var(--accent) !important;
+    color: var(--bg-base) !important;
+    border: none !important;
+}
+body.dark .btn-secondary, .dark .btn-secondary {
+    background: var(--bg-input) !important;
+    color: var(--text-secondary) !important;
+    border: 1px solid var(--border) !important;
+}
+body.dark .card, .dark .card {
+    background: var(--bg-card) !important;
+    color: var(--text) !important;
+    border: 1px solid var(--border) !important;
+}
+body.dark .alert, .dark .alert {
+    background: rgba(34, 197, 94, 0.1) !important;
+    color: var(--success) !important;
+}
 }
 
 .navbar {
