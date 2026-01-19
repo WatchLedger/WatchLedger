@@ -47,7 +47,15 @@
                             <button class="btn btn-primary" name="Input.Button" value="login">Login</button>
                             <button class="btn btn-secondary" name="Input.Button" value="cancel">Cancel</button>
                         </form>
+
+                        <div class="mt-3">
+                            <p><a asp-page="/Account/ForgotPassword/Index">Forgot your password?</a></p>
+                        </div>
                     </div>
+                </div>
+
+                <div class="mt-3">
+                    <p>Don't have an account? <a asp-page="/Account/Register/Index" asp-route-returnUrl="@Model.Input.ReturnUrl">Register</a></p>
                 </div>
             </div>
         }

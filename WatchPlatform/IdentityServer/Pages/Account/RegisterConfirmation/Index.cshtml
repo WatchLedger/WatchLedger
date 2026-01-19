@@ -1,0 +1,28 @@
+@page
+@model IdentityServer.Pages.RegisterConfirmation.Index
+
+<div class="register-confirmation-page">
+    <div class="lead">
+        <h1>Registration Successful</h1>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Check Your Email</h2>
+                </div>
+
+                <div class="card-body">
+                    <p>We've sent a confirmation email to <strong>@Model.Email</strong>.</p>
+                    <p>Please click the link in the email to verify your email address and activate your account.</p>
+                    <p>If you don't see the email, check your spam folder.</p>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <p><a asp-page="/Account/Login/Index" asp-route-returnUrl="@Model.ReturnUrl">Return to Login</a></p>
+            </div>
+        </div>
+    </div>
+</div>
